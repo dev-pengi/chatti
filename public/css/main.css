@@ -216,6 +216,7 @@ main .header {
     justify-content: space-between;
     align-items: center;
 }
+
 main .header {
     height: 60px;
     width: 100%;
@@ -224,19 +225,23 @@ main .header {
     align-items: center;
     padding: 10px 10px;
 }
+
 main .header .info {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 main .header .info .avatar {
     margin-right: 10px;
 }
+
 main .header .info .name {
     color: var(--dark);
     font-weight: 600;
 }
-main .chat_box{
+
+main .chat_box {
     height: calc(100vh - 60px - 60px);
     width: 100%;
     display: flex;
@@ -244,16 +249,19 @@ main .chat_box{
     padding: 10px 12px;
     overflow-y: auto;
 }
-main .msg{
+
+main .msg {
     display: flex;
     justify-content: start;
     align-items: center;
     margin-bottom: 10px;
 }
-main .msg .msg_avt{
+
+main .msg .msg_avt {
     margin-right: 8px;
 }
-main .msg .msg_text{
+
+main .msg .msg_text {
     background-color: var(--white);
     color: var(--dark);
     padding: 4px 12px;
@@ -262,10 +270,11 @@ main .msg .msg_text{
     word-wrap: break-word;
 }
 
-main .msg.me{
+main .msg.me {
     justify-content: end;
 }
-main .msg.me .msg_text{
+
+main .msg.me .msg_text {
     background-color: var(--purple);
     color: var(--white);
     padding: 5px 12px;
@@ -273,7 +282,7 @@ main .msg.me .msg_text{
 }
 
 
-main .inputs_box{
+main .inputs_box {
     height: 60px;
     width: 100%;
     padding: 0 15px;
@@ -281,23 +290,42 @@ main .inputs_box{
     justify-content: center;
     align-items: center;
 }
-main input{
+
+main input {
     width: 100%;
     padding: 7px 10px;
     font-size: 17px;
     border: none;
 }
-main .send_btn{
+
+main .send_btn {
     margin-left: 10px;
-    height: 35px;
-    width: 35px;
+    min-height: 35px;
+    min-width: 35px;
     background-color: var(--purple);
     color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
+    opacity: 1;
 }
-main .send_btn.disabled{
-    background-color: var(--grey);
+
+main .send_btn:hover {
+    opacity: .8;
+}
+
+main .send_btn.off {
     pointer-events: none;
+    background-color: var(--gray);
+}
+
+
+@media screen and (max-width:900px) {
+    nav {
+        left: -300px;
+    }
+    main {
+        width: 100%;
+        left: 0;
+    }
 }
