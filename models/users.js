@@ -7,6 +7,7 @@ const user = new mongoose.Schema({
     name: { type: String, required: true },
     avatar: { type: String, default: null },
     email: { type: String, default: null },
+    contacts: { type: Array, default: [] },
 
     banned: { type: Boolean, default: false }
 });

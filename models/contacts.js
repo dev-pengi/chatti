@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const contact = new mongoose.Schema({
     // public data
-    id1: { type: String, required: true },
-    id2: { type: String, required: true },
+    id: { type: String, required: true, unique: true },
     messages: { type: Array, default: [] },
 });
 

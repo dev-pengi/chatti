@@ -7,6 +7,7 @@ const session = require("express-session");
 const fileupload = require("express-fileupload");
 const app = express();
 const port = process.env.PORT || 5000;
+const server = app.listen(port, () => { console.log(`app listening to ${port}`); })
 
 //database
 const mongoose = require('mongoose');
@@ -20,6 +21,8 @@ const connections = require('./events/connections');
 require('./events/handler');
 connections.database();
 
+//socket
+const io = require("socket.io")(server);
 
 //Routes
 const redirects = require('./routes/redirects')
@@ -31,10 +34,8 @@ const path = require("path");
 const livereload = require("livereload");
 const MemoryStore = require("memorystore")(session);
 let test_mode = process.env.TEST
-require('./api/api')(app)
 
 //express
-app.listen(port, 'localhost', () => { console.log(`app listening to ${port}`); })
 app.set("view engine", "ejs")
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(express.static('public'))
@@ -59,11 +60,6 @@ if (test_mode) {
 }
 
 
-
-
-
-
-
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 
 
@@ -78,13 +74,13 @@ passport.use(new GoogleStrategy({
         return done(null, profile);
     });
 }));
-
-app.use(session({
+const sessionMiddleware = session({
     secret: 'DBE1CAF4635A3',
     cookie: { maxAge: (1000 * 60 * 60 * 24 * 7) },
     saveUninitialized: false,
     resave: true,
-}));
+})
+app.use(sessionMiddleware);
 /*
 {
   sub: '114999617844345065008',
@@ -101,21 +97,21 @@ app.get('/login/auth/google', passport.authenticate('google', { failureRedirect:
     const user = req.user._json
     const save_user = await users.findOneAndUpdate(
         {
-            id: user.sub
+            id: user.sub,
+            email: user.email,
         },
         {
             name: user.name,
             avatar: user.picture,
-            email: user.email,
+            // $pull: { contacts: '116648123783396825111' },
         },
         {
             upsert: true,
             new: true
-        }).catch(err => { console.log(err);})
+        }).catch(err => { console.log(err); });
     //success redirect
     if (!save_user) return res.redirect('/login')
-    console.log(save_user);
-    res.redirect('/chat/id');
+    res.redirect('/chat');
 });
 
 passport.serializeUser((user, done) => done(null, user));
@@ -127,30 +123,137 @@ app.use(passport.session());
 app.get('/logout', (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/main');
     req.logout(function (err) {
-        if (err) { return next(err); }
+        if (err) {
+            return next(err);
+        }
         res.redirect("/");
     });
     res.redirect('/');
 });
 
-
-
-
 app.get('/login', (req, res) => {
-    res.render('login', { pagetitle: 'Chatti - login' })
+    res.render('login', { pagetitle: 'Chatti - login' });
 })
 app.get('/chat/:id', (req, res) => {
-    // const check_user = check.user(req, res)
-    // if (!check_user) return;
-    res.render('chat', { pagetitle: 'Chatti - User' })
+    const check_user = check.user(req, res);
+    if (!check_user) return;
+    res.render('chat', { pagetitle: 'Chatti - User' });
+})
+app.get('/chat', (req, res) => {
+    const check_user = check.user(req, res);
+    if (!check_user) return;
+    res.render('chat', { pagetitle: 'Chatti - User' });
 })
 
-
-
-
-
-
-
-
 // run
-redirects(app)
+redirects(app);
+require('./api/api')(app);
+
+
+const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
+
+io.use(wrap(sessionMiddleware));
+io.use(wrap(passport.initialize()));
+io.use(wrap(passport.session()));
+
+io.use((socket, next) => {
+    if (socket.request.user) {
+        next();
+    } else {
+        next(new Error('unauthorized'))
+    }
+});
+
+// io.on('connect', (socket) => {
+//     console.log(`new connection ${socket.id}`);
+//     socket.on('whoami', (cb) => {
+//         cb(socket.request.user ? socket.request.user.username : '');
+//     });
+
+//     const session = socket.request.session;
+//     console.log(`saving sid ${socket.id} in session ${session.id}`);
+//     session.socketId = socket.id;
+//     session.save();
+// });
+
+
+
+const contacts = require('./models/contacts')
+const tools = require('./events/tools')
+const sockets = []
+io.on('connection', (socket) => {
+    const user = check.user_socket(socket);
+    if (!user) return;
+    let socket_data = {
+        userID: user.sub,
+        socket_id: socket.id
+    }
+    const socket_i = sockets.map(sockets => sockets.socket_id).indexOf(socket.id)
+    if (socket_i) sockets[socket_i] == socket_data;
+    else sockets.push(socket_data);
+
+    console.log(`New socket client: ${user.name}`);
+    console.log(socket.id);
+    socket.on('messages', async (data) => {
+        console.log(data);
+        const user1 = await users.findOne({ id: user.sub });
+        const user2 = await users.findOne({ id: data.to });
+        if (!user1) return socket.emit('redirect', { destination: '/login/auth/google' });
+        if (!user2) return socket.emit('error', { status: '403', reason: 'user not found' });
+
+        if (user1.id == user2.id) return socket.emit('error', { status: '403', reason: 'hey Yo, you can\t text your self' });
+        const message = {
+            message: data.content,
+            createdOn: Date.now(),
+            by: user1.id,
+            to: user2.id,
+            type: 'text',
+        }
+        let chat_id = tools.chat_id(user1.id, user2.id)
+        let chat_data = await contacts.findOneAndUpdate(
+            {
+                id: chat_id,
+            },
+            {
+                $push: { messages: message }
+            },
+            {
+                upsert: true,
+                new: true
+            }).catch(err => { return });
+        if (!chat_data) return socket.emit('error', { destination: '/login/auth/google' });
+
+        const target_client = sockets.find(sockets => sockets.userID == data.to)
+        if (target_client) {
+            var socketById = io.sockets.sockets.get(target_client.socket_id);
+            socketById.emit("message", message)
+        }
+
+
+
+        // if (!user1.contacts.includes(user2.id)) {
+        //     const doc = await users.findOneAndUpdate(
+        //         {
+        //             id: user1.id,
+        //             contacts: { $nin: [user2.id] },
+        //         },
+        //         {
+        //             $push: { contacts: user2.id },
+        //         }
+        //     )
+        // }
+        // if (!user2.contacts.includes(user1.id)) {
+        //     const doc = await users.findOneAndUpdate(
+        //         {
+        //             id: user2.id,
+        //             contacts: { $nin: [user1.id] },
+        //         },
+        //         {
+        //             $push: { contacts: user1.id },
+        //         }
+        //     )
+        // }
+
+    })
+})
+

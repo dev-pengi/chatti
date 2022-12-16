@@ -5,7 +5,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth;  */
     text-decoration: none;
     list-style: none;
     outline: none;
@@ -253,12 +253,12 @@ main .chat_box {
 main .msg {
     display: flex;
     justify-content: start;
-    align-items: center;
+    align-items: start;
     margin-bottom: 10px;
 }
 
 main .msg .msg_avt {
-    margin-right: 8px;
+    margin-right: 4px;
 }
 
 main .msg .msg_text {
