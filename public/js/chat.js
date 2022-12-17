@@ -31,55 +31,117 @@ function get_contacts() {
         }
     });
 }
-function set_data(res) {
-    const html = res.map(contact => {
-        return `
-        <a href="/chat/${contact.id}"class="contact pointer transition curved">
-            <img crossorigin="anonymous"  src="${contact.avatar}" class="contact_avatar circle" width="50px">
-            <div class="contact_info">
-                <p class="contact_name">${contact.name}</p>
-                <p class="last_msg">new contact</p>
-            </div>
-        </a>`
-    }).join('')
-    contacts_box.innerHTML = html
+function set_data(contacts) {
+    refresh_contacts();
+    function refresh_contacts() {
+        contacts_box.innerHTML = ''
+        if (!contacts.length) return;
+        contacts.sort((a, b) => {
+            return b.last_msg.createdOn - a.last_msg.createdOn;
+        }).map(contact => {
+            const last_msg = contact.last_msg.message ? contact.last_msg.message : 'New contact';
+
+            const contact_holder = document.createElement("a");
+
+            const contact_img = document.createElement("img");
+            const contact_info = document.createElement("div");
+            const contact_name = document.createElement("p");
+            const contact_last_msg = document.createElement("p");
+            const contact_name_text = document.createTextNode(contact.name);
+            const contact_last_msg_text = document.createTextNode(last_msg);
+
+            contacts_box.appendChild(contact_holder);
+            contact_holder.appendChild(contact_img);
+            contact_holder.appendChild(contact_info);
+            contact_info.appendChild(contact_name);
+            contact_info.appendChild(contact_last_msg);
+            contact_name.appendChild(contact_name_text);
+            contact_last_msg.appendChild(contact_last_msg_text);
+            contact_holder.setAttribute('href', `/chat/${contact.id}`);
+            contact_holder.setAttribute('class', 'contact curved pointer transition');
+            contact_img.setAttribute('class', 'contact_avatar circle');
+            contact_img.setAttribute('src', contact.avatar);
+            contact_info.setAttribute('class', 'contact_info');
+            contact_name.setAttribute('class', 'contact_name');
+            contact_last_msg.setAttribute('class', 'last_msg');
+        })
+    }
+
+    socket.on('message', data => {
+        let contact = contacts.find(contact => contact.id == data.by.id);
+        if (contact) {
+            contact.last_msg = data;
+            refresh_contacts();
+        }
+        else {
+            contacts.push({
+                id: data.by.id,
+                name: data.by.name,
+                avatar: data.by.avt,
+                last_msg: data,
+            })
+            refresh_contacts();
+        }
+    })
+    socket.on('my_message', data => {
+        console.log(data.to.id);
+        let contact = contacts.find(contact => contact.id == data.to.id);
+        if (contact) {
+            contact.last_msg = data;
+            refresh_contacts();
+        }
+        else {
+            contacts.push({
+                id: data.to.id,
+                name: data.to.name,
+                avatar: data.by.avt,
+                last_msg: data,
+            })
+            refresh_contacts();
+        }
+    })
 }
-
-
-
 
 
 function set_chat(data) {
+    const header_info = document.createElement("div");
+    const header_img = document.createElement("img");
+    const header_name = document.createElement("p");
+    const header_name_text = document.createTextNode(data.user2.name);
 
-    console.log(data);
-    const header = () => {
-        return `<div class="info">
-            <img crossorigin="anonymous" src="${data.user2.avatar}" class="avatar circle" width="40px">
-                <p class="name">${data.user2.name}</p>
-        </div>`
-    }
-    chat_header.innerHTML = header();
-    const messages = data.messages.map(message => {
-        const avatar = () => {
-            if (message.by == id) return `<img crossorigin="anonymous" src="${data.user2.avatar}" class="msg_avt circle" width="32px">`
-            return '';
+    header_img.setAttribute('src', data.user2.avatar)
+    header_info.classList.add('info')
+    header_img.classList.add('avatar')
+    header_img.classList.add('circle')
+    header_name.classList.add('name')
+    chat_header.appendChild(header_info)
+    header_info.appendChild(header_img)
+    header_info.appendChild(header_name)
+    header_name.appendChild(header_name_text)
+
+    data.messages.map(message => {
+        const msg_obj = document.createElement("div");
+        const msg_text_holder = document.createElement("p");
+        const msg_text = document.createTextNode(message.message);
+        if (message.by == id) {
+            const msg_avt = document.createElement("img");
+            msg_avt.setAttribute('class', 'msg_avt circle');
+            msg_avt.setAttribute('src', data.user2.avatar)
+            msg_obj.appendChild(msg_avt);
         }
-        const by = () => {
-            if (message.by != id) return 'me'
-            return '';
+        else {
+            msg_obj.classList.add('me')
         }
-        return `
-        <div class="msg ${by()}">
-            ${avatar()}
-            <p class="msg_text">${message.message}</p>
-        </div>
-        `
-    }).join('')
-    chat_box.innerHTML = messages;
+        chat_box.appendChild(msg_obj);
+
+        msg_obj.appendChild(msg_text_holder)
+        msg_text_holder.appendChild(msg_text);
+
+        msg_text_holder.classList.add('msg_text')
+        msg_obj.classList.add('msg')
+    })
     chat_box.scrollTop = chat_box.scrollHeight;
 }
-
-
 msg_input.addEventListener('input', () => {
     if (!msg_input.value.trim().length) {
         send_btn.classList.add('off');
@@ -101,10 +163,13 @@ window.addEventListener("keyup", function (event) {
 });
 
 socket.on('my_message', data => {
+    console.log(data.current);
+    if (data.to.id != id || data.current == true) return
     create(data.message);
 });
 socket.on('message', data => {
-    get(data.message, data.avt);
+    if (data.by.id != id) return
+    get(data.message, data.by.avt);
 });
 socket.on('typing', data => {
     set_typing(data.avt);
@@ -121,8 +186,7 @@ function create(msg = '') {
     msg_obj.appendChild(msg_text_holder)
     msg_text_holder.appendChild(msg_text);
     msg_text_holder.classList.add('msg_text')
-    msg_obj.classList.add('msg')
-    msg_obj.classList.add('me')
+    msg_obj.setAttribute('class', 'msg me')
     chat_box.appendChild(msg_obj);
 
     chat_box.scrollTop = chat_box.scrollHeight;
@@ -152,10 +216,8 @@ function get(msg = '', avt = '') {
     msg_obj.appendChild(msg_text_holder)
     msg_text_holder.appendChild(msg_text);
     chat_box.appendChild(msg_obj);
-    msg_avt.classList.add('msg_avt')
-    msg_avt.classList.add('circle')
-    msg_avt.width = '32px'
-    msg_avt.src = avt
+    msg_avt.setAttribute('class', 'circle msg_avt')
+    msg_avt.setAttribute('src', avt)
     msg_text_holder.classList.add('msg_text')
     msg_obj.classList.add('msg')
     // console.log(avt);

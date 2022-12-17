@@ -180,6 +180,7 @@ nav .buttons .nav_btn:hover {
 
 .contacts .contact .contact_avatar {
     margin-right: 10px;
+    width: 45px;
 }
 
 .contact_info {
@@ -198,6 +199,10 @@ nav .buttons .nav_btn:hover {
 .contacts .contact .last_msg {
     font-size: 15px;
     color: var(--gray-dark);
+    max-width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -234,6 +239,7 @@ main .header .info {
 
 main .header .info .avatar {
     margin-right: 10px;
+    width: 42px;
 }
 
 main .header .info .name {
@@ -259,6 +265,7 @@ main .msg {
 
 main .msg .msg_avt {
     margin-right: 4px;
+    width: 32px;
 }
 
 main .msg .msg_text {

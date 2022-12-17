@@ -192,7 +192,7 @@ io.on('connection', (socket) => {
     socket.on('messages', async (data, response) => {
         const user1 = await users.findOne({ id: user.sub });
         const user2 = await users.findOne({ id: data.to });
-        if (!user1) return socket.emit('redirect', { destination: '/login/auth/google' });
+        if (!user1) return socket.emit('redirect', '/login/auth/google');
         if (!user2) return socket.emit('error', { status: '403', reason: 'user not found' });
 
         if (user1.id == user2.id) return socket.emit('error', { status: '403', reason: 'hey Yo, you can\t text your self' });
@@ -220,12 +220,42 @@ io.on('connection', (socket) => {
         sockets.filter(sockett => sockett.userID == user2.id).map(sockett => {
             var socketById = io.sockets.sockets.get(sockett.socket_id);
             if (!socketById) return;
-            socketById.emit("message", { message: message.message, createdOn: message.createdOn, type: 'text', avt: user1.avatar, })
+            socketById.emit("message", {
+                type: 'text',
+                createdOn: message.createdOn,
+                message: message.message,
+                by: {
+                    id: user1.id,
+                    name: user1.name,
+                    avt: user1.avatar,
+                },
+                to: {
+                    id: user2.id,
+                    name: user2.name,
+                    avt: user2.avatar,
+                },
+            })
         })
-        sockets.filter(sockett => sockett.userID == user1.id && sockett.socket_id != socket.id).map(sockett => {
+        sockets.filter(sockett => sockett.userID == user1.id).map(sockett => {
             var socketById = io.sockets.sockets.get(sockett.socket_id);
             if (!socketById) return;
-            socketById.emit("my_message", { message: message.message, createdOn: message.createdOn, type: 'text' })
+            const current = (sockett.socket_id == socket.id);
+            socketById.emit("my_message", {
+                message: message.message,
+                createdOn: message.createdOn,
+                type: 'text',
+                by: {
+                    id: user1.id,
+                    name: user1.name,
+                    avt: user1.avatar,
+                },
+                to: {
+                    id: user2.id,
+                    name: user2.name,
+                    avt: user2.avatar,
+                },
+                current: current,
+            })
         })
         if (!user1.contacts.includes(user2.id)) {
             const doc = await users.findOneAndUpdate(
@@ -251,19 +281,19 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('typing', async (data) => {
-        sockets.filter(sockett => sockett.userID == data.to).map(sockett => {
-            var socketById = io.sockets.sockets.get(sockett.socket_id);
-            if (!socketById) return;
-            socketById.emit("typing", { data: user.picture })
-        })
-    })
-    socket.on('remove_typing', async (data) => {
-        sockets.filter(sockett => sockett.userID == data.to).map(sockett => {
-            var socketById = io.sockets.sockets.get(sockett.socket_id);
-            if (!socketById) return;
-            socketById.emit("remove_typing")
-        })
-    })
+    // socket.on('typing', async (data) => {
+    //     sockets.filter(sockett => sockett.userID == data.to).map(sockett => {
+    //         var socketById = io.sockets.sockets.get(sockett.socket_id);
+    //         if (!socketById) return;
+    //         socketById.emit("typing", { data: user.picture })
+    //     })
+    // })
+    // socket.on('remove_typing', async (data) => {
+    //     sockets.filter(sockett => sockett.userID == data.to).map(sockett => {
+    //         var socketById = io.sockets.sockets.get(sockett.socket_id);
+    //         if (!socketById) return;
+    //         socketById.emit("remove_typing")
+    //     })
+    // })
 })
 
