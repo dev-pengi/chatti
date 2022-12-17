@@ -81,18 +81,7 @@ const sessionMiddleware = session({
     resave: true,
 })
 app.use(sessionMiddleware);
-/*
-{
-  sub: '114999617844345065008',
-  name: 'Jdjfj Dbfndn',
-  given_name: 'Jdjfj',
-  family_name: 'Dbfndn',
-  picture: 'https://lh3.googleusercontent.com/a/AEdFTp6YfiOVyTSkgiKyeqK7uzG6KIIzP_AgLoSseEU_=s96-c',
-  email: 'siffffdoul@gmail.com',
-  email_verified: true,
-  locale: 'ar'
-}
-*/
+
 app.get('/login/auth/google', passport.authenticate('google', { failureRedirect: '/login' }), async (req, res) => {
     const user = req.user._json
     const save_user = await users.findOneAndUpdate(
