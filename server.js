@@ -68,7 +68,7 @@ passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     scope: ["email", "profile"],
-    callbackURL: 'https://rockpro.me/login/auth/google',
+    callbackURL: process.env.cb,
 }, (accessToken, refreshToken, profile, done) => {
     process.nextTick(() => {
         return done(null, profile);
