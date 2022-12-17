@@ -5,7 +5,6 @@ const main = document.querySelector('main');
 const chat_header = document.querySelector('#chat_header');
 const send_btn = document.querySelector('#send_btn');
 const chat_box = document.querySelector('#chat_box');
-const typing_box = document.querySelector('#chat_box');
 var id = window.location.pathname.split('/')[2];
 
 get_contacts()
@@ -116,10 +115,16 @@ socket.on('remove_typing', data => {
 
 function create(msg = '') {
     if (!msg.trim().length) return false;
-    chat_box.innerHTML += `
-        <div class="msg me">
-            <p class="msg_text">${msg}</p>
-        </div>`
+    const msg_obj = document.createElement("div");
+    const msg_text_holder = document.createElement("p");
+    const msg_text = document.createTextNode(msg);
+    msg_obj.appendChild(msg_text_holder)
+    msg_text_holder.appendChild(msg_text);
+    msg_text_holder.classList.add('msg_text')
+    msg_obj.classList.add('msg')
+    msg_obj.classList.add('me')
+    chat_box.appendChild(msg_obj);
+
     chat_box.scrollTop = chat_box.scrollHeight;
     msg_input.value = '';
     msg_input.focus();
@@ -127,45 +132,46 @@ function create(msg = '') {
 }
 
 function send(msg = '') {
-    if (!msg.trim().length) return false;
-    chat_box.innerHTML += `
-    <div class="msg me">
-        <p class="msg_text">${msg}</p>
-    </div>`
-    chat_box.scrollTop = chat_box.scrollHeight;
-    msg_input.value = '';
-    msg_input.focus();
-    send_btn.classList.add('off')
-
-
+    create(msg);
     socket.emit('messages', {
         action: 'post',
         type: 'text',
         to: id,
         content: msg
     }, (response) => {
-        console.log(response);
     })
 }
 
 function get(msg = '', avt = '') {
     if (!msg.trim().length) return false;
-    chat_box.innerHTML += `
-    <div class="msg">
-        <img src="${avt}" crossorigin="anonymous" class="msg_avt circle" width="32px">
-        <p class="msg_text">${msg}</p>
-    </div>`
+    const msg_obj = document.createElement("div");
+    const msg_avt = document.createElement("img");
+    const msg_text_holder = document.createElement("p");
+    const msg_text = document.createTextNode(msg);
+    msg_obj.appendChild(msg_avt)
+    msg_obj.appendChild(msg_text_holder)
+    msg_text_holder.appendChild(msg_text);
+    chat_box.appendChild(msg_obj);
+    msg_avt.classList.add('msg_avt')
+    msg_avt.classList.add('circle')
+    msg_avt.width = '32px'
+    msg_avt.src = avt
+    msg_text_holder.classList.add('msg_text')
+    msg_obj.classList.add('msg')
+    // console.log(avt);
+
     chat_box.scrollTop = chat_box.scrollHeight;
     msg_input.focus();
     socket.emit('remove_typing', { to: id })
 }
 
 
+
 function set_typing(avt = '') {
-    console.log('typing...');
+    // chat_box.append('hiii')
+    const typing_box = document.querySelector('#typing_box');
 }
 function remove_typing() {
-    console.log('removed typing');
 }
 
 // setInterval(() => {
