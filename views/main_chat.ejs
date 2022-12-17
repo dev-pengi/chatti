@@ -3,8 +3,19 @@
 
 <head>
     <%- include('includes/head') %>
-</head>
+    <style>
+        @media screen and (max-width:900px) {
+            nav {
+                width: 100vw !important;
+                left: 0 !important;
+            }
 
+            main {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
 
 <body>
     <nav class="transition">
@@ -19,14 +30,8 @@
         </div>
     </nav>
     <main class="transition">
-        <div class="header" id="chat_header">
-        </div>
-        <div class="chat_box" id="chat_box">
-        </div>
-        <div class="inputs_box">
-            <input type="text" class="msg_input" id="msg_input" placeholder="Message..." autofocus autocomplete="false">
-            <i class="fa-solid fa-paper-plane send_btn circle pointer transition off" id="send_btn"></i>
-        </div>
+        <h3 style="display:block; text-align:center; margin:50vh auto; font-size:1.3rem; color:var(--dark);">Select a
+            chat or start a new conversation</h3>
     </main>
     <script src="js/socket.js"></script>
     <script src="js/chat.js"></script>

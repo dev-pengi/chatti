@@ -142,7 +142,7 @@ app.get('/chat/:id', (req, res) => {
 app.get('/chat', (req, res) => {
     const check_user = check.user(req, res);
     if (!check_user) return;
-    res.render('chat', { pagetitle: 'Chatti - User' });
+    res.render('main_chat', { pagetitle: 'Chatti - User' });
 })
 
 // run
@@ -180,7 +180,7 @@ io.use((socket, next) => {
 
 const contacts = require('./models/contacts')
 const tools = require('./events/tools')
-const sockets = []
+let sockets = []
 io.on('connection', (socket) => {
     const user = check.user_socket(socket);
     if (!user) return;
@@ -188,14 +188,8 @@ io.on('connection', (socket) => {
         userID: user.sub,
         socket_id: socket.id
     }
-    const socket_i = sockets.map(sockets => sockets.socket_id).indexOf(socket.id)
-    if (socket_i) sockets[socket_i] == socket_data;
-    else sockets.push(socket_data);
-
-    console.log(`New socket client: ${user.name}`);
-    console.log(socket.id);
-    socket.on('messages', async (data) => {
-        console.log(data);
+    sockets.push(socket_data);
+    socket.on('messages', async (data, response) => {
         const user1 = await users.findOne({ id: user.sub });
         const user2 = await users.findOne({ id: data.to });
         if (!user1) return socket.emit('redirect', { destination: '/login/auth/google' });
@@ -222,38 +216,54 @@ io.on('connection', (socket) => {
                 new: true
             }).catch(err => { return });
         if (!chat_data) return socket.emit('error', { destination: '/login/auth/google' });
-
-        const target_client = sockets.find(sockets => sockets.userID == data.to)
-        if (target_client) {
-            var socketById = io.sockets.sockets.get(target_client.socket_id);
-            socketById.emit("message", message)
+        response('sent');
+        sockets.filter(sockett => sockett.userID == user2.id).map(sockett => {
+            var socketById = io.sockets.sockets.get(sockett.socket_id);
+            if (!socketById) return;
+            socketById.emit("message", { message: message.message, createdOn: message.createdOn, type: 'text', avt: user1.avatar, })
+        })
+        sockets.filter(sockett => sockett.userID == user1.id && sockett.socket_id != socket.id).map(sockett => {
+            var socketById = io.sockets.sockets.get(sockett.socket_id);
+            if (!socketById) return;
+            socketById.emit("my_message", { message: message.message, createdOn: message.createdOn, type: 'text' })
+        })
+        if (!user1.contacts.includes(user2.id)) {
+            const doc = await users.findOneAndUpdate(
+                {
+                    id: user1.id,
+                    contacts: { $nin: [user2.id] },
+                },
+                {
+                    $push: { contacts: user2.id },
+                }
+            )
         }
+        if (!user2.contacts.includes(user1.id)) {
+            const doc = await users.findOneAndUpdate(
+                {
+                    id: user2.id,
+                    contacts: { $nin: [user1.id] },
+                },
+                {
+                    $push: { contacts: user1.id },
+                }
+            )
+        }
+    })
 
-
-
-        // if (!user1.contacts.includes(user2.id)) {
-        //     const doc = await users.findOneAndUpdate(
-        //         {
-        //             id: user1.id,
-        //             contacts: { $nin: [user2.id] },
-        //         },
-        //         {
-        //             $push: { contacts: user2.id },
-        //         }
-        //     )
-        // }
-        // if (!user2.contacts.includes(user1.id)) {
-        //     const doc = await users.findOneAndUpdate(
-        //         {
-        //             id: user2.id,
-        //             contacts: { $nin: [user1.id] },
-        //         },
-        //         {
-        //             $push: { contacts: user1.id },
-        //         }
-        //     )
-        // }
-
+    socket.on('typing', async (data) => {
+        sockets.filter(sockett => sockett.userID == data.to).map(sockett => {
+            var socketById = io.sockets.sockets.get(sockett.socket_id);
+            if (!socketById) return;
+            socketById.emit("typing", { data: user.picture })
+        })
+    })
+    socket.on('remove_typing', async (data) => {
+        sockets.filter(sockett => sockett.userID == data.to).map(sockett => {
+            var socketById = io.sockets.sockets.get(sockett.socket_id);
+            if (!socketById) return;
+            socketById.emit("remove_typing")
+        })
     })
 })
 

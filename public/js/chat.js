@@ -5,6 +5,7 @@ const main = document.querySelector('main');
 const chat_header = document.querySelector('#chat_header');
 const send_btn = document.querySelector('#send_btn');
 const chat_box = document.querySelector('#chat_box');
+const typing_box = document.querySelector('#chat_box');
 var id = window.location.pathname.split('/')[2];
 
 get_contacts()
@@ -16,9 +17,10 @@ function get_contacts() {
             set_data(data.data)
         },
         error: (err) => {
+            window.location.path = '/chat'
         }
     });
-    if (!id) return main.innerHTML = `<h3 style="display:block; text-align:center; margin:50vh auto; font-size:1.3rem; color:var(--dark);">Select a chat or start a new conversation</h3>`
+    if (!id) return;
     $.ajax({
         type: "GET",
         url: `/api/user/contact/${id}`,
@@ -26,7 +28,7 @@ function get_contacts() {
             set_chat(data)
         },
         error: (err) => {
-            main.innerHTML = `<h3 style="display:block; text-align:center; margin:50vh auto; font-size:1.3rem; color:var(--dark);">Select a chat or start a new conversation</h3>`
+            window.location.path = '/chat'
         }
     });
 }
@@ -80,8 +82,14 @@ function set_chat(data) {
 
 
 msg_input.addEventListener('input', () => {
-    if (!msg_input.value.trim().length) return send_btn.classList.add('off');
-    send_btn.classList.remove('off');
+    if (!msg_input.value.trim().length) {
+        send_btn.classList.add('off');
+        socket.emit('remove_typing', { to: id })
+    }
+    else {
+        send_btn.classList.remove('off');
+        socket.emit('typing', { to: id })
+    }
 })
 send_btn.addEventListener('click', () => {
     let msg = msg_input.value;
@@ -92,6 +100,31 @@ window.addEventListener("keyup", function (event) {
     let msg = msg_input.value;
     send(msg);
 });
+
+socket.on('my_message', data => {
+    create(data.message);
+});
+socket.on('message', data => {
+    get(data.message, data.avt);
+});
+socket.on('typing', data => {
+    set_typing(data.avt);
+});
+socket.on('remove_typing', data => {
+    remove_typing();
+});
+
+function create(msg = '') {
+    if (!msg.trim().length) return false;
+    chat_box.innerHTML += `
+        <div class="msg me">
+            <p class="msg_text">${msg}</p>
+        </div>`
+    chat_box.scrollTop = chat_box.scrollHeight;
+    msg_input.value = '';
+    msg_input.focus();
+    send_btn.classList.add('off')
+}
 
 function send(msg = '') {
     if (!msg.trim().length) return false;
@@ -110,22 +143,12 @@ function send(msg = '') {
         type: 'text',
         to: id,
         content: msg
+    }, (response) => {
+        console.log(response);
     })
-
-    // $.ajax({
-    //     type: "POST",
-    //     url: `/api/user/chat/${id}/messages/send`,
-    //     data: data,
-    //     success: (data) => {
-    //         console.log(`took ${Date.now() - start_t}ms to send.`);
-    //     },
-    //     error: (err) => {
-    //         console.log(err);
-    //     }
-    // });
-
 }
-function get(msg = '', avt = 'images/avt1.png') {
+
+function get(msg = '', avt = '') {
     if (!msg.trim().length) return false;
     chat_box.innerHTML += `
     <div class="msg">
@@ -134,6 +157,15 @@ function get(msg = '', avt = 'images/avt1.png') {
     </div>`
     chat_box.scrollTop = chat_box.scrollHeight;
     msg_input.focus();
+    socket.emit('remove_typing', { to: id })
+}
+
+
+function set_typing(avt = '') {
+    console.log('typing...');
+}
+function remove_typing() {
+    console.log('removed typing');
 }
 
 // setInterval(() => {
