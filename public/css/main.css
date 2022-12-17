@@ -58,7 +58,7 @@ input[type=number] {
 
 body {
     background-color: var(--background);
-    min-height: 100vh;
+    min-height: 100%;
     font-family: 'Open Sans', 'Ubuntu';
 }
 
@@ -160,7 +160,7 @@ nav .buttons .nav_btn:hover {
 }
 
 .contacts {
-    height: calc(100vh - 60px);
+    height: calc(100% - 60px);
     overflow-y: auto;
     padding: 10px 10px;
     overflow-x: hidden;
@@ -248,7 +248,7 @@ main .header .info .name {
 }
 
 main .chat_box {
-    height: calc(100vh - 60px - 60px);
+    height: calc(100% - 60px - 60px);
     width: 100%;
     display: flex;
     flex-direction: column;
