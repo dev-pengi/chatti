@@ -194,8 +194,8 @@ io.on('connection', (socket) => {
         const user2 = await users.findOne({ id: data.to });
         if (!user1) return socket.emit('redirect', '/login/auth/google');
         if (!user2) return socket.emit('error', { status: '403', reason: 'user not found' });
-
         if (user1.id == user2.id) return socket.emit('error', { status: '403', reason: 'hey Yo, you can\t text your self' });
+        if (!data.content.trim().length) return response({ error: 403, reason: 'invalid message' });
         const message = {
             message: data.content,
             createdOn: Date.now(),
