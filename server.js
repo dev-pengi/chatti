@@ -5,6 +5,8 @@ require('dotenv').config()
 const express = require('express');
 const session = require("express-session");
 const fileupload = require("express-fileupload");
+const flash = require('req-flash');
+const cookieParser = require('cookie-parser')
 const app = express();
 const port = process.env.PORT || 5000;
 const server = app.listen(port, () => { console.log(`app listening to ${port}`); })
@@ -35,6 +37,13 @@ const livereload = require("livereload");
 const MemoryStore = require("memorystore")(session);
 let test_mode = process.env.TEST
 
+const sessionMiddleware = session({
+    secret: 'DBE1CAF4635A3',
+    cookie: { maxAge: (1000 * 60 * 60 * 24 * 7) },
+    saveUninitialized: false,
+    resave: true,
+})
+
 //express
 app.set("view engine", "ejs")
 app.use(bodyparser.urlencoded({ extended: true }))
@@ -42,6 +51,9 @@ app.use(express.static('public'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileupload());
+app.use(cookieParser());
+app.use(sessionMiddleware);
+app.use(flash());
 
 //live reload
 if (test_mode) {
@@ -74,14 +86,13 @@ passport.use(new GoogleStrategy({
         return done(null, profile);
     });
 }));
-const sessionMiddleware = session({
-    secret: 'DBE1CAF4635A3',
-    cookie: { maxAge: (1000 * 60 * 60 * 24 * 7) },
-    saveUninitialized: false,
-    resave: true,
-})
-app.use(sessionMiddleware);
 
+app.get('/login/google', (req, res) => {
+    if (req.query.goTo) {
+        req.flash('returnTo', `${req.query.goTo}`);
+    }
+    res.redirect('/login/auth/google');
+})
 app.get('/login/auth/google', passport.authenticate('google', { failureRedirect: '/login' }), async (req, res) => {
     const user = req.user._json
     const save_user = await users.findOneAndUpdate(
@@ -100,7 +111,12 @@ app.get('/login/auth/google', passport.authenticate('google', { failureRedirect:
         }).catch(err => { console.log(err); });
     //success redirect
     if (!save_user) return res.redirect('/login')
-    res.redirect('/chat');
+    if (req.flash('returnTo')) {
+
+        res.redirect(`${req.flash('returnTo')}`);
+        delete req.session.returnTo
+    }
+    else res.redirect('/chat');
 });
 
 passport.serializeUser((user, done) => done(null, user));
@@ -134,6 +150,7 @@ app.get('/chat', (req, res) => {
     res.render('main_chat', { pagetitle: 'Chatti - User' });
 })
 
+
 // run
 redirects(app);
 require('./api/api')(app);
@@ -152,19 +169,6 @@ io.use((socket, next) => {
         next(new Error('unauthorized'))
     }
 });
-
-// io.on('connect', (socket) => {
-//     console.log(`new connection ${socket.id}`);
-//     socket.on('whoami', (cb) => {
-//         cb(socket.request.user ? socket.request.user.username : '');
-//     });
-
-//     const session = socket.request.session;
-//     console.log(`saving sid ${socket.id} in session ${session.id}`);
-//     session.socketId = socket.id;
-//     session.save();
-// });
-
 
 
 const contacts = require('./models/contacts')

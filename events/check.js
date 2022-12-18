@@ -1,6 +1,6 @@
 module.exports.user = (req, res) => {
     if (!req.user) {
-        res.redirect('/login/auth/google');
+        res.redirect(`/login/google?goTo=${req.path}`);
         return false;
     }
     return req.user._json;

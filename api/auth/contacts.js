@@ -21,7 +21,6 @@ module.exports = (app) => {
             }
             let chat = await contacts.findOne({ id: chat_id(user.id, get_contacts_data.id) });
             if (chat && chat.messages.length) {
-                console.log('true');
                 contact_data.last_msg = chat.messages.sort((a, b) => b.createdOn - a.createdOn)[0]
             }
             contacts_arr.push(contact_data);

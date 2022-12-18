@@ -1,4 +1,4 @@
-var socket = io.connect('https://rockpro.me')
+var socket = io.connect('/')
 
 socket.on('redirect', (destination) => {
     window.location.href = destination;
