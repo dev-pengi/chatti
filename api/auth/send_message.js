@@ -34,7 +34,6 @@ module.exports = (app) => {
         res.status(200).send('OK')
 
         if (!user1.contacts.includes(user2.id)) {
-            console.log(user2.id);
             const doc = await users.findOneAndUpdate(
                 {
                     id: user1.id,
@@ -44,10 +43,8 @@ module.exports = (app) => {
                     $push: { contacts: user2.id },
                 }
             )
-            console.log(doc);
         } 
         if (!user2.contacts.includes(user1.id)) {
-            console.log(user1.id);
             const doc = await users.findOneAndUpdate(
                 {
                     id: user2.id,
@@ -57,7 +54,6 @@ module.exports = (app) => {
                     $push: { contacts: user1.id },
                 }
             )
-            console.log(doc);
         }
     })
 }

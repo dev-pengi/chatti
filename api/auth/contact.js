@@ -9,7 +9,7 @@ module.exports = (app) => {
         if (!user2) return res.status(405).send({ error: 405, reason: 'this user cannot be found' });
 
         const user1 = await users.findOne({ id: user1_json.sub });
-        if (!user1) return res.status(401).send({ error: 401, reason: 'this action requires login' });
+        if (!user1) return res.status(401).send({ error: 401, reason: 'try to login again to create your account' });
 
         let chat_id = tools.chat_id(user1.id, user2.id)
         let chat_data = await contacts.findOne(

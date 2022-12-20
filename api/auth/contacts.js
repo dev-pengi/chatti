@@ -5,11 +5,16 @@ module.exports = (app) => {
     app.get('/api/user/contacts', async (req, res) => {
         if (!req.user) return res.status(401).send({ error: 401, reason: 'this action requires login' });
 
-
         const user = await users.findOne({ id: req.user._json.sub });
-        if (!user || !user.contacts) return res.status(200).send({ status: 'OK', data: [] });
-
-        let contacts_arr = []
+        if (!user) return res.status(401).send({ error: 401, reason: 'try to login again to create your account' });
+        const data = {
+            user: {
+                id: user.id,
+                name: user.name,
+                avatar: user.avatar,
+            },
+            contacts: []
+        }
         for (let i = 0; i < user.contacts.length; i++) {
             let get_contacts_data = await users.findOne({ id: user.contacts[i] });
             if (!get_contacts_data) continue;
@@ -23,9 +28,9 @@ module.exports = (app) => {
             if (chat && chat.messages.length) {
                 contact_data.last_msg = chat.messages.sort((a, b) => b.createdOn - a.createdOn)[0]
             }
-            contacts_arr.push(contact_data);
+            data.contacts.push(contact_data);
         }
 
-        res.status(200).send({ status: 'OK', data: contacts_arr });
+        res.status(200).send({ status: 'OK', data: data });
     })
 }

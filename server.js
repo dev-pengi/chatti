@@ -88,9 +88,7 @@ passport.use(new GoogleStrategy({
 }));
 
 app.get('/login/google', (req, res) => {
-    if (req.query.goTo) {
-        req.flash('returnTo', `${req.query.goTo}`);
-    }
+    if (req.query.goTo) req.flash('returnTo', `${req.query.goTo}`);
     res.redirect('/login/auth/google');
 })
 app.get('/login/auth/google', passport.authenticate('google', { failureRedirect: '/login' }), async (req, res) => {
@@ -103,18 +101,18 @@ app.get('/login/auth/google', passport.authenticate('google', { failureRedirect:
         {
             name: user.name,
             avatar: user.picture,
-            // $pull: { contacts: '116648123783396825111' },
+            locale: user.locale,
+            auth_provider: req.user.provider,
         },
         {
             upsert: true,
             new: true
         }).catch(err => { console.log(err); });
     //success redirect
+    console.log(save_user);
     if (!save_user) return res.redirect('/login')
     if (req.flash('returnTo')) {
-
         res.redirect(`${req.flash('returnTo')}`);
-        delete req.session.returnTo
     }
     else res.redirect('/chat');
 });

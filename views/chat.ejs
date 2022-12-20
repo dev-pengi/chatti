@@ -5,8 +5,9 @@
     <%- include('includes/head') %>
 </head>
 
-
 <body>
+
+
     <nav class="transition">
         <div class="nav_header">
             <h2 class="title">Rock chat</h2>
@@ -28,6 +29,33 @@
             <i class="fa-solid fa-paper-plane send_btn circle pointer transition off" id="send_btn"></i>
         </div>
     </main>
+
+
+    <div class="search_overlay" id="search_overlay">
+        <div class="search_block curved">
+            <div class="header">
+                <div class="search_input" >
+                    <input type="text" id="search_input" class="search_input curved" id="search_input" autocomplete="false" ,
+                        autocapitalize="false" autofocus placeholder="Search by name, gmail or user id">
+                    <i class="fa-solid fa-search"></i>
+                </div>
+            </div>
+            <div class="results" id="results_block">
+                <h3 style="text-align: center; width: 100%; margin: 40px 0;">Search for people to chat
+                    with</h3>
+
+            </div>
+            <div class="footer">
+                <div class="id_block">
+                    <input type="text" id="link_input" readonly value="">
+                    <i class="fa-solid fa-link" id="link_copy"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
     <script src="js/socket.js"></script>
     <script src="js/chat.js"></script>
 </body>

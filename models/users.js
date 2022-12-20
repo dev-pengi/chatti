@@ -8,6 +8,8 @@ const user = new mongoose.Schema({
     avatar: { type: String, default: null },
     email: { type: String, default: null },
     contacts: { type: Array, default: [] },
+    locale: { type: String },
+    auth_provider: { type: String },
 
     banned: { type: Boolean, default: false }
 });
