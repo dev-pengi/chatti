@@ -257,8 +257,15 @@ function set_search(user) {
         search_overlay.classList.add('active')
     })
     $(search_overlay).on('click', function (e) {
-        console.log($(e.target).closest(results_block).length);
-        if ($(e.target).closest(results_block).length < 0) {
+        const check1 = $(e.target).closest(results_block).length
+        const check2 = $(e.target).closest(link_input).length
+        const check3 = $(e.target).closest(link_copy).length
+        const check4 = $(e.target).closest(search_input).length
+        console.log(check1);
+        console.log(check2);
+        console.log(check3);
+        console.log(check4);
+        if (!check1 && !check2 && !check3 && !check4) {
             search_overlay.classList.remove('active')
         }
     });
