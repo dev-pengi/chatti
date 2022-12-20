@@ -47,7 +47,7 @@ input[type=number] {
 
 :root {
     background: #ffffff;
-    --white: #cccccc;
+    --white: #fff;
     --secondary: #1e549f;
     --blue: #1e549f;
     --purple: #7f51d4;
@@ -386,13 +386,13 @@ main .send_btn.off {
 }
 
 @keyframes pop_out {
-  0% {
-    transform: scale(0);
-  }
+    0% {
+        transform: scale(0);
+    }
 
-  100% {
-    transform: scale(1);
-  }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .search_overlay .search_block .header {

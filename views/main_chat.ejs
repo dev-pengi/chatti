@@ -3,18 +3,18 @@
 
 <head>
     <%- include('includes/head') %>
-    <style>
-        @media screen and (max-width:900px) {
-            nav {
-                width: 100vw !important;
-                left: 0 !important;
-            }
+        <style>
+            @media screen and (max-width:900px) {
+                nav {
+                    width: 100vw !important;
+                    left: 0 !important;
+                }
 
-            main {
-                display: none !important;
+                main {
+                    display: none !important;
+                }
             }
-        }
-    </style>
+        </style>
 </head>
 
 <body>
@@ -35,6 +35,8 @@
     </main>
     <script src="js/socket.js"></script>
     <script src="js/chat.js"></script>
+
+    <%- include('includes/search') %>
 </body>
 
 
