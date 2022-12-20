@@ -257,7 +257,8 @@ function set_search(user) {
         search_overlay.classList.add('active')
     })
     $(search_overlay).on('click', function (e) {
-        if ($(e.target).closest(results_block).length == 0) {
+        console.log($(e.target).closest(results_block).length);
+        if ($(e.target).closest(results_block).length < 0) {
             search_overlay.classList.remove('active')
         }
     });
