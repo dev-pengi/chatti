@@ -30,3 +30,5 @@ TEST = "true (leave it true only in dev, testing mode)"
 ```
 npm run dev
 ```
+
+a link to try it: https://rockpro.me/chat
