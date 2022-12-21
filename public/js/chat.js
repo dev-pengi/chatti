@@ -226,10 +226,8 @@ function get(msg = '', avt = '') {
     socket.emit('remove_typing', { to: id })
 }
 
-
-
 function set_typing(avt = '') {
-
 }
+
 function remove_typing() {
 }
