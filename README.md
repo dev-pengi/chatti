@@ -1,4 +1,5 @@
 # chatti
+<sub>the official link: https://rockpro.me/chat<sub>
 
 > chatti is a simple realtime chat web application with the feature: google login, contacts and searching
 
@@ -31,4 +32,6 @@ TEST = "true (leave it true only in dev, testing mode)"
 npm run dev
 ```
 
-a link to try it: https://rockpro.me/chat
+> to host it publicly with domain name and ssl encryption you can do it throw Ubuntu virtual private server (VPS) follow [this instraction](https://gist.github.com/dev-pengi/0f480f0eef16dfd7e6a755ad7e99272a)
+
+
