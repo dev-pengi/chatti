@@ -273,7 +273,7 @@ main .msg.me.up .msg_text {
     border-top-right-radius: 3px !important;
 }
 main .msg.down-avt .msg_avt{
-    visibility: none;
+    visibility: hidden;
     pointer-events: none;
 }
 
