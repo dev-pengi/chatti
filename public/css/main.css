@@ -260,8 +260,17 @@ main .chat_box {
 main .msg {
     display: flex;
     justify-content: start;
-    align-items: start;
+    align-items: end;
     margin-bottom: 10px;
+}
+main .msg.down {
+    margin-bottom: 2px;
+}
+main .msg.down .msg_text {
+    border-bottom-right-radius: 3px !important;
+}
+main .msg.up .msg_text {
+    border-top-right-radius: 3px !important;
 }
 
 main .msg .msg_avt {
@@ -272,7 +281,7 @@ main .msg .msg_avt {
 main .msg .msg_text {
     background-color: var(--white);
     color: var(--dark);
-    padding: 4px 12px;
+    padding: 5px 12px;
     border-radius: 22px;
     max-width: 70%;
     word-wrap: break-word;
