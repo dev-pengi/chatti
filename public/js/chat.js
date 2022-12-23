@@ -95,7 +95,7 @@ function set_data(contacts) {
             contacts.push({
                 id: data.to.id,
                 name: data.to.name,
-                avatar: data.by.avt,
+                avatar: data.to.avt,
                 last_msg: data,
             })
             refresh_contacts();
