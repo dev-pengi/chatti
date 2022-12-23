@@ -263,14 +263,17 @@ main .msg {
     align-items: end;
     margin-bottom: 10px;
 }
-main .msg.down {
+main .msg.me.down {
     margin-bottom: 2px;
 }
-main .msg.down .msg_text {
+main .msg.me.down .msg_text {
     border-bottom-right-radius: 3px !important;
 }
-main .msg.up .msg_text {
+main .msg.me.up .msg_text {
     border-top-right-radius: 3px !important;
+}
+main .msg.down-avt .msg_avt{
+    display: none;
 }
 
 main .msg .msg_avt {

@@ -130,15 +130,14 @@ function set_chat(data) {
             msg_avt.setAttribute('class', 'msg_avt circle');
             msg_avt.setAttribute('src', data.user2.avatar)
             msg_obj.appendChild(msg_avt);
-            // if (messages[i - 1])
-            // {
-            //     if (messages[i - 1].by == id) msg_obj.classList.add('up')
-            // }
-            // if (messages[i + 1])
-            // {
-            //     if (messages[i + 1].by == id) msg_obj.classList.add('down')
-            // }
-            //temporary remove
+            if (messages[i - 1])
+            {
+                if (messages[i - 1].by == id) msg_obj.classList.add('up')
+            }
+            if (messages[i + 1])
+            {
+                if (messages[i + 1].by == id) msg_obj.classList.add('down-avt')
+            }
         }
         else {
             msg_obj.classList.add('me')
