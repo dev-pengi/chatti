@@ -95,7 +95,7 @@ function set_data(contacts) {
             contacts.push({
                 id: data.to.id,
                 name: data.to.name,
-                avatar: data.by.avt,
+                avatar: data.to.avt,
                 last_msg: data,
             })
             refresh_contacts();
@@ -120,18 +120,36 @@ function set_chat(data) {
     header_info.appendChild(header_name)
     header_name.appendChild(header_name_text)
 
-    data.messages.map(message => {
+    const messages = data.messages
+    for (let i = 0; i < messages.length; i++) {
         const msg_obj = document.createElement("div");
         const msg_text_holder = document.createElement("p");
-        const msg_text = document.createTextNode(message.message);
-        if (message.by == id) {
+        const msg_text = document.createTextNode(messages[i].message);
+        if (messages[i].by == id) {
             const msg_avt = document.createElement("img");
             msg_avt.setAttribute('class', 'msg_avt circle');
             msg_avt.setAttribute('src', data.user2.avatar)
             msg_obj.appendChild(msg_avt);
+            if (messages[i - 1])
+            {
+                if (messages[i - 1].by == id) msg_obj.classList.add('up')
+            }
+            if (messages[i + 1])
+            {
+                if (messages[i + 1].by == id) msg_obj.classList.add('down-avt')
+            }
         }
         else {
             msg_obj.classList.add('me')
+            if (messages[i - 1])
+            {
+                if (messages[i - 1].by != id) msg_obj.classList.add('up')
+            }
+            if (messages[i + 1])
+            {
+                if (messages[i + 1].by != id) msg_obj.classList.add('down')
+            }
+
         }
         chat_box.appendChild(msg_obj);
 
@@ -140,7 +158,8 @@ function set_chat(data) {
 
         msg_text_holder.classList.add('msg_text')
         msg_obj.classList.add('msg')
-    })
+        
+    }
     chat_box.scrollTop = chat_box.scrollHeight;
 }
 msg_input.addEventListener('input', () => {
