@@ -48,9 +48,9 @@ input[type=number] {
 :root {
     background: #ffffff;
     --white: #fff;
-    --secondary: #1e549f;
     --blue: #1e549f;
-    --purple: #7f51d4;
+    --purple: #9a7aa6;
+    --soft-purple: #a585b1;
     --dark: #212529;
     --gray: #6c757d;
     --gray-dark: #393e46;
@@ -122,6 +122,7 @@ nav {
     width: 300px;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 nav .nav_header {
@@ -205,7 +206,6 @@ nav .buttons .nav_btn:hover {
     text-overflow: ellipsis;
 }
 
-
 main {
     position: fixed;
     left: 300px;
@@ -257,11 +257,41 @@ main .chat_box {
     overflow-y: auto;
 }
 
+@supports(mix-blend-mode: screen) {
+    .chat_box:after {
+        background: linear-gradient(rgb(255, 143, 178) 0%, rgb(167, 151, 255) 50%, rgb(0, 229, 255) 100%);
+        mix-blend-mode: screen;
+        pointer-events: none;
+    }
+}
+
 main .msg {
     display: flex;
     justify-content: start;
-    align-items: start;
+    align-items: end;
     margin-bottom: 10px;
+}
+
+main .msg.me {
+    justify-content: end;
+    margin-right: 15px;
+}
+
+main .msg.me.down {
+    margin-bottom: 2px;
+}
+
+main .msg.me.down .msg_text {
+    border-bottom-right-radius: 3px !important;
+}
+
+main .msg.me.up .msg_text {
+    border-top-right-radius: 3px !important;
+}
+
+main .msg.down-avt .msg_avt {
+    visibility: hidden;
+    pointer-events: none;
 }
 
 main .msg .msg_avt {
@@ -272,18 +302,14 @@ main .msg .msg_avt {
 main .msg .msg_text {
     background-color: var(--white);
     color: var(--dark);
-    padding: 4px 12px;
+    padding: 5px 12px;
     border-radius: 22px;
     max-width: 70%;
     word-wrap: break-word;
 }
 
-main .msg.me {
-    justify-content: end;
-}
-
 main .msg.me .msg_text {
-    background-color: var(--purple);
+    background-color: var(--soft-purple);
     color: #fff;
     padding: 5px 12px;
     border-radius: 17px;

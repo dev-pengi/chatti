@@ -190,9 +190,17 @@ io.on('connection', (socket) => {
         const message = {
             message: data.content,
             createdOn: Date.now(),
-            by: user1.id,
-            to: user2.id,
             type: 'text',
+            by: {
+                id: user1.id,
+                name: user1.name,
+                avt: user1.avatar,
+            },
+            to: {
+                id: user2.id,
+                name: user2.name,
+                avt: user2.avatar,
+            },
         }
         let chat_id = tools.chat_id(user1.id, user2.id)
         let chat_data = await contacts.findOneAndUpdate(
@@ -211,21 +219,7 @@ io.on('connection', (socket) => {
         sockets.filter(sockett => sockett.userID == user2.id).map(sockett => {
             var socketById = io.sockets.sockets.get(sockett.socket_id);
             if (!socketById) return;
-            socketById.emit("message", {
-                type: 'text',
-                createdOn: message.createdOn,
-                message: message.message,
-                by: {
-                    id: user1.id,
-                    name: user1.name,
-                    avt: user1.avatar,
-                },
-                to: {
-                    id: user2.id,
-                    name: user2.name,
-                    avt: user2.avatar,
-                },
-            })
+            socketById.emit("message", message)
         })
         sockets.filter(sockett => sockett.userID == user1.id).map(sockett => {
             var socketById = io.sockets.sockets.get(sockett.socket_id);

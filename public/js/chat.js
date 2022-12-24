@@ -35,7 +35,7 @@ function get_contacts() {
 function set_data(contacts) {
     refresh_contacts();
     function refresh_contacts() {
-        contacts_box.innerHTML = ''
+        // contacts_box.innerHTML = ''
         if (!contacts.length) return;
         contacts.sort((a, b) => {
             return b.last_msg.createdOn - a.last_msg.createdOn;

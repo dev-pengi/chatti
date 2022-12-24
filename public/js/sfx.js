@@ -1,6 +1,5 @@
 let first_click = false; // some browsers requires the user to at least click onetime to allow the website to use audios...
 document.addEventListener('click', () => {
-    console.log(first_click);
     if (!first_click) return first_click = true;
 })
 
