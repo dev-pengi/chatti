@@ -1,0 +1,59 @@
+.inputBlock {
+    position: relative;
+    margin: 20px 0;
+}
+
+
+.inputBlock input {
+    border: 1px solid var(--gray-light);
+    border-radius: 5px;
+    padding: 13px 14px;
+    width: 100%;
+    transition: .3s;
+}
+
+.inputBlock input[type=password] {
+    letter-spacing: 2px;
+}
+
+.inputBlock .placeholder {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 9px;
+    height: max-content;
+    width: max-content;
+    margin: auto 0;
+    padding: 0 6px;
+    background-color: var(--white);
+    color: var(--gray);
+    transition: .2s;
+    pointer-events: none;
+}
+
+.inputBlock input:focus,
+.inputBlock input.typed {
+    border: 1px solid var(--primary);
+}
+
+.inputBlock input:focus+.placeholder,
+.inputBlock input.typed+.placeholder {
+    transform: translateY(-25px);
+    font-size: 14px;
+    color: var(--primary);
+}
+
+button.button {
+    background-color: var(--primary);
+    color: #fff;
+    padding: 9px 10px;
+    font-size: 17px;
+    border-radius: 5px;
+    width: 100%;
+    transition: .3s;
+}
+
+button.button:hover {
+    background-color: var(--primary-hover);
+}
+ 

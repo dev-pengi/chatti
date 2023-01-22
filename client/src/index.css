@@ -1,0 +1,39 @@
+@import url("https://fonts.googleapis.com/css?family=Baloo+Paaji|Open+Sans:300,300i,400,400i,600,600i,700,700i");
+
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  text-decoration: none;
+  list-style: none;
+  outline: none;
+  border: none;
+  font-family: 'Open Sans', 'Ubuntu', sans-serif;
+}
+
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+:root {
+  --primary: #007bff;
+  --primary-hover: #3399ff;
+  --white: #ffffff;
+  --gray-light: #868e96;
+  --gray: #6c757d;
+  --dark: #343a40;
+  --dark-deep: #212529;
+  --green: #28a745;
+  --red: #dc3545;
+  --purple: #8e44ad;
+  --pink: #e91e63;
+  --yellow: #f1c40f;
+}

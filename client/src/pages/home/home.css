@@ -1,0 +1,32 @@
+.loginContainer {
+    width: 600px;
+    padding: 0 30px;
+    margin: 0 auto;
+}
+
+@media screen and (max-width:700px) {
+    .loginContainer {
+        padding: 0 10px;
+    }
+}
+
+.titleBox h1 {
+    font-size: 25px;
+}
+
+.titleBox {
+    margin-top: 50px !important;
+    display: flex;
+    justify-content: center;
+}
+
+.loginBox,
+.titleBox {
+    align-items: center;
+    padding: 15px 0px;
+    background: #fff;
+    width: 100%;
+    margin: 30px 0 15px 0;
+    border-radius: .5em;
+    border-width: "1px";
+}
