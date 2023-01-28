@@ -37,17 +37,15 @@ const Login = () => {
         }
       }
       const { data } = await axios.post("/api/users/login", { email, password }, config)
-      console.log(data)
       toast.success('successfully loged in')
-
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem('token', data.token);
       setLoading(false);
       navigate('/chats')
     } catch (err) {
       toast.error(err.response.data.message);
       setLoading(false)
     }
-
+//fdghfdgh
   }
 
   return (

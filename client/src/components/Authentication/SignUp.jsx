@@ -5,23 +5,23 @@ import { useNavigate } from 'react-router-dom'
 import Button from "../Inputs/Button"
 import Input from "../Inputs/Input"
 
+
 const SignUp = () => {
+  const navigate = useNavigate()
+  //inputs states
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [cPassword, setCPassword] = useState('')
 
+  //verify states
   const [verifyname, setVerifyName] = useState({ status: true })
   const [verifyemail, setVerifyEmail] = useState({ status: true })
   const [verifypassword, setVerifyPassword] = useState({ status: true })
   const [verifyCPassword, setverifyCPassword] = useState({ status: true })
 
-  const navigate = useNavigate()
-
-
-  const submitHandler = async () => {
-    setLoading(true)
+  const checkValues = () => {
     if (!name.trim().length) {
       setLoading(false);
       setVerifyName({ status: false, reason: 'name is required' });
@@ -42,7 +42,11 @@ const SignUp = () => {
       setverifyCPassword({ status: false, reason: 'passwords don\'t match' });
       return;
     }
+  }
 
+  const submitHandler = async () => {
+    setLoading(true)
+    checkValues()
 
     try {
       const config = {
@@ -54,7 +58,7 @@ const SignUp = () => {
       console.log(data)
       toast.success('successfully registerd')
 
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem('token', data.token);
       setLoading(false);
       navigate('/chats')
     } catch (err) {

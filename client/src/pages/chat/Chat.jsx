@@ -1,29 +1,30 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { ChatState } from '../../Context/ChatProvider';
+import SideDrawer from '../../components/Miscellaneous/SideDrawer';
+import MyChats from '../../components/MyChats';
+import ChatBox from '../../components/ChatBox';
 
 
 const Chat = () => {
-    const [chats, setChats] = useState([])
+    const { user } = ChatState();
+    const navigate = useNavigate()
 
-    const fetchChats = async () => {
-        try {
-            const { data } = await axios.get('/api/chat')
-            setChats(data)
-        } catch (err) {
-            console.log(err)
-        }
-    }
     useEffect(() => {
-        fetchChats()
-    }, [])
+        if (user === null) return navigate('/')
+    }, [user])
 
 
     return (
-        <div>
+        <>
+            {user && <SideDrawer />}
+            {/* {user && <MyChats />}
+            {user && <ChatBox />} */}
 
-        </div>
+        </>
     )
 }
 
-export default Chat
+export default Chat;
