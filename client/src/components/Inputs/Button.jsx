@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { CircularProgress } from '@chakra-ui/react';
+import { FaCircleNotch } from 'react-icons/fa'
 import './inputs.css'
-const Button = ({ onClick, text, icon }) => {
+const Button = ({ click, text, icon, loading }) => {
     return (
-        <button onClick={onclick} className='button'>
-            {text ? <p style={icon ? { marginLeft: '50px' } : {}}>{text}</p> : ''}
-            {icon ? icon : ''}
+        <button onClick={loading ? () => { } : click} style={loading ? { pointerEvents: "none" } : {}} className={`button ${loading ? 'loading' : ''}`}>
+            {!loading && text ? <p style={icon ? { marginLeft: '5em' } : {}}>{text}</p> : ''}
+            {!loading && icon ? icon : ''}
+            {loading ? <FaCircleNotch className='spin show' /> : ''}
         </button >
     )
 }

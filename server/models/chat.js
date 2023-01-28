@@ -5,6 +5,7 @@ const chatSchema = new Schema({
     isGroup: { type: Boolean, default: false },
     users: [
         {
+            unique: true,
             type: Schema.Types.ObjectId,
             ref: "user"
         },

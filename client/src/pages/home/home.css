@@ -1,5 +1,5 @@
 .loginContainer {
-    width: 600px;
+    width: 500px;
     padding: 0 30px;
     margin: 0 auto;
 }
@@ -14,19 +14,19 @@
     font-size: 25px;
 }
 
-.titleBox {
-    margin-top: 50px !important;
-    display: flex;
-    justify-content: center;
-}
 
-.loginBox,
-.titleBox {
+.loginBox {
     align-items: center;
     padding: 15px 0px;
     background: #fff;
     width: 100%;
-    margin: 30px 0 15px 0;
+    margin: 100px 0 15px 0;
     border-radius: .5em;
     border-width: "1px";
+}
+
+.loginBox h1 {
+    font-size: 25px;
+    text-align: center;
+    margin-bottom: 10px;
 }

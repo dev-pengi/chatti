@@ -13,19 +13,10 @@
   font-family: 'Open Sans', 'Ubuntu', sans-serif;
 }
 
-@keyframes show {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
 
 :root {
   --primary: #007bff;
-  --primary-hover: #3399ff;
+  --primary-hover: #3f9dfc;
   --white: #ffffff;
   --gray-light: #868e96;
   --gray: #6c757d;
@@ -36,4 +27,52 @@
   --purple: #8e44ad;
   --pink: #e91e63;
   --yellow: #f1c40f;
+}
+
+.spin {
+  animation: spin infinite .7s linear;
+}
+
+.icon {
+  font-size: 23px;
+}
+
+@-moz-keyframes spin {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }

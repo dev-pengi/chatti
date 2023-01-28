@@ -4,16 +4,31 @@ import { Routes, Route } from 'react-router-dom'
 import Home from "./pages/home/Home";
 import Chat from "./pages/chat/Chat";
 import './App.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
   return (
-    <div className="app">
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/chat' element={<Chat />} />
-      </Routes>
-    </div>
+    <>
+      <div className="app">
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/chat' element={<Chat />} />
+        </Routes>
+      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
   );
 }
 export default App;

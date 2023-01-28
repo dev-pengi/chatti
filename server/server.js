@@ -1,18 +1,31 @@
 console.clear();
 require('dotenv').config()
+
+//express
 const express = require('express');
-const chats = require('./data/data');
-
-
 const app = express();
+const fileupload = require("express-fileupload");
+const bodyparser = require("body-parser")
+
+//routes
+const userRoutes = require('./routes/userRoutes')
+const chatRoutes = require('./routes/chatRoutes')
+
+//configs
 require('./config/run')(app);
 
+//middlewares
+const { notFound, errorHandler } = require('./middleware/errorMiddleware')
 
-app.get('/api/chat', (req, res) => {
-    res.send(chats)
-})
-app.get('/api/chat/:id', (req, res) => {
-    const { id } = req.params
-    const singleChat = chats.find(c => c._id === id)
-    res.send(singleChat)
-})
+//express routes
+app.use(bodyparser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(fileupload());
+app.use(express.urlencoded({ extended: true }));
+
+//requests routes
+app.use('/api/users', userRoutes)
+app.use('/api/chats', chatRoutes)
+
+app.use(notFound)
+app.use(errorHandler)
