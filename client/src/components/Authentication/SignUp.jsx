@@ -21,6 +21,7 @@ const SignUp = () => {
   const [verifypassword, setVerifyPassword] = useState({ status: true })
   const [verifyCPassword, setverifyCPassword] = useState({ status: true })
 
+  //check the inputs values
   const checkValues = () => {
     if (!name.trim().length) {
       setLoading(false);
@@ -44,10 +45,10 @@ const SignUp = () => {
     }
   }
 
+  //submit the data on click
   const submitHandler = async () => {
     setLoading(true)
     checkValues()
-
     try {
       const config = {
         headers: {
@@ -55,9 +56,7 @@ const SignUp = () => {
         }
       }
       const { data } = await axios.post("/api/users/register", { name, email, password }, config)
-      console.log(data)
       toast.success('successfully registerd')
-
       localStorage.setItem('token', data.token);
       setLoading(false);
       navigate('/chats')

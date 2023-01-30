@@ -17,8 +17,11 @@
 :root {
   --primary: #007bff;
   --primary-hover: #3f9dfc;
+  --primary-click: #0180ff;
   --white: #ffffff;
-  --gray-light: #868e96;
+  --ghost-hover: #ecf1f7;
+  --ghost-click: #e2ecf7;
+  --gray-light: #919191;
   --gray: #6c757d;
   --dark: #343a40;
   --dark-deep: #212529;
@@ -31,6 +34,14 @@
 
 .spin {
   animation: spin infinite .7s linear;
+}
+
+.show {
+  animation: show .2s linear;
+}
+
+.unshow {
+  animation: unshow .2s linear;
 }
 
 .icon {
@@ -74,5 +85,51 @@
 
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes unshow {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.ghost {
+  background: none;
+}
+
+.ghost:hover {
+  background: var(--ghost-hover);
+}
+
+.ghost:active {
+  background: var(--ghost-click);
+}
+
+.primary {
+  background-color: var(--primary);
+  color: var(--white);
+}
+.primary:hover {
+  background-color: var(--primary-hover);
+}
+.primary:active {
+  background-color: var(--primary-click);
+}
+
+
+@media screen and (max-width:800px) {
+  .remove-medium {
+    display: none;
+  }
+}
+
+@media screen and (max-width:500px) {
+  .remove-small {
+    display: none;
   }
 }

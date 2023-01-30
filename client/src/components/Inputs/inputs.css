@@ -1,11 +1,11 @@
-.inputBlock {
+.dynamic-input {
     position: relative;
     margin: 20px 0;
     transition: .3s;
 }
 
 
-.inputBlock input {
+.dynamic-input input {
     border: 1px solid var(--gray-light);
     border-radius: 5px;
     padding: 13px 14px;
@@ -13,11 +13,11 @@
     transition: .3s;
 }
 
-.inputBlock input[type=password] {
+.dynamic-input input[type=password] {
     letter-spacing: 2px;
 }
 
-.inputBlock .placeholder {
+.dynamic-input .placeholder {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -32,14 +32,14 @@
     pointer-events: none;
 }
 
-.inputBlock input:focus,
-.inputBlock input.typed {
+.dynamic-input input:focus,
+.dynamic-input input.typed {
     border: 1px solid var(--primary);
 }
 
-.inputBlock input:focus+.placeholder,
-.inputBlock input.typed+.placeholder,
-.inputBlock.error input+.placeholder {
+.dynamic-input input:focus+.placeholder,
+.dynamic-input input.typed+.placeholder,
+.dynamic-input.error input+.placeholder {
     transform: translateY(-27px);
     font-size: 14px;
     color: var(--primary);
@@ -48,25 +48,49 @@
 
 
 
-.inputBlock.error input {
+.dynamic-input.error input {
     border-color: var(--red);
 }
 
 
-.inputBlock.error input+.placeholder {
+.dynamic-input.error input+.placeholder {
     color: var(--red);
 }
 
-.inputBlock.error {
+.dynamic-input.error {
     margin-bottom: 45px;
 }
 
-.inputBlock.error .error-text {
+.dynamic-input.error .error-text {
     position: absolute;
     font-size: 14px;
     color: var(--red);
     margin-bottom: 10099px;
 }
+
+.labeled-input {
+    width: max-content;
+}
+
+.labeled-input input {
+    height: 48px;
+    width: 100%;
+    padding: 0 11px;
+    border: var(--gray) 1px solid;
+    border-radius: 4px;
+    transition: .3s;
+    font-size: 17px;
+}
+
+.labeled-input input:focus,
+.labeled-input input.typed {
+    border: var(--primary) 1px solid;
+}
+
+
+
+
+
 
 .button {
     background-color: var(--primary);
