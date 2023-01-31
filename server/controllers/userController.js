@@ -9,30 +9,39 @@ const registerUser = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("Please enter all fields");
     }
+    if (password.trim().length <= 8) {
+        res.status(400)
+        throw new Error("Password must be at least 8 letters");
+    }
 
     const getUser = await user.findOne({ email: email })
     if (getUser) {
         res.status(400);
-        throw new Error("email has already been used");
+        throw new Error("An account with this email already exists");
     }
-    const newUser = await user.create({
-        name,
-        email,
-        password,
-    })
+    try {
+        const newUser = await user.create({
+            name,
+            email,
+            password,
+        })
 
-    if (!user) {
+        if (!newUser) {
+            res.status(400);
+            throw new Error("Failed to create the account");
+        }
+
+        res.status(200).json({
+            _id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            avatar: newUser.avatar,
+            token: generateToken(newUser._id)
+        })
+    } catch (err) {
         res.status(400);
         throw new Error("Failed to create the account");
     }
-
-    res.status(200).json({
-        _id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        avatar: newUser.avatar,
-        token: generateToken(newUser._id)
-    })
 })
 
 const authUser = asyncHandler(async (req, res) => {
@@ -88,5 +97,56 @@ const getUser = asyncHandler(async (req, res) => {
         throw new Error('User can\'t be not found')
     }
 })
+const UpdateSettings = asyncHandler(async (req, res) => {
+    const { name, email, bio, url } = req.body;
+    const update = {}
+    if (name) {
+        if (name.trim().length) {
+            update.name = name
+        }
+        else {
+            res.status(404);
+            throw new Error('Please use a valid name')
+        }
+    }
 
-module.exports = { registerUser, authUser, allUsers, getUser }
+    if (email != req.user.email) {
+        const getUser = await user.findOne({ email: email })
+        if (getUser) {
+            res.status(400);
+            throw new Error("An account with this email already exists");
+        }
+        else update.email = email
+    }
+
+    if (bio && bio.trim().length && bio != req.user.bio) {
+        update.bio = bio
+    }
+
+    if (url && url.trim().length) {
+        if (url.trim().length) {
+            update.url = url
+        }
+        else {
+            res.status(404);
+            throw new Error('Please provide a valid url')
+        }
+    }
+
+    try {
+        const UpdatedUser = await user.findOneAndUpdate(
+            {
+                _id: req.user._id
+            },
+            { ...update }
+        )
+
+        res.status(200).json(UpdatedUser);
+
+    } catch (error) {
+        res.status(404);
+        throw new Error('User can\'t be not found')
+    }
+})
+
+module.exports = { registerUser, authUser, allUsers, getUser, UpdateSettings }

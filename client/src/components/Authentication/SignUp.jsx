@@ -26,29 +26,36 @@ const SignUp = () => {
     if (!name.trim().length) {
       setLoading(false);
       setVerifyName({ status: false, reason: 'name is required' });
-      return;
+      return false;
     }
     if (!email.trim().length) {
       setLoading(false);
       setVerifyEmail({ status: false, reason: 'email field is required' });
-      return;
+      return false;
     }
     if (password.trim().length < 8) {
       setLoading(false);
       setVerifyPassword({ status: false, reason: 'password must be more than 8 letters' });
-      return;
+      return false;
     }
     if (cPassword != password) {
       setLoading(false);
       setverifyCPassword({ status: false, reason: 'passwords don\'t match' });
-      return;
+      return false;
     }
+    return true;
+  }
+  const handleSignUp = (data) => {
+    toast.success('successfully registerd')
+    localStorage.setItem('token', data.token);
+    setLoading(false);
+    navigate('/chats')
   }
 
   //submit the data on click
   const submitHandler = async () => {
-    setLoading(true)
-    checkValues()
+    setLoading(true);
+    if (!checkValues()) return false;
     try {
       const config = {
         headers: {
@@ -56,22 +63,24 @@ const SignUp = () => {
         }
       }
       const { data } = await axios.post("/api/users/register", { name, email, password }, config)
-      toast.success('successfully registerd')
-      localStorage.setItem('token', data.token);
-      setLoading(false);
-      navigate('/chats')
+      handleSignUp(data)
     } catch (err) {
-      toast.error(err.response.data.message);
+      toast.error(err.response.data.message || 'Server connection error');
       setLoading(false)
     }
+  }
+  const handleType = (event, setValue, setVerify) => {
+    const value = event.target.value
+    setValue(value)
+    setVerify({ status: true });
   }
 
   return (
     <div style={{ animation: 'show .3s' }}>
-      <Input placeholder="name" onChange={(e) => { setName(e.target.value); setVerifyName({ status: true }) }} status={verifyname} />
-      <Input placeholder="email" onChange={(e) => { setEmail(e.target.value); setVerifyEmail({ status: true }) }} status={verifyemail} />
-      <Input placeholder="password" type="password" onChange={(e) => { setPassword(e.target.value); setVerifyPassword({ status: true }) }} status={verifypassword} />
-      <Input placeholder="confirm password" type="password" onChange={(e) => { setCPassword(e.target.value);; setverifyCPassword({ status: true }) }} status={verifyCPassword} />
+      <Input placeholder="name" onChange={(e) => handleType(e, setName, setVerifyName)} status={verifyname} />
+      <Input placeholder="email" onChange={(e) => handleType(e, setEmail, setVerifyEmail)} status={verifyemail} />
+      <Input placeholder="password" type="password" onChange={(e) => handleType(e, setPassword, setVerifyPassword)} status={verifypassword} />
+      <Input placeholder="confirm password" type="password" onChange={(e) => handleType(e, setCPassword, setverifyCPassword)} status={verifyCPassword} />
       <Button text={'Sign up'} click={submitHandler} loading={loading} />
     </div>
   )

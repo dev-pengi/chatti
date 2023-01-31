@@ -1,0 +1,55 @@
+header {
+    background: #fff;
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+header .chatti {
+    font-family: 'Baloo Paaji', cursive;
+    color: var(--dark);
+    font-weight: 400 !important;
+    font-size: 30px !important;
+}
+
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.header-buttons .btn.circle {
+    font-size: 18px;
+    margin: 0 4px;
+    color: var(--dark);
+}
+
+.settings-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.group {
+    margin: 10px 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 15px;
+}
+
+.change-avatar .right {
+    margin-left: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.change-avatar .right h3 {
+    font-size: 19px;
+}

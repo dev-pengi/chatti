@@ -19,8 +19,8 @@
   --primary-hover: #3f9dfc;
   --primary-click: #0180ff;
   --white: #ffffff;
-  --ghost-hover: #ecf1f7;
-  --ghost-click: #e2ecf7;
+  --ghost-hover: #e2ecf8;
+  --ghost-click: #d6e7fa;
   --gray-light: #919191;
   --gray: #6c757d;
   --dark: #343a40;
@@ -33,11 +33,15 @@
 }
 
 .spin {
-  animation: spin infinite .7s linear;
+  animation: spin infinite .8s linear;
 }
 
 .show {
   animation: show .2s linear;
+}
+
+.scale {
+  animation: scale .2s linear;
 }
 
 .unshow {
@@ -78,6 +82,16 @@
   }
 }
 
+@keyframes scale {
+  0% {
+    transform: scale(.4);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 @keyframes show {
   0% {
     opacity: 0;
@@ -98,6 +112,60 @@
   }
 }
 
+.circle {
+  border-radius: 50%;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.btn {
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 17px;
+  transition: .3s;
+}
+
+.full {
+  width: 100% !important;
+}
+
+.btn.circle {
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.btn:active {
+  transform: scale(.97);
+}
+
+.btn p {
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.btn p.with-icon {
+  margin-left: 10px;
+}
+
+.btn p.with-icon-right {
+  margin-right: 10px;
+}
+
 .ghost {
   background: none;
 }
@@ -110,15 +178,30 @@
   background: var(--ghost-click);
 }
 
+
 .primary {
   background-color: var(--primary);
-  color: var(--white);
+  color: var(--white) !important;
 }
+
 .primary:hover {
   background-color: var(--primary-hover);
 }
+
 .primary:active {
   background-color: var(--primary-click);
+}
+
+.link-btn {
+  background: none;
+  padding: 0;
+  width: max-content;
+  height: max-content;
+  color: var(--dark);
+}
+
+.link-btn:hover {
+  text-decoration: underline;
 }
 
 

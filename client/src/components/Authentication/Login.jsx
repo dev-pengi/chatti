@@ -27,6 +27,13 @@ const Login = () => {
       setVerifyPassword({ status: false, reason: 'password field is required' });
       return false;
     }
+    return true;
+  }
+  const handleLogin = (data) => {
+    toast.success('successfully loged in')
+    localStorage.setItem('token', data.token);
+    setLoading(false);
+    navigate('/chats')
   }
 
   //submit the data on click
@@ -40,24 +47,26 @@ const Login = () => {
           "Content-type": "application/json",
         }
       }
-      const { data } = await axios.post("/api/users/login", { email, password }, config)
-      toast.success('successfully loged in')
-      localStorage.setItem('token', data.token);
-      setLoading(false);
-      navigate('/chats')
+      const { data } = await axios.post("/api/users/login", { email, password }, config);
+      handleLogin(data);
     } catch (err) {
-      toast.error(err.response.data.message);
-      setLoading(false)
+      toast.error(err.response.data.message || 'Server connection error');
+      setLoading(false);
     }
+  }
+  const handleType = (event, setValue, setVerify) => {
+    const value = event.target.value
+    setValue(value)
+    setVerify({ status: true });
   }
 
   return (
     <div style={{ animation: 'show .3s' }}>
-      <Input placeholder="Email" onChange={(e) => { setEmail(e.target.value); setVerifyEmail({ status: true }) }} status={verifyemail} />
-      <Input placeholder="Password" type="password" onChange={(e) => { setPassword(e.target.value); setVerifyPassword({ status: true }) }} status={verifypassword} />
+      <Input placeholder="Email" onChange={(e) => { handleType(e, setEmail, setVerifyEmail) }} status={verifyemail} />
+      <Input placeholder="Password" type="password" onChange={(e) => { handleType(e, setPassword, setVerifyPassword) }} status={verifypassword} />
       <Button text={'Login'} click={submitHandler} loading={loading} />
     </div>
   )
 }
 
-export default Login
+export default Login;

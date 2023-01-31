@@ -7,25 +7,3 @@
     background-position: center;
     background-repeat: no-repeat;
 }
-
-.btn {
-    border-radius: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40px;
-    padding: 0 17px;
-    transition: .2s;
-}
-
-.btn.circle {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-}
-
-.btn p {
-    margin-left: 10px;
-    font-weight: 600;
-    font-size: 17px;
-}

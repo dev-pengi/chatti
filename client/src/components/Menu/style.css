@@ -1,0 +1,13 @@
+.menu {
+    position: absolute;
+    background-color: var(--white);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    top: 70px;
+    right: 20px;
+    width: max-content;
+    max-width: 350px;
+    padding: 15px 10px;
+    border-radius: 5px;
+    max-height: 60vh;
+    overflow-y: auto;
+}

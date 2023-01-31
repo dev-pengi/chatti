@@ -19,17 +19,40 @@ const DynamicInput = ({ type, placeholder, autoFocus, iValue, style, phStyle, on
 export default DynamicInput;
 
 
-export const LabeledInput = ({ label, type, placeholder, onChange, style }) => {
+export const LabeledInput = ({ label, type, placeholder, onChange, style, className, value = '' }) => {
 
-    const [typed, setTyped] = useState(false);
+    const [typed, setTyped] = useState(value.trim().length ? true : false);
     const handleInput = (e) => {
         setTyped(e.target.value ? true : false);
     }
 
     return (
-        <div style={style} className='labeled-input'>
+        <div style={style} className={`labeled-input ${className}`}>
             {label && <label>{label}</label>}
-            <input onChange={onChange} onInput={handleInput} className={`${typed ? 'typed' : ''}`} type={type} placeholder={placeholder} />
+            <input value={value} onChange={onChange} style={{ marginTop: label ? '3px' : '' }} onInput={handleInput} className={`${typed ? 'typed' : ''}`} type={type} placeholder={placeholder} />
+        </div>
+    )
+}
+
+
+export const LabeledArea = ({ label, type, placeholder, onChange, style, className, value = '' }) => {
+
+    const [typed, setTyped] = useState(value.trim().length ? true : false);
+    const handleInput = (e) => {
+        setTyped(e.target.value ? true : false);
+    }
+
+    return (
+        <div style={style} className={`labeled-input ${className}`}>
+            {label && <label>{label}</label>}
+            <textarea
+                onChange={onChange}
+                style={{ marginTop: label ? '3px' : '' }}
+                onInput={handleInput}
+                className={`${typed ? 'typed' : ''}`}
+                type={type} placeholder={placeholder}
+                value={value}
+            ></textarea>
         </div>
     )
 }

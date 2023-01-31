@@ -1,28 +1,37 @@
 import { useState } from 'react';
 import { GrClose } from 'react-icons/gr';
+import UseClickOutside from '../events/useClickOutside'
 import './style.css';
 
-const Modal = ({ children, title = "modal", closeBtn, showFotter = true, primaryBtn, secondaryBtn, show, setShow }) => {
+const Modal = ({ children, Button, title = "Chatti", showFotter = true, primaryBtn, secondaryBtn, style }) => {
 
+    const [isOpen, setIsOpen] = useState(false);
     const handleClose = () => {
-        setShow(false)
+        setIsOpen(false);
+    }
+    const handleOpen = () => {
+        setIsOpen(true);
     }
 
     return (
         <>
-            {show && <div className={`modal-overlay show`}>
-                <div className="modal-box">
-                    <div className="modal-header">
-                        <h2>{title}</h2>
-                        <button onClick={handleClose} className='btn ghost'><GrClose /></button>
+            {isOpen && <div className="modal-overlay show"></div>}
+            <UseClickOutside onClickOutside={handleClose}>
+                <Button onClick={handleOpen} />
+                {
+                    isOpen && <div className="modal-box scale show">
+                        <div className="modal-header">
+                            <h2>{title}</h2>
+                            <button onClick={handleClose} className='btn circle ghost'><GrClose /></button>
+                        </div>
+                        <div className="modal-body" style={style}>{children}</div>
+                        {showFotter && <div className="modal-fotter">
+                            {primaryBtn && <button className="btn primary">{primaryBtn}</button>}
+                            <button className="btn secondary" onClick={handleClose}>{secondaryBtn ? secondaryBtn : 'Close'}</button>
+                        </div>}
                     </div>
-                    <div className="modal-body">{children}</div>
-                    {showFotter && <div className="modal-fotter">
-                        {primaryBtn && <button className="btn primary">{primaryBtn}</button>}
-                        <button className="btn secondary" onClick={handleClose}>{secondaryBtn ? secondaryBtn : 'Close'}</button>
-                    </div>}
-                </div>
-            </div >}
+                }
+            </UseClickOutside>
         </>
     )
 }

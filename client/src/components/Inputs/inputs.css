@@ -70,10 +70,27 @@
 
 .labeled-input {
     width: max-content;
+    height: max-content;
 }
 
-.labeled-input input {
-    height: 48px;
+.labeled-input label {
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--gray);
+    margin: 4px;
+}
+
+textarea {
+    resize: horizontal;
+    max-height: 1000px;
+    min-height: 200px;
+    transition: 0s !important;
+    padding: 5px 10px !important;
+}
+
+.labeled-input input,
+.labeled-input textarea {
+    height: 45px;
     width: 100%;
     padding: 0 11px;
     border: var(--gray) 1px solid;
@@ -83,7 +100,9 @@
 }
 
 .labeled-input input:focus,
-.labeled-input input.typed {
+.labeled-input input.typed,
+.labeled-input textarea.typed,
+.labeled-input textarea:focus {
     border: var(--primary) 1px solid;
 }
 
