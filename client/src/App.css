@@ -1,9 +1,18 @@
 .app {
     min-height: 100vh;
     display: flex;
-    /* background-image: url('./background.png') ; */
     background-color: #eeeeee;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    overflow-y: scroll !important;
+}
+
+header {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.app.isHeader {
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
 }

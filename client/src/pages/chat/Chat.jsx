@@ -19,7 +19,6 @@ const Chat = () => {
 
     return (
         <>
-            {user && <TopBar />}
             {/* {user && <MyChats />}
             {user && <ChatBox />} */}
 

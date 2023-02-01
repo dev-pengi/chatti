@@ -15,14 +15,23 @@
 
 
 :root {
-  --primary: #007bff;
-  --primary-hover: #3f9dfc;
-  --primary-click: #0180ff;
+  --header: #1f1f25;
+  --nav: #3b3b4b;
+  --bg: #292930;
+  --primary: #5865f2;
+  --primary-hover: #4e59cb;
+  --primary-click: #4a56d6;
   --white: #ffffff;
   --ghost-hover: #e2ecf8;
   --ghost-click: #d6e7fa;
-  --gray-light: #919191;
-  --gray: #6c757d;
+  --text-color: #a5a5a8;
+  --gray-0: #919198;
+  --gray-1: #434350;
+  --gray-2: #393943;
+  --gray-3: #292930;
+  --gray-3-4: #2c2c35;
+  --gray-4: #1f1f25;
+  --gray-5: #0c0c0f;
   --dark: #343a40;
   --dark-deep: #212529;
   --green: #28a745;
@@ -41,7 +50,7 @@
 }
 
 .scale {
-  animation: scale .2s linear;
+  animation: scale .1s linear;
 }
 
 .unshow {
@@ -84,7 +93,7 @@
 
 @keyframes scale {
   0% {
-    transform: scale(.4);
+    transform: scale(.7);
   }
 
   100% {

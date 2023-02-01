@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { FaCircleNotch } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
 import UseClickOutside from '../events/useClickOutside'
 import './style.css';
 
-const Modal = ({ children, Button, title = "Chatti", showFotter = true, primaryBtn, secondaryBtn, style }) => {
+const Modal = ({ children, Button, title = "Chatti", showFotter = true, primaryBtn, secondaryBtn, style, loading, onSubmit }) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const handleClose = () => {
@@ -26,7 +27,7 @@ const Modal = ({ children, Button, title = "Chatti", showFotter = true, primaryB
                         </div>
                         <div className="modal-body" style={style}>{children}</div>
                         {showFotter && <div className="modal-fotter">
-                            {primaryBtn && <button className="btn primary">{primaryBtn}</button>}
+                            {primaryBtn && <button onClick={onSubmit} className={`btn primary ${loading ? 'loading' : ''}`}>{loading ? <FaCircleNotch className='spin' /> : primaryBtn}</button>}
                             <button className="btn secondary" onClick={handleClose}>{secondaryBtn ? secondaryBtn : 'Close'}</button>
                         </div>}
                     </div>

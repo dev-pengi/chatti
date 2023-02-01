@@ -8,6 +8,6 @@ router.post('/register', registerUser)
 router.post('/login', authUser)
 router.route('/').get(protect, allUsers)
 router.route('/:userID').get(protect, getUser)
-router.route('/settings/update').get(protect, UpdateSettings)
+router.route('/settings').post(protect, UpdateSettings)
 
 module.exports = router;

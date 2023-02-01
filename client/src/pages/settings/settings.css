@@ -1,0 +1,110 @@
+.settings {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+.settings-nav {
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    left: 0;
+    display: flex;
+    justify-content: end;
+    padding: 20px 10px;
+    /* background-color: #fff; */
+}
+
+.settings-nav ul {
+    width: 100%;
+}
+
+.settings-nav ul li .category {
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-size: 13px;
+    color: #585858;
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+
+.settings-nav ul li .links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+.settings-nav ul li .links a {
+    width: 100%;
+    margin: 2px 0;
+    padding: 7px 10px;
+    border-radius: 4px;
+    text-transform: capitalize;
+    transition: .2s linear;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: var(--dark);
+}
+
+.settings-nav ul li .links a .nav-icon {
+    margin-right: 10px;
+}
+
+.settings-nav ul li .links a:hover {
+    background-color: var(--ghost-click);
+}
+
+.settings-nav ul li .links a.active {
+    background-color: var(--primary-hover);
+    color: var(--white);
+    pointer-events: none;
+}
+
+.settings-body {
+    position: fixed;
+    left: 250px;
+    width: calc(100% - 250px);
+    height: calc(100% - 60px);
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+.settings-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.group {
+    margin: 10px 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 15px;
+}
+
+.change-avatar .right {
+    margin-left: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.change-avatar .right h3 {
+    font-size: 19px;
+}
+
+.settings-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 15px;
+}

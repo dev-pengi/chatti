@@ -15,16 +15,12 @@ import './style.css';
 const SideDrawer = () => {
     const ref = useRef();
 
-    const [show, setShow] = useState(false);
     const [search, setSearch] = useState("");
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [loadingChat, setLoadingChat] = useState(false);
 
-    const handleSearchOpen = () => {
-        setShow(true)
-    }
-
+    
 
     const SearchButton = ({ onClick }) => {
         return (

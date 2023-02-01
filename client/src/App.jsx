@@ -1,29 +1,41 @@
-import { Button } from '@chakra-ui/react';
+
 import { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Home from "./pages/home/Home";
 import Chat from "./pages/chat/Chat";
 import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SettingsPage from './pages/settings/SettingsPage';
+import Header from './components/Header/Header';
+import { ChatState } from './Context/ChatProvider';
+import { useState } from 'react';
 
 function App() {
+  const location = useLocation()
+  const { user } = ChatState()
+  const [showHeader, setShowHeader] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname !== '/' && user) setShowHeader(true);
+  }, [location.pathname, user])
 
   return (
     <>
-      <div className="app">
+      {(showHeader) && (
+        <Header />
+      )}
+      <div className={`app ${showHeader ? 'isHeader' : ''}`}>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/chats' element={<Chat />} />
+          <Route path='/settings/*' element={<SettingsPage />} />
         </Routes>
       </div>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
         hideProgressBar={false}
         closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
         draggable
         pauseOnHover
         theme="light"
