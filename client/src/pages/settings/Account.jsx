@@ -13,10 +13,26 @@ const Profile = () => {
     const { user, setUser } = ChatState();
     const [loading, setLoading] = useState(false)
     const [avatar, setAvatar] = useState(user.avatar)
+    const [avtFile, setAvtFile] = useState(user.avatar)
     const [name, setName] = useState(user.name)
     const [email, setEmail] = useState(user.email)
     const [bio, setBio] = useState(user.bio)
     const [url, setUrl] = useState(user.url)
+
+    const handleSubmit = async e => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('image', image);
+        Object.keys(otherData).forEach(key => {
+            formData.append(key, otherData[key]);
+        });
+        try {
+            const response = await axios.post('YOUR_API_ENDPOINT', formData);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const submitChanges = async () => {
         setLoading(true);
@@ -24,17 +40,19 @@ const Profile = () => {
         try {
             const config = {
                 headers: {
-                    "Content-type": "application/json",
+                    "Content-type": "multipart/form-data",
                     'Authorization': `Bearer ${token}`,
                 }
             };
             const settingsData = {
-                name,
-                email,
-                bio,
-                url
+                name, email, bio, url
             };
-            const { data } = await axios.post('/api/users/settings', settingsData, config);
+            const formData = new FormData();
+            formData.append('img', avtFile);
+            Object.keys(settingsData).forEach(key => {
+                formData.append(key, settingsData[key]);
+            });
+            const { data } = await axios.post('/api/users/settings', formData, config);
             setUser(data);
             toast.success('Changes has been successfuly changed');
             setLoading(false);
@@ -73,7 +91,8 @@ const Profile = () => {
     }
     const handleAvtChange = (event) => {
         const selectedFile = event.target.files[0];
-        if (!selectedFile.type.startsWith('image/')) return toast.error('this file is not a valid image')
+        setAvtFile(selectedFile);
+        if (!selectedFile.type.startsWith('image/')) return toast.error('this file is not a valid image');
         const reader = new FileReader();
 
         reader.onload = (e) => {

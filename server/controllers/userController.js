@@ -99,6 +99,7 @@ const getUser = asyncHandler(async (req, res) => {
 })
 const UpdateSettings = asyncHandler(async (req, res) => {
     const { name, email, bio, url } = req.body;
+    const avt = req.image;
     const update = {}
     if (name) {
         if (name.trim().length) {
@@ -132,13 +133,20 @@ const UpdateSettings = asyncHandler(async (req, res) => {
             throw new Error('Please provide a valid url')
         }
     }
+    if (avt) {
+        update.avatar = `${avt}`;
+        console.log(update.avatar)
+    }
 
     try {
         const UpdatedUser = await user.findOneAndUpdate(
             {
                 _id: req.user._id
             },
-            { ...update }
+            {
+                ...update
+            },
+            { new: true }
         )
 
         res.status(200).json(UpdatedUser);

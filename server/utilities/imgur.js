@@ -1,21 +1,25 @@
-const axios = require('axios');
+const axios = require("axios");
+const { IMGUR_CLIENT_ID } = process.env;
 
-const config = {
-    headers: {
-        'Authorization': `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
-        'Content-Type': 'application/octet-stream',
-    }
-};
-
-const uploadImageToImgur = async (imageBuffer) => {
+const imgurUpload = async (image) => {
     try {
-        const { data } = await axios.post('https://api.imgur.com/3/image', imageBuffer, config);
-        console.log(data)
+        const response = await axios({
+            method: "post",
+            url: "https://api.imgur.com/3/image",
+            headers: {
+                Authorization: `Client-ID ${IMGUR_CLIENT_ID}`,
+                "Content-Type": "multipart/form-data",
+            },
+            data: {
+                image: image,
+            },
+        });
+        const { data } = response;
         return data.data.link;
-    } catch (err) {
-        console.error(`Error uploading image: ${err.message}`);
-        throw new Error('Error uploading image');
+    } catch (error) {
+        console.error(error);
+        throw error;
     }
 };
 
-module.exports = { uploadImageToImgur };
+module.exports = imgurUpload;
