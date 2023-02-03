@@ -1,11 +1,10 @@
 .app {
     min-height: 100vh;
     display: flex;
-    background-color: #eeeeee;
+    background-color: var(--bg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    overflow-y: scroll !important;
 }
 
 header {
@@ -14,5 +13,5 @@ header {
 
 .app.isHeader {
     margin-top: 60px;
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 60px) !important;
 }

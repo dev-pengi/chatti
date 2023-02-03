@@ -18,6 +18,7 @@ function App() {
 
   useEffect(() => {
     if (location.pathname !== '/' && user) setShowHeader(true);
+    else setShowHeader(false);
   }, [location.pathname, user])
 
   return (
@@ -38,7 +39,7 @@ function App() {
         closeOnClick={false}
         draggable
         pauseOnHover
-        theme="light"
+        theme="dark"
       />
     </>
   );

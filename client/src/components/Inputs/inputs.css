@@ -6,7 +6,8 @@
 
 
 .dynamic-input input {
-    border: 1px solid var(--gray-light);
+    border: var(--gray-1) 1px solid;
+    background: none;
     border-radius: 5px;
     padding: 13px 14px;
     width: 100%;
@@ -26,7 +27,7 @@
     width: max-content;
     margin: auto 0;
     padding: 0 6px;
-    background-color: var(--white);
+    background-color: var(--boxes);
     color: var(--gray);
     transition: .2s;
     pointer-events: none;
@@ -76,7 +77,7 @@
 .labeled-input label {
     text-transform: uppercase;
     font-weight: 600;
-    color: var(--gray);
+    color: var(--text-color);
     margin: 4px;
 }
 
@@ -93,10 +94,15 @@ textarea {
     height: 45px;
     width: 100%;
     padding: 0 11px;
-    border: var(--gray) 1px solid;
-    border-radius: 4px;
+    border: var(--gray-1) 1px solid;
+    border-radius: 10px;
     transition: .3s;
     font-size: 17px;
+    background: none !important;
+    color: var(--white);
+}
+*::placeholder{
+    color: var(--text-color);
 }
 
 .labeled-input input:focus,

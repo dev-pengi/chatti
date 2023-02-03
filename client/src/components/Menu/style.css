@@ -1,7 +1,8 @@
 .menu {
     position: absolute;
-    background-color: var(--white);
+    background-color: var(--modal);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    color: var(--white);
     top: 70px;
     right: 20px;
     width: max-content;

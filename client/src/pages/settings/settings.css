@@ -1,20 +1,18 @@
 .settings {
-    position: relative;
+    display: flex;
     width: 100%;
-    height: 100%;
-    display: block;
-    margin: 0 auto;
 }
 
 .settings-nav {
     position: fixed;
-    width: 250px;
+    width: 275px;
     height: 100%;
     left: 0;
     display: flex;
     justify-content: end;
     padding: 20px 10px;
-    /* background-color: #fff; */
+    background-color: var(--nav);
+    transition: .3s;
 }
 
 .settings-nav ul {
@@ -26,7 +24,7 @@
     font-weight: 800;
     letter-spacing: 1px;
     font-size: 13px;
-    color: #585858;
+    color: var(--text-color);
     margin-bottom: 5px;
     margin-left: 10px;
 }
@@ -49,7 +47,7 @@
     display: flex;
     justify-content: start;
     align-items: center;
-    color: var(--dark);
+    color: var(--white);
 }
 
 .settings-nav ul li .links a .nav-icon {
@@ -67,13 +65,39 @@
 }
 
 .settings-body {
-    position: fixed;
-    left: 250px;
-    width: calc(100% - 250px);
-    height: calc(100% - 60px);
-    overflow-y: auto;
+    position: relative;
+    left: 275px;
+    width: calc(100% - 275px);
+    /* height: calc(100% - 60px); */
+    /* overflow-y: auto; */
     padding: 10px;
-    background-color: #ffffff;
+    background-color: var(--bg);
+    transition: .3s;
+}
+
+.change-avt {
+    width: max-content;
+    height: max-content;
+    cursor: pointer;
+}
+
+.change-avt img {
+    height: 120px;
+    width: 120px;
+    min-height: 120px;
+    min-width: 120px;
+    object-fit: cover;
+}
+
+.change-avt .icon {
+    top: 0;
+    right: 0px;
+    background-color: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 33px;
+    height: 33px;
 }
 
 .settings-inputs {

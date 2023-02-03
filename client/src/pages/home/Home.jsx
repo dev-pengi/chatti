@@ -17,8 +17,8 @@ const Home = () => {
     return (
         <div className="loginContainer">
             <div className="loginBox" >
-                <h1 className="title">Talk A-live</h1>
-                <Tabs variant='soft-rounded' >
+                <h1 className="title">Chatti</h1>
+                <Tabs variant='soft-rounded' colorScheme={"whiteAlpha"}>
                     <TabList mb="1em">
                         <Tab marginLeft="12px" width="100%">Login</Tab>
                         <Tab marginRight="12px" width="100%">Sign up</Tab>

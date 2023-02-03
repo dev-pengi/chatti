@@ -1,5 +1,5 @@
 import { Link, Routes, Route, useLocation } from "react-router-dom";
-import Profile from "./Profile";
+import Account from "./Account";
 import Privacy from "./Privacy";
 import './settings.css'
 import { ChatState } from "../../Context/ChatProvider";
@@ -18,22 +18,22 @@ const SettingsPage = () => {
             <li>
               <h3 className="category">Account</h3>
               <div className="links">
-                <Link to={"/settings"} className={`${(location.pathname === '/settings' || location.pathname === '/settings/profile') ? 'active' : ''}`}>
+                <Link to={"/settings"} className={`${(location.pathname === '/settings' || location.pathname === '/settings/account') ? 'active' : ''}`}>
                   <FaUser className="nav-icon" />
-                  <p>Profile</p>
+                  <p>Account</p>
                 </Link>
-                {/* <Link to={"/settings/privacy"} className={`${location.pathname === '/settings/privacy' ? 'active' : ''}`}>
+                <Link to={"/settings/privacy"} className={`${location.pathname === '/settings/privacy' ? 'active' : ''}`}>
                   <FaWrench className="nav-icon" />
                   <p>Privacy</p>
-                </Link> */}
+                </Link>
               </div>
             </li>
           </ul>
         </div>
         <div className="settings-body">
           <Routes>
-            <Route path="/" element={<Profile />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/" element={<Account />} />
+            <Route path="/account" element={<Privacy />} />
             {/* <Route path="/privacy" element={<Privacy />} /> */}
           </Routes>
         </div>
