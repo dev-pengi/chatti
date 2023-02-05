@@ -48,17 +48,37 @@ const accessChat = asyncHandler(async (req, res) => {
             throw new Error(err.message)
         }
     }
-
-})
+});
 
 const fetchChats = asyncHandler(async (req, res) => {
     try {
-        let chats = await chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
-            .populate('users', "-password")
-            .populate('groupAdmin', "-password")
-            .populate('lastMessage')
-            .sort({ updatedAt: -1 })
+        let search = req.query.search;
+        let chats;
+        if (search) {
+            let populatedChats = await chat.find({
+                users: { $elemMatch: { $eq: req.user._id } }
+            })
+                .populate('groupAdmin', "-password")
+                .populate('lastMessage')
+                .sort({ updatedAt: -1 });
 
+            populatedChats = await user.populate(populatedChats, {
+                path: "users",
+                select: '-password'
+            });
+
+            chats = populatedChats.filter((chat) => {
+                return chat.users.some((user) => {
+                    return JSON.stringify(user, ['name']).match(new RegExp(search, 'i')) && (user.name !== req.user.name);
+                });
+            });
+        } else {
+            chats = await chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+                .populate('users', "-password")
+                .populate('groupAdmin', "-password")
+                .populate('lastMessage')
+                .sort({ updatedAt: -1 })
+        }
 
         chats = await user.populate(chats, {
             path: "lastMessage.sender",
@@ -71,6 +91,9 @@ const fetchChats = asyncHandler(async (req, res) => {
         throw new Error(err.message)
     }
 })
+
+
+
 
 const createGroupChat = asyncHandler(async (req, res) => {
     let { users, name } = req.body;

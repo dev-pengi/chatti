@@ -100,7 +100,35 @@ const Profile = () => {
         };
 
         reader.readAsDataURL(selectedFile);
-    }
+    };
+    const handleDrop = (event) => {
+        event.preventDefault();
+        const { files } = event.dataTransfer;
+        setAvtFile(files[0]);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setAvatar(e.target.result);
+        };
+        reader.readAsDataURL(files[0]);
+    };
+    const handlePaste = (event) => {
+        const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf("image") === 0) {
+                const blob = items[i].getAsFile();
+                setAvtFile(blob);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    setAvatar(e.target.result);
+                };
+                reader.readAsDataURL(blob);
+            }
+        }
+    };
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+    };
 
     const SettingsButton = ({ onClick }) => {
         return (
@@ -111,22 +139,30 @@ const Profile = () => {
     }
 
     return (
-        <div className='show'>
-
+        <div
+            className='show'
+            onPaste={handlePaste}>
             <div className="settings-inputs">
                 <div className="group" >
-                    <div onClick={handleAvtClick} className="change-avt relative">
+                    <div
+                        onClick={handleAvtClick}
+                        className="change-avt relative"
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}>
+
                         <img src={avatar} width="120px" className="circle" />
+
                         <div className="icon absolute circle">
                             <FaImages />
                         </div>
+
                         <input
                             type="file"
                             ref={fileInput}
                             accept="image/*"
                             style={{ display: 'none' }}
-                            onChange={handleAvtChange}
-                        />
+                            onChange={handleAvtChange} />
+                            
                     </div>
                     <LabeledInput className="full" onChange={(e) => setName(e.target.value)} placeholder="name" label={"name"} value={name} />
                 </div>

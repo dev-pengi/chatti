@@ -22,10 +22,10 @@ const SettingsPage = () => {
                   <FaUser className="nav-icon" />
                   <p>Account</p>
                 </Link>
-                <Link to={"/settings/privacy"} className={`${location.pathname === '/settings/privacy' ? 'active' : ''}`}>
+                {/* <Link to={"/settings/privacy"} className={`${location.pathname === '/settings/privacy' ? 'active' : ''}`}>
                   <FaWrench className="nav-icon" />
                   <p>Privacy</p>
-                </Link>
+                </Link> */}
               </div>
             </li>
           </ul>

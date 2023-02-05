@@ -7,12 +7,13 @@
     position: fixed;
     width: 275px;
     height: 100%;
-    left: 0;
+    left: 0px;
     display: flex;
     justify-content: end;
     padding: 20px 10px;
     background-color: var(--nav);
     transition: .3s;
+    z-index: 47;
 }
 
 .settings-nav ul {
@@ -68,8 +69,6 @@
     position: relative;
     left: 275px;
     width: calc(100% - 275px);
-    /* height: calc(100% - 60px); */
-    /* overflow-y: auto; */
     padding: 10px;
     background-color: var(--bg);
     transition: .3s;
@@ -131,4 +130,21 @@
     justify-content: start;
     align-items: center;
     gap: 15px;
+}
+
+
+
+@media screen and (max-width:800px) {
+    .settings-nav {
+        left: -275px;
+    }
+
+    .settings-body {
+        left: 0;
+        width: 100%;
+    }
+
+    .app.nav-active .settings-nav {
+        left: 0;
+    }
 }

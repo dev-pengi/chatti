@@ -1,0 +1,38 @@
+.chat-windows {
+    display: flex;
+    width: 100%;
+}
+
+.chat-windows nav {
+    position: fixed;
+    width: 300px;
+    height: 100%;
+    left: 0px;
+    padding: 20px 10px;
+    background-color: var(--nav);
+    transition: .3s;
+    z-index: 47;
+}
+
+.chat-windows nav .searchNote {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.chat-windows nav .nav-note {
+    text-align: center;
+}
+
+.chat-windows nav .chats-search{
+    display: block;
+    width: 100%;
+}
+.chat-windows nav .nav-chats{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}

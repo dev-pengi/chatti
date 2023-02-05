@@ -1,11 +1,10 @@
 import axios from 'axios'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react'
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { ChatState } from '../../Context/ChatProvider';
-import TopBar from '../../components/Header/Header';
-import MyChats from '../../components/MyChats';
-import ChatBox from '../../components/ChatBox';
+import MyChats from '../../components/Chat/MyChats';
+import './chat.css'
+// import ChatBox from '../../components/ChatBox';
 
 
 const Chat = () => {
@@ -18,11 +17,9 @@ const Chat = () => {
 
 
     return (
-        <>
-            {/* {user && <MyChats />}
-            {user && <ChatBox />} */}
-
-        </>
+        <div className='chat-windows'>
+            {user && <MyChats />}
+        </div>
     )
 }
 

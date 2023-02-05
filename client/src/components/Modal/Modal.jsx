@@ -4,13 +4,14 @@ import UseClickOutside from '../events/useClickOutside'
 import './style.css';
 
 const Modal = ({ children, Button, title = "Chatti", showFotter = true, primaryBtn, secondaryBtn, style, loading, onSubmit }) => {
-
     const [isOpen, setIsOpen] = useState(false);
     const handleClose = () => {
         setIsOpen(false);
+        console.log('adfg')
     }
     const handleOpen = () => {
         setIsOpen(true);
+        console.log('hi');
     }
 
     return (

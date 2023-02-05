@@ -29,7 +29,7 @@ function App() {
       <div className={`app ${showHeader ? 'isHeader' : ''}`}>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/chats' element={<Chat />} />
+          <Route path='/chats/*' element={<Chat />} />
           <Route path='/settings/*' element={<SettingsPage />} />
         </Routes>
       </div>

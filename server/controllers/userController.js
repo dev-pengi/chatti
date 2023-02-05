@@ -110,6 +110,10 @@ const UpdateSettings = asyncHandler(async (req, res) => {
             throw new Error('Please use a valid name')
         }
     }
+    else {
+        res.status(400);
+        throw new Error("Please provide a name");
+    }
 
     if (email != req.user.email) {
         const getUser = await user.findOne({ email: email })
@@ -119,12 +123,16 @@ const UpdateSettings = asyncHandler(async (req, res) => {
         }
         else update.email = email
     }
+    else if (!email) {
+        res.status(400);
+        throw new Error("Please provide an email");
+    }
 
     if (bio && bio.trim().length && bio != req.user.bio) {
         update.bio = bio
     }
 
-    if (url && url.trim().length) {
+    if (url) {
         if (url.trim().length) {
             update.url = url
         }

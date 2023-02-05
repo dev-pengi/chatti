@@ -11,41 +11,39 @@ import HeaderButtons from './HeaderButtons'
 //css
 import 'tippy.js/dist/tippy.css';
 import './style.css';
+import Search from '../Search/Search';
 
 const SideDrawer = () => {
     const ref = useRef();
 
-    const [search, setSearch] = useState("");
+    const [keyword, setKeyword] = useState('');
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [loadingChat, setLoadingChat] = useState(false);
 
-    
 
-    const SearchButton = ({ onClick }) => {
-        return (
-            <button className='btn ghost' onClick={onClick}>
-                <FaSearch />
-                <p className='remove-small with-icon'> Search user </p>
-            </button>
-        )
+    const handleNavToggle = () => {
+        document.querySelector('.app').classList.toggle('nav-active')
     }
-    const SearchModal = () => {
+
+    const RightSide = () => {
         return (
-            <Modal Button={SearchButton} title="Search" showFotter={false}>
-                <div className="flex-block" style={{ display: 'flex', justifyContent: "center", alignItems: 'center' }} >
-                    <LabeledInput className="full" placeholder="Search for users" />
-                    <button style={{ marginLeft: "10px" }} className='btn circle ghost'>
-                        <FaSearch />
-                    </button>
+            <div className='right'>
+                <div className="nav-toggle-btn btn circle" onClick={handleNavToggle}>
+                    <div className="nav-toggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
-            </Modal>
+                <Search />
+            </div>
         )
     }
     return (
         <>
             <header>
-                <SearchModal />
+                <RightSide />
                 <Link to="/chats" className='chatti'>Chatti</Link>
                 <HeaderButtons />
             </header>
