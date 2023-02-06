@@ -49,7 +49,7 @@ const SignUp = () => {
     toast.success('successfully registerd')
     localStorage.setItem('token', data.token);
     setLoading(false);
-    navigate('/chats')
+    navigate('/chat')
   }
 
   //submit the data on click

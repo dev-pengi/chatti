@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import './inputs.css'
 const DynamicInput = ({ type, placeholder, autoFocus, iValue, style, phStyle, onChange, status = { status: 1 } }) => {
 
@@ -19,17 +19,17 @@ const DynamicInput = ({ type, placeholder, autoFocus, iValue, style, phStyle, on
 export default DynamicInput;
 
 
-export const LabeledInput = ({ label, type, placeholder, onChange, style, className, value = '' }) => {
-
+export const LabeledInput = ({ label, type, placeholder, onChange, style, className, value = '', Ekey }) => {
+    const inputRef = useRef(null);
     const [typed, setTyped] = useState(value.trim().length ? true : false);
     const handleInput = (e) => {
         setTyped(e.target.value ? true : false);
     }
 
     return (
-        <div style={style} className={`labeled-input ${className}`}>
+        <div style={style} className={`labeled-input ${className} ${typed ? 'typed' : ''}`}>
             {label && <label>{label}</label>}
-            <input value={value} onChange={onChange} style={{ marginTop: label ? '3px' : '' }} onInput={handleInput} className={`${typed ? 'typed' : ''}`} type={type} placeholder={placeholder} />
+            <input key={Ekey} value={value} onChange={onChange} style={{ marginTop: label ? '3px' : '' }} onInput={handleInput} className={`${typed ? 'typed' : ''}`} type={type} placeholder={placeholder} />
         </div>
     )
 }

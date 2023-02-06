@@ -44,7 +44,7 @@ const SideDrawer = () => {
         <>
             <header>
                 <RightSide />
-                <Link to="/chats" className='chatti'>Chatti</Link>
+                <Link to="/chat" className='chatti'>Chatti</Link>
                 <HeaderButtons />
             </header>
 

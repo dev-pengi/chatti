@@ -5,13 +5,18 @@
 
 .chat-windows nav {
     position: fixed;
-    width: 300px;
-    height: 100%;
+    width: 350px;
+    height: calc(100% - 60px);
     left: 0px;
     padding: 20px 10px;
     background-color: var(--nav);
     transition: .3s;
     z-index: 47;
+    overflow-y: auto;
+}
+
+.chat-windows nav::-webkit-scrollbar {
+    width: 5px;
 }
 
 .chat-windows nav .searchNote {
@@ -27,12 +32,91 @@
     text-align: center;
 }
 
-.chat-windows nav .chats-search{
+.chat-windows nav .chats-search {
     display: block;
     width: 100%;
 }
-.chat-windows nav .nav-chats{
+
+.chat-windows nav .nav-chats {
     display: flex;
     width: 100%;
     flex-direction: column;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.chat-windows nav .nav-chats .loading-chat,
+.chat-windows nav .nav-chats .nav-chat {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 5px;
+}
+
+
+.chat-windows nav .nav-chats .nav-chat {
+    border-radius: 7px;
+    transition: .3s;
+}
+
+.chat-windows nav .nav-chats .nav-chat:hover {
+    background-color: var(--ghost-hover);
+}
+
+.chat-windows nav .nav-chats .nav-chat.chat-active {
+    background-color: var(--ghost-click);
+}
+
+
+.chat-windows nav .nav-chats .nav-chat .left img {
+    min-height: 50px;
+    height: 50px;
+    min-width: 50px;
+    width: 50px;
+}
+
+.chat-windows nav .nav-chats .loading-chat .right,
+.chat-windows nav .nav-chats .nav-chat .right {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-windows nav .nav-chats .nav-chat .right h3 {
+    font-size: 20px;
+}
+
+.chat-windows nav .nav-chats .nav-chat .right .last-msg {
+    font-size: 14px;
+    margin-top: -13px;
+}
+
+.chat-windows nav .avt-loading {
+    min-height: 50px;
+    min-width: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+.chat-windows nav .name-loading {
+    height: 18px;
+    width: 130px;
+    border-radius: 3px;
+}
+
+.chat-windows nav .last-msg-loading {
+    height: 13px;
+    width: 190px;
+    border-radius: 3px;
+}
+
+.chats-search {
+    transition: .3s;
+}
+
+.chats-search.typed+.add-group {
+    display: none;
 }

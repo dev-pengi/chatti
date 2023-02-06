@@ -46,10 +46,8 @@ body {
   --purple: #7c44ad;
   --pink: #e91e63;
   --yellow: #f1c40f;
-  --skeleton: rgba(44, 44, 60, 0.7);
-  --skeleton-highlight: rgba(92, 101, 242, 0.2);
-
-
+  --skeleton: #2c2c3cb3;
+  --skeleton-highlight: #5c65f233;
 }
 
 

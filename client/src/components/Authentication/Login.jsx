@@ -33,7 +33,7 @@ const Login = () => {
     toast.success('successfully loged in')
     localStorage.setItem('token', data.token);
     setLoading(false);
-    navigate('/chats')
+    navigate('/chat')
   }
 
   //submit the data on click

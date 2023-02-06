@@ -7,7 +7,7 @@ const { registerUser, authUser, allUsers } = require('../controllers/userControl
 const { protect } = require('../middleware/authMiddleware')
 // router.route('/').post()
 
-router.route('/').post(protect, accessChat)
+router.route('/:userID').get(protect, accessChat)
 router.route('/').get(protect, fetchChats)
 router.route('/group/create').post(protect, createGroupChat)
 router.route('/group/rename').put(protect, renameGroup)

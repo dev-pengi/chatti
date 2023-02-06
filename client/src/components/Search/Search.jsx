@@ -1,36 +1,37 @@
 //react hooks
 import { useState, useEffect } from 'react';
 //icons
-import { FaSearch } from "react-icons/fa";
+import { FaCircleNotch, FaSearch } from "react-icons/fa";
 import { toast } from 'react-toastify';
 //components
 import { LabeledInput } from '../Inputs/Input'
 import Modal from '../Modal/Modal';
 import axios from 'axios'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './search.css'
 
 
 const Search = ({ type = 'ghost' }) => {
+    const navigate = useNavigate()
 
     const [search, setSearch] = useState('');
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+
+    const token = localStorage.getItem('token')
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+    }
+    const config = {
+        headers
+    };
+
     const HandleSearch = async () => {
         setError('')
         try {
             setLoading(true);
-
-            const token = localStorage.getItem('token')
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-            }
-            const config = {
-                headers
-            };
-
             const { data } = await axios.get(`/api/users?search=${search}`, config);
             setLoading(false);
             if (!data || !data.length) return setError('Can\'t find any users');
@@ -74,6 +75,33 @@ const Search = ({ type = 'ghost' }) => {
             </button>
         )
     }
+    const MessageButton = ({ userID }) => {
+        const [btnLoading, setBtnLoading] = useState(false)
+
+        const accessChat = async () => {
+            try {
+                const { data } = await axios.get(`/api/chats/${userID}`, config)
+                setBtnLoading(false);
+                navigate(`/chat/${data._id}`)
+            } catch (err) {
+                const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
+                toast.error(error);
+                setBtnLoading(false);
+            }
+
+        }
+        const handleClick = () => {
+            setBtnLoading(true);
+            accessChat()
+        }
+
+        return (
+            <button onClick={handleClick} className="btn ghost">
+                {btnLoading ? <FaCircleNotch className='spin' /> : "message"}
+            </button>
+        )
+    }
+
     const Users = ({ users }) => {
         if (loading) return <SearchLoading />
         if (error) return <p className="note-text">{error}</p>
@@ -91,7 +119,7 @@ const Search = ({ type = 'ghost' }) => {
                                     <h3 className='name'>{user.name}</h3>
                                 </div>
                                 <div className="search-left">
-                                    <Link to={`/chats/${user._id}`}><button className="btn ghost">message</button></Link>
+                                    <MessageButton userID={user._id} />
                                 </div>
                             </div>
                         )

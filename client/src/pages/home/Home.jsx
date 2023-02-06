@@ -11,7 +11,7 @@ const Home = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user) navigate('/chats')
+        if (user) navigate('/chat')
     }, [user])
 
     return (

@@ -4,7 +4,7 @@ const chat = require('../models/chat');
 const generateToken = require('../config/generateToken')
 
 const accessChat = asyncHandler(async (req, res) => {
-    const { userID } = req.body;
+    const { userID } = req.params;
 
     if (!userID) {
         res.status(400);
@@ -33,7 +33,7 @@ const accessChat = asyncHandler(async (req, res) => {
     }
     else {
         let chatData = {
-            chatName: "sender",
+            name: "sender",
             isGroupChat: false,
             users: [req.user._id, userID]
         };
@@ -69,7 +69,7 @@ const fetchChats = asyncHandler(async (req, res) => {
 
             chats = populatedChats.filter((chat) => {
                 return chat.users.some((user) => {
-                    return JSON.stringify(user, ['name']).match(new RegExp(search, 'i')) && (user.name !== req.user.name);
+                    return JSON.stringify(user, ['name', '_id']).match(new RegExp(search, 'i')) && (user._id !== req.user._id);
                 });
             });
         } else {
@@ -105,22 +105,22 @@ const createGroupChat = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('name is required')
     }
-    users = JSON.parse(users);
 
     if (users.length < 2) {
         res.status(400)
         throw new Error('it requires at least 2 users to create a group chat')
     }
-
+    console.log(users)
     users.push(req.user._id);
 
     try {
         const groupChat = await chat.create({
-            chatName: name,
+            name: name,
             users: users,
             isGroup: true,
             groupAdmin: req.user._id,
         })
+        console.log(groupChat)
         const fullGroupChat = await chat.findOne({ _id: groupChat._id })
             .populate("users", "-password")
             .populate("groupAdmin", "-password")
@@ -133,13 +133,13 @@ const createGroupChat = asyncHandler(async (req, res) => {
 })
 
 const renameGroup = asyncHandler(async (req, res) => {
-    let { chatID, chatName } = req.body;
+    let { chatID, name } = req.body;
 
 
     const updatedChat = await chat.findByIdAndUpdate(
         chatID,
         {
-            chatName
+            name
         },
         { new: true }
     )

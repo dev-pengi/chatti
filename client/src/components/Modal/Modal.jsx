@@ -28,7 +28,7 @@ const Modal = ({ children, Button, title = "Chatti", showFotter = true, primaryB
                         <div className="modal-body" style={style}>{children}</div>
                         {showFotter && <div className="modal-fotter">
                             {primaryBtn && <button onClick={onSubmit} className={`btn primary ${loading ? 'loading' : ''}`}>{loading ? <FaCircleNotch className='spin' /> : primaryBtn}</button>}
-                            <button className="btn secondary" onClick={handleClose}>{secondaryBtn ? secondaryBtn : 'Close'}</button>
+                            <button className="btn ghost" onClick={handleClose}>{secondaryBtn ? secondaryBtn : 'Close'}</button>
                         </div>}
                     </div>
                 }

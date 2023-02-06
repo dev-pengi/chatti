@@ -1,14 +1,15 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { ChatState } from '../../Context/ChatProvider';
 import MyChats from '../../components/Chat/MyChats';
 import './chat.css'
-// import ChatBox from '../../components/ChatBox';
+import ChatBox from '../../components/Chat/ChatBox';
 
 
 const Chat = () => {
     const { user } = ChatState();
+    const { id } = useParams();
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -17,10 +18,12 @@ const Chat = () => {
 
 
     return (
-        <div className='chat-windows'>
+        <div className='chat-windows show'>
             {user && <MyChats />}
+            {id && <ChatBox />}
         </div>
     )
+
 }
 
 export default Chat;
