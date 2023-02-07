@@ -7,11 +7,9 @@ const Modal = ({ children, Button, title = "Chatti", showFotter = true, primaryB
     const [isOpen, setIsOpen] = useState(false);
     const handleClose = () => {
         setIsOpen(false);
-        console.log('adfg')
     }
     const handleOpen = () => {
         setIsOpen(true);
-        console.log('hi');
     }
 
     return (

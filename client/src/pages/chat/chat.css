@@ -120,3 +120,69 @@
 .chats-search.typed+.add-group {
     display: none;
 }
+
+.group-search-users {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.search-text-note {
+    display: block;
+    margin: 10px auto;
+}
+
+.group-search-users .group-search-user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.group-search-users .group-search-user .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.group-search-users .group-search-user img {
+    min-width: 50px;
+    width: 50px;
+    min-height: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.group-search-users .group-search-user .name {
+    font-size: 18px;
+}
+
+.group-users {
+    /* padding: 0 10px; */
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.group-users .group-user {
+    padding: 1px 8px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--ghost-hover);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.group-users .group-user:hover {
+    background-color: var(--ghost-click);
+}
+
+.group-users .group-user .icon {
+    transform: rotateZ(45deg);
+    font-size: 13px;
+}

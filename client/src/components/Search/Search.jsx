@@ -42,7 +42,6 @@ const Search = ({ type = 'ghost' }) => {
             setLoading(false);
             setError(error)
         }
-
     }
 
 

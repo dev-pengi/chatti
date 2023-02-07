@@ -5,16 +5,23 @@ import { toast } from 'react-toastify';
 import { LabeledInput } from '../Inputs/Input';
 import { ChatState } from '../../Context/ChatProvider'
 import Search from '../Search/Search';
-import { Link, Routes, Route, useParams, useLocation } from 'react-router-dom';
+import { Link, Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
 import Modal from '../Modal/Modal';
+import CreateGroup from './CreateGroup';
 
 const MyChats = () => {
-
     const { user } = ChatState()
     const params = useParams()
-    const location = useLocation()
+    const navigate = useNavigate()
 
 
+    const token = localStorage.getItem('token')
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+    }
+    const config = {
+        headers
+    };
 
     const [loading, setLoading] = useState(false);
     const [chats, setChats] = useState([])
@@ -26,13 +33,6 @@ const MyChats = () => {
     const fetchChats = async (keyword = '') => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token')
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-            }
-            const config = {
-                headers
-            };
             const apiQuery = keyword.trim().length ? `?search=${keyword}` : ''
             const { data } = await axios.get(`/api/chats${apiQuery}`, config);
             setLoading(false);
@@ -51,7 +51,7 @@ const MyChats = () => {
 
 
     const LoadingChats = () => {
-        const times = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        const times = [1, 2, 3, 4, 5, 6, 7, 8];
         return (
             <div className="nav-chats">
                 {times.map(time => {
@@ -78,7 +78,7 @@ const MyChats = () => {
                 <>
                     <div className="nav-chats">
                         {userChats.map((chat, index) => {
-                            const otherUser = chat.isGroup ? chat : otherUser = chat.users.find(u => u._id != user._id);
+                            const otherUser = chat.isGroup ? chat : chat.users.find(u => u._id != user._id);
                             return (
                                 <Link to={`/chat/${chat._id}`} key={chat._id} className={` nav-chat ${params.id == chat._id ? "chat-active" : ''}`}>
                                     <div className="left">
@@ -116,26 +116,13 @@ const MyChats = () => {
             </button>
         )
     }
-    const AddGroupModal = ({ onClick }) => {
-        const [groupName, setGroupName] = useState('')
-        const [groupLoading, setGroupLoading] = useState(false)
 
-        const handleCreate = () => {
-            setGroupLoading(true);
-        }
-
-        return (
-            <Modal Button={AddGroupButton} title="Create group" showFotter={true} loading={groupLoading} primaryBtn="Create group" onSubmit={handleCreate}>
-                <LabeledInput label="Group name" className="full" value={groupName} onChange={(e) => { setGroupName(e.target.value) }} />
-            </Modal>
-        )
-    }
 
     return (
         <nav className="chat-nav">
             <div className="flex-group" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <LabeledInput value={search} onChange={handleSearchChange} placeholder="Search for chats" className="full chats-search" />
-                <AddGroupModal />
+                <CreateGroup AddGroupButton={AddGroupButton} />
             </div>
             <LoadChats userChats={chats} />
         </nav>

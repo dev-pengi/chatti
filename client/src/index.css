@@ -68,11 +68,6 @@ body {
 .unshow {
   animation: unshow .2s linear;
 }
-
-.icon {
-  font-size: 23px;
-}
-
 @-moz-keyframes spin {
   from {
     -moz-transform: rotate(0deg);
