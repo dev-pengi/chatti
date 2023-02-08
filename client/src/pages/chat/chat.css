@@ -5,7 +5,7 @@
 
 .chat-windows nav {
     position: fixed;
-    width: 350px;
+    width: 330px;
     height: calc(100% - 60px);
     left: 0px;
     padding: 20px 10px;
@@ -185,4 +185,9 @@
 .group-users .group-user .icon {
     transform: rotateZ(45deg);
     font-size: 13px;
+}
+
+.chat-box {
+    position: relative;
+    left: 330px;
 }

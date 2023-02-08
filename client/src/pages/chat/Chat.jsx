@@ -18,10 +18,12 @@ const Chat = () => {
 
 
     return (
-        <div className='chat-windows show'>
-            {user && <MyChats />}
-            {id && <ChatBox />}
-        </div>
+        <>
+            {user && <div className='chat-windows show'>
+                {user && <MyChats />}
+                {id && <ChatBox chatID={id} />}
+            </div>}
+        </>
     )
 
 }

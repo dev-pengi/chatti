@@ -5,7 +5,7 @@ const useClickOutside = (ref, callback) => {
         if (!ref.current || ref.current.contains(e.target)) {
             return;
         }
-        callback();
+        callback(e);
     };
 
     useEffect(() => {

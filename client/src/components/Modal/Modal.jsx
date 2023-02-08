@@ -15,7 +15,11 @@ const Modal = ({ children, Button, title = "Chatti", showFotter = true, primaryB
     return (
         <>
             {isOpen && <div className="modal-overlay show"></div>}
-            <UseClickOutside onClickOutside={handleClose}>
+            <UseClickOutside onClickOutside={(event) => {
+                if (event.target.closest('.modal-box') === null) {
+                    handleClose();
+                }
+            }}>
                 <Button onClick={handleOpen} />
                 {
                     isOpen && <div className="modal-box scale show">
@@ -35,7 +39,7 @@ const Modal = ({ children, Button, title = "Chatti", showFotter = true, primaryB
     )
 }
 
-export default Modal
+export default Modal;
 
 
 
