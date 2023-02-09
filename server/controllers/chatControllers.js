@@ -1,9 +1,13 @@
 const asyncHandler = require('express-async-handler');
 const user = require('../models/user');
 const chat = require('../models/chat');
-const generateToken = require('../config/generateToken')
 
-const accessChat = asyncHandler(async (req, res) => {
+
+
+
+
+
+const accessChatUser = asyncHandler(async (req, res) => {
     const { userID } = req.params;
 
     if (!userID) {
@@ -21,13 +25,11 @@ const accessChat = asyncHandler(async (req, res) => {
         .populate('users', "-password")
         .populate('lastMessage');
 
-    console.log(isChat);
     isChat = await user.populate(isChat, {
         path: "lastMessage.sender",
-        select: 'name pic email'
+        select: '-password'
     })
 
-    console.log(isChat);
     if (isChat.length) {
         res.send(isChat[0])
     }
@@ -48,6 +50,32 @@ const accessChat = asyncHandler(async (req, res) => {
             throw new Error(err.message)
         }
     }
+})
+
+
+
+const accessChatID = asyncHandler(async (req, res) => {
+    const { chatID } = req.params;
+
+    if (!chatID) {
+        res.status(400);
+        throw new Error('invalid chat id')
+    }
+
+    let isChat = await chat.findById(chatID)
+        .populate('users', "-password")
+        .populate('lastMessage');
+
+    isChat = await user.populate(isChat, {
+        path: "lastMessage.sender",
+        select: 'name pic email'
+    })
+    if (!isChat) {
+        res.status(400)
+        throw new Error('This chat is invailable')
+    };
+
+    res.send(isChat)
 });
 
 const fetchChats = asyncHandler(async (req, res) => {
@@ -97,20 +125,28 @@ const fetchChats = asyncHandler(async (req, res) => {
 
 const createGroupChat = asyncHandler(async (req, res) => {
     let { users, name } = req.body;
-    if (!users) {
-        res.status(400)
-        throw new Error('it requires at least 2 users to create a group chat')
-    }
     if (!name) {
         res.status(400)
-        throw new Error('name is required')
+        throw new Error('Group name is required')
     }
+    if (!users) {
+        res.status(400)
+        throw new Error('It requires at least to add 2 users to create a group chat')
+    }
+
+    for (let i = 0; i < users.length; i++) {
+        const checkUser = await user.findOne({ _id: users[i] })
+        if (!checkUser) {
+            res.status(400)
+            throw new Error('one of the added users doesn\'t exists')
+        }
+    }
+    const avt = 'https://i.imgur.com/JtPQkIg.png'
 
     if (users.length < 2) {
         res.status(400)
-        throw new Error('it requires at least 2 users to create a group chat')
+        throw new Error('It requires at least to add 2 users to create a group chat')
     }
-    console.log(users)
     users.push(req.user._id);
 
     try {
@@ -118,6 +154,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
             name: name,
             users: users,
             isGroup: true,
+            avatar: avt,
             groupAdmin: req.user._id,
         })
         console.log(groupChat)
@@ -204,10 +241,11 @@ const removeGroupMember = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-    accessChat,
+    accessChatID,
     fetchChats,
     createGroupChat,
     renameGroup,
     addGroupMember,
-    removeGroupMember
+    removeGroupMember,
+    accessChatUser
 }

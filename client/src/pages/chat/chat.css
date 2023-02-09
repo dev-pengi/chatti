@@ -190,4 +190,57 @@
 .chat-box {
     position: relative;
     left: 330px;
+    width: calc(100% - 330px);
+}
+
+.chat-box-header {
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+    border-bottom: solid 1px var(--ghost-hover);
+}
+
+.chat-box-header .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: .2s;
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-box-header .right:active {
+    transform: scale(.97);
+}
+
+.chat-box-header .right .avt-loading {
+    width: 40px;
+    height: 40px;
+}
+
+.chat-box-header .right .name-loading {
+    height: 19px;
+    width: 140px;
+    border-radius: 5px;
+}
+.chat-box-header .btn-loading {
+    height: 28px;
+    width: 28px;
+    border-radius: 5px;
+}
+
+
+
+
+.chat-box-header .right .avt {
+    width: 40px;
+    height: 40px;
+}
+
+.chat-box-header .right .name {
+    font-size: 20px;
 }

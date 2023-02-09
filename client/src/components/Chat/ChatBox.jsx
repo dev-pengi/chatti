@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
+import { FaEllipsisH } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { ChatState } from "../../Context/ChatProvider";
 
@@ -27,8 +28,9 @@ const ChatBox = ({ chatID }) => {
                 setChat(data)
             }
             else {
-                console.log(data)
                 const user2 = data.users.find(u => u._id != user._id);
+                console.log(data)
+                console.log(user2)
                 data.avatar = user2.avatar;
                 data.name = user2.name;
                 setChat(data);
@@ -43,6 +45,31 @@ const ChatBox = ({ chatID }) => {
             return error;
         }
     }
+    const ChatHeader = () => {
+        if (loading)
+            return (
+                <div className="chat-box-header">
+                    <div className="right">
+                        <div className="avt-loading skeleton circle"></div>
+                        <div className="name-loading skeleton"></div>
+                    </div>
+                    <div className="left">
+                        <div className="btn-loading skeleton"></div>
+                    </div>
+                </div>
+
+            )
+        else
+            return (
+                <div className="chat-box-header">
+                    <div className="right ghost">
+                        <img src={chat.avatar} alt={chat.name} className="avt circle" />
+                        <h3 className="name">{chat.name}</h3>
+                    </div>
+                    <div className="left"><button className="ghost btn circle"><FaEllipsisH /></button></div>
+                </div>
+            )
+    }
 
     useEffect(() => {
         fetchChat();
@@ -51,13 +78,7 @@ const ChatBox = ({ chatID }) => {
 
     return (
         <div className="chat-box show">
-            <div className="chat-box header">
-                <div className="right">
-                    <img src={chat.avatar} alt={chat.name} className="avt" />
-                    <div className="name">{chat.name}</div>
-                </div>
-                <div className="left"></div>
-            </div>
+            <ChatHeader />
         </div>
     )
 }

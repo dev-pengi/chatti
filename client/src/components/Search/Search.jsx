@@ -79,7 +79,7 @@ const Search = ({ type = 'ghost' }) => {
 
         const accessChat = async () => {
             try {
-                const { data } = await axios.get(`/api/chats/${userID}`, config)
+                const { data } = await axios.get(`/api/chats/user/${userID}`, config)
                 setBtnLoading(false);
                 navigate(`/chat/${data._id}`)
             } catch (err) {
