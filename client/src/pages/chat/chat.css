@@ -214,7 +214,7 @@
 }
 
 .chat-box-header .right:active {
-    transform: scale(.97);
+    transform: scale(.99);
 }
 
 .chat-box-header .right .avt-loading {

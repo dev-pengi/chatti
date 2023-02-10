@@ -130,7 +130,7 @@ const MyChats = () => {
             setGroupLoading(true);
             try {
                 const groupData = { name: groupName, users: groupUsers.map(u => u._id) }
-                const { data } = await axios.post('/api/chats/group/create', groupData, config)
+                const { data } = await axios.post('/api/chats/groups/create', groupData, config)
                 toast.success('Group has been successfuly created');
                 navigate(`/chat/${data._id}`)
                 setGroupLoading(false);

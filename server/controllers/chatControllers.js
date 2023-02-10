@@ -64,11 +64,12 @@ const accessChatID = asyncHandler(async (req, res) => {
 
     let isChat = await chat.findById(chatID)
         .populate('users', "-password")
+        .populate("groupAdmin", "-password")
         .populate('lastMessage');
 
     isChat = await user.populate(isChat, {
         path: "lastMessage.sender",
-        select: 'name pic email'
+        select: '-password'
     })
     if (!isChat) {
         res.status(400)
@@ -141,7 +142,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
             throw new Error('one of the added users doesn\'t exists')
         }
     }
-    const avt = 'https://i.imgur.com/JtPQkIg.png'
+    const avt = 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg'
 
     if (users.length < 2) {
         res.status(400)
@@ -169,60 +170,91 @@ const createGroupChat = asyncHandler(async (req, res) => {
     }
 })
 
-const renameGroup = asyncHandler(async (req, res) => {
-    let { chatID, name } = req.body;
+const updateGroup = asyncHandler(async (req, res) => {
+    let { name, users } = req.body;
+    let { chatID } = req.params;
+    const avt = req.image;
+    const update = {}
+    try {
 
+        const checkGroup = await chat.findOne(
+            {
+                _id: chatID,
+                isGroup: { $eq: true },
+            }
+        )
+        if (!checkGroup) {
+            res.status(400)
+            throw new Error('Group not found')
+        }
+        users = [...users, req.user._id.toString()]
+        users = users.filter((item, index) => {
+            return users.indexOf(item) === index;
+        });
+        
+        console.log(JSON.stringify(checkGroup.users.sort().map(u => u._id.toString())) === JSON.stringify(users.sort()));
+        if (users && users.length && JSON.stringify(checkGroup.users.map(u => u._id.toString())) !== JSON.stringify(users)) {
+            if (!req.user._id.equals(checkGroup.groupAdmin)) {
+                res.status(401)
+                throw new Error('Only group admin could add/remove users')
+            }
 
-    const updatedChat = await chat.findByIdAndUpdate(
-        chatID,
-        {
-            name
-        },
-        { new: true }
-    )
-        .populate("users", "-password")
-        .populate("groupAdmin", "-password")
-    if (!updatedChat) {
+            for (let i = 0; i < checkGroup.users.length; i++) {
+                const checkUser = await user.findOne({ _id: checkGroup.users[i] })
+                if (!checkUser) {
+                    res.status(400)
+                    throw new Error('one of the added users doesn\'t exists')
+                }
+            }
+            update.users = users
+        }
+        if (checkGroup.name != name) {
+            if (!name || !name.trim().length) {
+                res.status(400)
+                throw new Error('Please use a valid name')
+            }
+            update.name = name
+        }
+        if (avt) {
+            update.avatar = avt
+        }
+
+        const updatedChat = await chat.findOneAndUpdate(
+            {
+                _id: chatID,
+                isGroup: { $eq: true },
+            },
+            {
+                ...update
+            },
+            { new: true }
+        )
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password")
+
+        if (!updatedChat) {
+            res.status(400)
+            throw new Error('Group not found')
+        }
+        else {
+            res.json(updatedChat)
+        }
+    } catch (err) {
         res.status(400)
-        throw new Error('Chat not found')
-    }
-    else {
-        res.json(updatedChat)
+        throw new Error(err.message)
     }
 
 })
+const leaveGroup = asyncHandler(async (req, res) => {
+    let { chatID } = req.params;
 
-const addGroupMember = asyncHandler(async (req, res) => {
-    let { chatID, userID } = req.body;
-
-
-    const added = await chat.findByIdAndUpdate(
-        chatID,
+    const removed = await chat.findOneAndUpdate(
         {
-            $addToSet: { users: userID },
+            _id: chatID,
+            isGroup: { $eq: true },
         },
-        { new: true }
-    )
-        .populate("users", "-password")
-        .populate("groupAdmin", "-password")
-
-
-    if (!added) {
-        res.status(400)
-        throw new Error('Chat not found')
-    }
-    else {
-        res.json(added)
-    }
-})
-
-const removeGroupMember = asyncHandler(async (req, res) => {
-    let { chatID, userID } = req.body;
-
-    const removed = await chat.findByIdAndUpdate(
-        chatID,
         {
-            $pull: { users: userID },
+            $pull: { users: req.user._id },
         },
         { new: true }
     )
@@ -232,20 +264,18 @@ const removeGroupMember = asyncHandler(async (req, res) => {
 
     if (!removed) {
         res.status(400)
-        throw new Error('Chat not found')
+        throw new Error('Group not found')
     }
     else {
-        res.json(removed)
+        res.status(200).send('Succesffuly left the group')
     }
-
 })
 
 module.exports = {
     accessChatID,
     fetchChats,
     createGroupChat,
-    renameGroup,
-    addGroupMember,
-    removeGroupMember,
-    accessChatUser
+    updateGroup,
+    accessChatUser,
+    leaveGroup
 }

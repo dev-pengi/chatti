@@ -68,6 +68,7 @@ body {
 .unshow {
   animation: unshow .2s linear;
 }
+
 @-moz-keyframes spin {
   from {
     -moz-transform: rotate(0deg);
@@ -156,6 +157,14 @@ body {
   cursor: pointer;
 }
 
+.btn.left {
+  justify-content: start;
+}
+
+.btn.right {
+  justify-content: end;
+}
+
 .full {
   width: 100% !important;
 }
@@ -210,6 +219,27 @@ body {
   background-color: var(--primary-click);
 }
 
+
+.danger-ghost,
+.danger-ghost p,
+.danger-ghost .icon {
+  background: none;
+  color: var(--danger) !important;
+}
+
+.danger-ghost:hover {
+  color: var(--white);
+}
+
+.danger-ghost:hover {
+  background-color: var(--danger-hover);
+  color: var(--white) !important;
+}
+
+.danger-ghost:active {
+  background-color: var(--danger-click);
+  color: var(--white) !important;
+}
 
 .danger {
   background-color: var(--danger);

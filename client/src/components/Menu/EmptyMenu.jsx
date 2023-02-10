@@ -2,7 +2,7 @@ import { useState } from 'react';
 import UseClickOutside from '../events/useClickOutside'
 import './style.css'
 
-const EmptyMenu = ({ children, Button }) => {
+const EmptyMenu = ({ children, Button, fit = true }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const closeMenu = () => {
@@ -16,7 +16,7 @@ const EmptyMenu = ({ children, Button }) => {
         <>
             <UseClickOutside onClickOutside={closeMenu}>
                 <Button onClick={toggleMenu} />
-                {isOpen && <div className="menu show">
+                {isOpen && <div className={`menu show ${fit ? 'fit' : ''}`}>
                     {children}
                 </div>}
             </UseClickOutside>

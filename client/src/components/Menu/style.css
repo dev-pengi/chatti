@@ -3,12 +3,16 @@
     background-color: var(--modal);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     color: var(--white);
-    top: 70px;
+    top: 60px;
     right: 20px;
-    width: max-content;
+    width: 225px;
     max-width: 350px;
     padding: 15px 10px;
     border-radius: 5px;
     max-height: 60vh;
     overflow-y: auto;
+}
+
+.menu.fit {
+    width: max-content !important;
 }

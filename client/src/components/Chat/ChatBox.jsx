@@ -1,8 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { FaEllipsisH } from "react-icons/fa";
+import { FaEllipsisH, FaPlus } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+import { BsFillGearFill } from 'react-icons/bs'
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ChatState } from "../../Context/ChatProvider";
+import { LabeledInput } from "../Inputs/Input";
+import EmptyMenu from "../Menu/EmptyMenu";
+import Modal, { Confirmation } from "../Modal/Modal";
 
 const ChatBox = ({ chatID }) => {
     const token = localStorage.getItem('token')
@@ -13,10 +19,12 @@ const ChatBox = ({ chatID }) => {
         headers
     };
 
-    const { user } = ChatState();
+    const navigate = useNavigate();
 
+    const { user } = ChatState();
     const [chat, setChat] = useState({});
     const [loading, setLoading] = useState(false);
+    const [isGroup, setIsGroup] = useState(false);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
@@ -26,6 +34,7 @@ const ChatBox = ({ chatID }) => {
             let { data } = await axios.get(`/api/chats/${chatID}`, config);
             if (data.isGroup) {
                 setChat(data)
+                setIsGroup(true)
             }
             else {
                 const user2 = data.users.find(u => u._id != user._id);
@@ -34,6 +43,7 @@ const ChatBox = ({ chatID }) => {
                 data.avatar = user2.avatar;
                 data.name = user2.name;
                 setChat(data);
+                setIsGroup(false)
             }
             setLoading(false);
             return data;
@@ -45,6 +55,197 @@ const ChatBox = ({ chatID }) => {
             return error;
         }
     }
+
+    const GroupSettings = ({ onClick }) => {
+        const [groupName, setGroupName] = useState('');
+        const [results, setResults] = useState([]);
+        const [groupSearch, setGroupSearch] = useState('');
+        const [groupLoading, setGroupLoading] = useState(false);
+        const [groupSearchLoading, setGroupSearchLoading] = useState(false);
+        const [modalLoading, setModalLoading] = useState(true);
+        const [groupUsers, setGroupUsers] = useState([]);
+        const [isAdmin, setIsAdmin] = useState(false);
+
+        useEffect(() => {
+            if (!isGroup) return;
+            setGroupName(chat.name);
+            setGroupUsers(chat.users.filter(u => u._id != user._id));
+            setModalLoading(false);
+            setIsAdmin(chat.groupAdmin._id == user._id);
+
+        }, [chat])
+
+        const GroupSettingsOption = ({ onClick }) => {
+            return (
+                <button onClick={onClick} className="btn left ghost full">
+                    <BsFillGearFill />
+                    <p className="with-icon">Group settings</p>
+                </button>
+            )
+        }
+
+        const EditGroup = async () => {
+            setGroupLoading(true);
+            try {
+                const groupData = { name: groupName, users: [...groupUsers.map(u => u._id), user._id] }
+                const { data } = await axios.put(`/api/chats/groups/${chatID}`, groupData, config)
+                toast.success('Group has been successfuly updated');
+                setChat(data)
+                navigate(`/chat/${data._id}`)
+                setGroupLoading(false);
+            } catch (err) {
+                const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
+                toast.error(error);
+                setGroupLoading(false);
+                return error;
+            }
+        }
+
+        const fetchUsers = async (search) => {
+            try {
+                setGroupSearchLoading(true);
+                const { data } = await axios.get(`/api/users?search=${search}`, config);
+                setGroupSearchLoading(false);
+                setResults(data);
+            } catch (err) {
+                setGroupSearchLoading(false);
+            }
+        }
+
+        const handleGroupUsers = (e) => {
+            const value = e.target.value;
+            setGroupSearch(value);
+            if (value.trim().length) fetchUsers(value)
+        }
+
+        const addUser = (newUser) => {
+            if (groupUsers.map(u => u._id).includes(newUser._id)) return false;
+            setGroupUsers([...groupUsers, newUser])
+        }
+        const removeUser = (removeUser) => {
+            setGroupUsers(groupUsers.filter(user => user._id !== removeUser._id));
+        }
+        const GroupUsers = ({ remove }) => {
+            return (
+                <div className="group-users">
+                    {groupUsers.map(user => {
+                        return (
+                            <div
+                                key={user._id}
+                                onClick={(event) => {
+                                    if (!remove) return;
+                                    removeUser(user);
+                                    event.stopPropagation();
+                                }}
+                                className="group-user">
+
+                                <p className="name">{user.name}</p>
+                                {remove && <FaPlus className='icon' />}
+
+                            </div>
+                        )
+                    })
+                    }
+                </div >
+            )
+        }
+
+        const SearchResults = () => {
+            if (groupSearchLoading) return <p className="search-text-note">Loading users...</p>
+            if (groupSearch.trim().length) {
+                const addedUsers = groupUsers.map(user => user._id)
+                return (
+                    <div className="group-search-users">
+                        {results.map(user => {
+                            const [isAdded, setIsAdded] = useState(addedUsers.includes(user._id));
+                            return (
+                                !isAdded && (
+                                    <div key={user._id} className="group-search-user">
+                                        <div className="right">
+                                            <img className='avt circle' src={user.avatar} alt={user.name} />
+                                            <h3 className='name'>{user.name}</h3>
+                                        </div>
+                                        <div className="left">
+                                            <button className="ghost btn" onClick={(event) => { addUser(user); event.stopPropagation(); }}>Add</button>
+                                        </div>
+                                    </div>
+                                )
+                            )
+                        })}
+                    </div>
+                )
+            }
+        }
+
+
+
+        return (
+            <Modal Button={GroupSettingsOption} title="Group settings" showFotter={true} loading={groupLoading} primaryBtn="Edit group" onSubmit={EditGroup}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <LabeledInput label="Group name" placeholder="Group name" className="full" value={groupName} onChange={(e) => { setGroupName(e.target.value) }} />
+                    {isAdmin && <LabeledInput label="Add users" placeholder="Search" className="full" value={groupSearch} onChange={handleGroupUsers} />}
+                    <GroupUsers remove={isAdmin} />
+                    {isAdmin && <SearchResults />}
+                </div>
+            </Modal>
+        )
+    }
+
+
+    const LeaveGroup = () => {
+        const [leaveLoading, setLeaveLoading] = useState(false);
+
+        const LeaveGroupOption = ({ onClick }) => {
+            return <button className="btn left danger-ghost full" onClick={onClick}>
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <p className="with-icon">Leave group</p>
+            </button>
+        }
+        const handleLeave = async () => {
+            try {
+                setLeaveLoading(true);
+                await axios.delete(`/api/chats/groups/${chatID}`, config)
+                setLeaveLoading(false);
+                toast.success('you have successfuly left the group')
+                navigate('/chat')
+            } catch (err) {
+                const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
+                toast.error(error);
+                setLeaveLoading(false);
+                return error;
+            }
+        }
+        return (
+            <Confirmation danger={true} title="Leave group" primaryBtn="Leave" loading={leaveLoading} Button={LeaveGroupOption} onSubmit={handleLeave}>
+                Are you sure you want to leave this group?
+            </Confirmation>
+        )
+    }
+
+
+
+    const ChatOptions = () => {
+
+        const ChatOptionsButton = ({ onClick }) => {
+            return (
+                <button onClick={onClick} className="ghost btn circle">
+                    <FaEllipsisH />
+                </button>
+            )
+        }
+
+        return (
+            <EmptyMenu Button={ChatOptionsButton} fit={true}>
+                <div className="flex-group-gap" style={{ display: 'flex', flexDirection: "column", gap: "5px" }}>
+                    {!isGroup && < button className="btn left ghost full">Show profile</button>}
+                    {!isGroup && < button className="btn left ghost full">Block user</button>}
+                    {isGroup && <GroupSettings />}
+                    {isGroup && <LeaveGroup />}
+                </div>
+            </EmptyMenu >
+        )
+    }
+
     const ChatHeader = () => {
         if (loading)
             return (
@@ -57,7 +258,6 @@ const ChatBox = ({ chatID }) => {
                         <div className="btn-loading skeleton"></div>
                     </div>
                 </div>
-
             )
         else
             return (
@@ -66,7 +266,9 @@ const ChatBox = ({ chatID }) => {
                         <img src={chat.avatar} alt={chat.name} className="avt circle" />
                         <h3 className="name">{chat.name}</h3>
                     </div>
-                    <div className="left"><button className="ghost btn circle"><FaEllipsisH /></button></div>
+                    <div className="left">
+                        <ChatOptions />
+                    </div>
                 </div>
             )
     }
