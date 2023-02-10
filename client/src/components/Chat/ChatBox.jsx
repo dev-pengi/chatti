@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useEffect, useState } from "react"
-import { FaEllipsisH, FaPlus } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react"
+import { FaEllipsisH, FaImages, FaPlus } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { BsFillGearFill } from 'react-icons/bs'
 import { useNavigate } from "react-router-dom";
@@ -65,9 +65,12 @@ const ChatBox = ({ chatID }) => {
         const [modalLoading, setModalLoading] = useState(true);
         const [groupUsers, setGroupUsers] = useState([]);
         const [isAdmin, setIsAdmin] = useState(false);
+        const [groupAvt, setGroupAvt] = useState('');
+        const [avtFile, setAvtFile] = useState('');
 
         useEffect(() => {
             if (!isGroup) return;
+            setGroupAvt(chat.avatar)
             setGroupName(chat.name);
             setGroupUsers(chat.users.filter(u => u._id != user._id));
             setModalLoading(false);
@@ -88,7 +91,12 @@ const ChatBox = ({ chatID }) => {
             setGroupLoading(true);
             try {
                 const groupData = { name: groupName, users: [...groupUsers.map(u => u._id), user._id] }
-                const { data } = await axios.put(`/api/chats/groups/${chatID}`, groupData, config)
+                const formData = new FormData();
+                formData.append('img', avtFile);
+                Object.keys(groupData).forEach(key => {
+                    formData.append(key, JSON.stringify(groupData[key]));
+                });
+                const { data } = await axios.put(`/api/chats/groups/${chatID}`, formData, config)
                 toast.success('Group has been successfuly updated');
                 setChat(data)
                 navigate(`/chat/${data._id}`)
@@ -178,11 +186,62 @@ const ChatBox = ({ chatID }) => {
         }
 
 
+        const fileInput = useRef(null);
+        const handleAvtClick = () => {
+            fileInput.current.click();
+        }
+        const handleAvtChange = (event) => {
+            const selectedFile = event.target.files[0];
+            setAvtFile(selectedFile);
+            if (!selectedFile.type.startsWith('image/')) return toast.error('this file is not a valid image');
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                setGroupAvt(e.target.result);
+            };
+
+            reader.readAsDataURL(selectedFile);
+        };
+        const handleDrop = (event) => {
+            event.preventDefault();
+            const { files } = event.dataTransfer;
+            setAvtFile(files[0]);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setGroupAvt(e.target.result);
+            };
+            reader.readAsDataURL(files[0]);
+        };
+
+        const handleDragOver = (event) => {
+            event.preventDefault();
+        };
 
         return (
-            <Modal Button={GroupSettingsOption} title="Group settings" showFotter={true} loading={groupLoading} primaryBtn="Edit group" onSubmit={EditGroup}>
+            <Modal Button={GroupSettingsOption} title="Group settings" showFotter={true} loading={groupLoading} primaryBtn="Update group" onSubmit={EditGroup}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                    <LabeledInput label="Group name" placeholder="Group name" className="full" value={groupName} onChange={(e) => { setGroupName(e.target.value) }} />
+                    <div className="group" >
+                        <div
+                            onClick={handleAvtClick}
+                            className="change-avt relative"
+                            onDrop={handleDrop}
+                            onDragOver={handleDragOver}>
+                            <img src={groupAvt} width="120px" className="circle" />
+                            <div className="icon absolute circle">
+                                <FaImages />
+                            </div>
+
+                            <input
+                                type="file"
+                                ref={fileInput}
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={handleAvtChange} />
+
+                        </div>
+                        <LabeledInput label="Group name" placeholder="Group name" className="full" value={groupName} onChange={(e) => { setGroupName(e.target.value) }} />
+                    </div>
+
                     {isAdmin && <LabeledInput label="Add users" placeholder="Search" className="full" value={groupSearch} onChange={handleGroupUsers} />}
                     <GroupUsers remove={isAdmin} />
                     {isAdmin && <SearchResults />}
@@ -197,7 +256,7 @@ const ChatBox = ({ chatID }) => {
 
         const LeaveGroupOption = ({ onClick }) => {
             return <button className="btn left danger-ghost full" onClick={onClick}>
-                <i class="fa-solid fa-right-from-bracket"></i>
+                <i className="fa-solid fa-right-from-bracket"></i>
                 <p className="with-icon">Leave group</p>
             </button>
         }
@@ -237,8 +296,14 @@ const ChatBox = ({ chatID }) => {
         return (
             <EmptyMenu Button={ChatOptionsButton} fit={true}>
                 <div className="flex-group-gap" style={{ display: 'flex', flexDirection: "column", gap: "5px" }}>
-                    {!isGroup && < button className="btn left ghost full">Show profile</button>}
-                    {!isGroup && < button className="btn left ghost full">Block user</button>}
+                    {!isGroup && < button className="btn left ghost full">
+                        <i className="fa-solid fa-user"></i>
+                        <p className="with-icon">Show profile</p>
+                    </button>}
+                    {!isGroup && < button className="btn left danger-ghost full">
+                        <i class="fa-solid fa-ban"></i>
+                        <p className="with-icon">Block user</p>
+                    </button>}
                     {isGroup && <GroupSettings />}
                     {isGroup && <LeaveGroup />}
                 </div>

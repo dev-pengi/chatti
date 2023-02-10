@@ -176,6 +176,8 @@ const updateGroup = asyncHandler(async (req, res) => {
     const avt = req.image;
     const update = {}
     try {
+        users = JSON.parse(users);
+        name = JSON.parse(name);
 
         const checkGroup = await chat.findOne(
             {
@@ -191,7 +193,7 @@ const updateGroup = asyncHandler(async (req, res) => {
         users = users.filter((item, index) => {
             return users.indexOf(item) === index;
         });
-        
+
         console.log(JSON.stringify(checkGroup.users.sort().map(u => u._id.toString())) === JSON.stringify(users.sort()));
         if (users && users.length && JSON.stringify(checkGroup.users.map(u => u._id.toString())) !== JSON.stringify(users)) {
             if (!req.user._id.equals(checkGroup.groupAdmin)) {

@@ -183,6 +183,11 @@ body {
 .btn p {
   font-weight: 600;
   font-size: 17px;
+  transition: .3s;
+}
+
+.btn i {
+  transition: .3s;
 }
 
 .btn p.with-icon {
@@ -222,18 +227,20 @@ body {
 
 .danger-ghost,
 .danger-ghost p,
-.danger-ghost .icon {
+.danger-ghost i {
   background: none;
-  color: var(--danger) !important;
+  color: var(--danger);
 }
 
-.danger-ghost:hover {
-  color: var(--white);
-}
 
 .danger-ghost:hover {
   background-color: var(--danger-hover);
   color: var(--white) !important;
+}
+
+.danger-ghost:hover p,
+.danger-ghost:hover i {
+  color: var(--white);
 }
 
 .danger-ghost:active {
