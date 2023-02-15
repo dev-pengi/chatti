@@ -50,9 +50,8 @@ const ChatBox = ({ chatID }) => {
         } catch (err) {
             const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
             toast.error(error);
-            console.log(err);
             setLoading(false);
-            return error;
+            navigate('/chat')
         }
     }
 
@@ -92,7 +91,7 @@ const ChatBox = ({ chatID }) => {
             try {
                 const groupData = { name: groupName, users: [...groupUsers.map(u => u._id), user._id] }
                 const formData = new FormData();
-                formData.append('img', avtFile);
+                formData.append('img', avtFile); `  `
                 Object.keys(groupData).forEach(key => {
                     formData.append(key, JSON.stringify(groupData[key]));
                 });

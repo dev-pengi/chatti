@@ -62,7 +62,12 @@ const accessChatID = asyncHandler(async (req, res) => {
         throw new Error('invalid chat id')
     }
 
-    let isChat = await chat.findById(chatID)
+    let isChat = await chat.findOne({
+        $and: [
+            { _id: chatID },
+            { users: { $elemMatch: { $eq: req.user._id } } }
+        ]
+    })
         .populate('users', "-password")
         .populate("groupAdmin", "-password")
         .populate('lastMessage');

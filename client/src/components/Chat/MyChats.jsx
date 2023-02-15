@@ -87,7 +87,7 @@ const MyChats = () => {
                                     </div>
                                     <div className="right">
                                         <h3 className='name'>{otherUser.name}</h3>
-                                        <p className='last-msg'>{chat.lastMessage ? chat.lastMessage : 'New contact, start chating!'}</p>
+                                        <p className='last-msg'>{chat.lastMessage ? chat.lastMessage : `New ${chat.isGroup ? 'group' : 'contact'}, start chating!`}</p>
                                     </div>
                                 </Link>
                             )
@@ -214,9 +214,9 @@ const MyChats = () => {
         return (
             <Modal Button={AddGroupButton} title="Create group" showFotter={true} loading={groupLoading} primaryBtn="Create group" onSubmit={CreateGroup}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    {groupUsers.length > 0 && <GroupUsers />}
                     <LabeledInput label="Group name" placeholder="Group name" className="full" value={groupName} onChange={(e) => { setGroupName(e.target.value) }} />
                     <LabeledInput label="Add users" placeholder="Search" className="full" value={groupSearch} onChange={handleGroupUsers} />
-                    <GroupUsers />
                     <SearchResults />
                 </div>
             </Modal>

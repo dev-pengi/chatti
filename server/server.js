@@ -10,6 +10,7 @@ const bodyparser = require("body-parser")
 //routes
 const userRoutes = require('./routes/userRoutes')
 const chatRoutes = require('./routes/chatRoutes')
+const messageRoutes = require('./routes/messageRoutes')
 
 //configs
 require('./config/run')(app);
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 //requests routes
 app.use('/api/users', userRoutes)
 app.use('/api/chats', chatRoutes)
+app.use('/api/messages', messageRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
