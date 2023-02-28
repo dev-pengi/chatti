@@ -83,6 +83,7 @@
     align-items: start;
     flex-direction: column;
     gap: 10px;
+    width: 100%;
 }
 
 .chat-windows nav .nav-chats .nav-chat .right h3 {
@@ -92,6 +93,14 @@
 .chat-windows nav .nav-chats .nav-chat .right .last-msg {
     font-size: 14px;
     margin-top: -13px;
+    max-width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-windows nav .nav-chats .nav-chat .right .last-msg span {
+    font-weight: 600;
 }
 
 .chat-windows nav .avt-loading {
@@ -227,6 +236,7 @@
     width: 140px;
     border-radius: 5px;
 }
+
 .chat-box-header .btn-loading {
     height: 28px;
     width: 28px;

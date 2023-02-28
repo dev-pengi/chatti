@@ -5,8 +5,8 @@ const messageSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "user"
     },
-    content: { type: Strine, trim: true, required: true },
-    type: { type: Strine, default: 'text' },
+    content: { type: String, trim: true, required: true },
+    type: { type: String, default: 'text' },
     chat: {
         type: Schema.Types.ObjectId,
         ref: "chat"

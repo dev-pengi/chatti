@@ -51,9 +51,6 @@ const accessChatUser = asyncHandler(async (req, res) => {
         }
     }
 })
-
-
-
 const accessChatID = asyncHandler(async (req, res) => {
     const { chatID } = req.params;
 

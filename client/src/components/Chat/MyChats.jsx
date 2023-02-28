@@ -80,6 +80,7 @@ const MyChats = () => {
                         {userChats.map((chat, index) => {
                             const otherUser = chat.isGroup ? chat : chat.users.find(u => u._id != user._id);
                             if (!otherUser) return;
+                            console.log(chat.lastMessage)
                             return (
                                 <Link to={`/chat/${chat._id}`} key={chat._id} className={` nav-chat ${params.id == chat._id ? "chat-active" : ''}`}>
                                     <div className="left">
@@ -87,7 +88,7 @@ const MyChats = () => {
                                     </div>
                                     <div className="right">
                                         <h3 className='name'>{otherUser.name}</h3>
-                                        <p className='last-msg'>{chat.lastMessage ? chat.lastMessage : `New ${chat.isGroup ? 'group' : 'contact'}, start chating!`}</p>
+                                        <p className='last-msg'>{chat.lastMessage ? (chat.lastMessage.sender._id == user._id) ? <> <span>You: </span> {chat.lastMessage.content} </> : chat.lastMessage.content : `New ${chat.isGroup ? 'group' : 'contact'}, start chating!`}</p>
                                     </div>
                                 </Link>
                             )
