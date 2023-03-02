@@ -3,14 +3,14 @@ import { useEffect, useState } from "react"
 import { FaPlus, FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { LabeledInput } from '../Inputs/Input';
-import { ChatState } from '../../Context/ChatProvider'
+import { UserState } from '../../Context/UserProvider'
 import Search from '../Search/Search';
 import { Link, Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
 import Modal from '../Modal/Modal';
 
 const MyChats = () => {
 
-    const { user } = ChatState()
+    const { user } = UserState()
     const params = useParams()
     const navigate = useNavigate()
 
@@ -80,7 +80,6 @@ const MyChats = () => {
                         {userChats.map((chat, index) => {
                             const otherUser = chat.isGroup ? chat : chat.users.find(u => u._id != user._id);
                             if (!otherUser) return;
-                            console.log(chat.lastMessage)
                             return (
                                 <Link to={`/chat/${chat._id}`} key={chat._id} className={` nav-chat ${params.id == chat._id ? "chat-active" : ''}`}>
                                     <div className="left">

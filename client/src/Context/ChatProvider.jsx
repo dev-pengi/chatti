@@ -1,51 +1,71 @@
-import axios from 'axios';
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import axios from 'axios';
+// import { createContext, useContext, useEffect, useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { toast } from 'react-toastify';
 
-const ChatContext = createContext();
+// const ChatContext = createContext();
 
-const ChatProvider = ({ children }) => {
-    //dom hooks
-    const navigate = useNavigate()
-    //states
-    const [user, setUser] = useState();
-    //other
-    const token = localStorage.getItem('token')
-    //to handle when the user data is invalable or the user isn't logged in
-    const handleInvalid = () => setUser(null)
-    //fetch the user data by token
-    const fetchUser = async () => {
-        try {
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-            }
-            const config = {
-                headers
-            };
+// const ChatProvider = ({ children }) => {
 
-            const { data } = await axios.get('/api/users/@me', config);
-            if (!data) return handleInvalid();
-            setUser(data);
-        } catch (err) {
-            handleInvalid();
-        }
-    }
+//     const navigate = useNavigate();
 
-    //run the function on the first render & when the token changes
-    useEffect(() => {
-        setUser()
-        if (!token) return handleInvalid();
-        fetchUser();
+//     const [chatID, SetChatID] = useState('');
+//     const [chats, setChats] = useState([]);
+//     const [chatsLoading, setChatsLoading] = useState(true);
+//     const [messages, setMessages] = useState([]);
+//     const [messagesLoading, setMessagesLoading] = useState(false);
 
-    }, [token])
 
-    return (
-        <ChatContext.Provider value={{ user, setUser }}>{children}</ChatContext.Provider>
-    )
-}
+//     //fetch the user data by token
 
-export const ChatState = () => {
-    return useContext(ChatContext)
-}
+//     const fetchChats = async (keyword = '') => {
+//         try {
+//             setChatsLoading(true);
+//             const apiQuery = keyword.trim().length ? `?search=${keyword}` : ''
+//             const { data } = await axios.get(`/api/chats${apiQuery}`, config);
+//             setChatsLoading(false);
+//             setChats(data);
+//             return data;
+//         } catch (err) {
+//             const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
+//             toast.error(error);
+//             setChatsLoading(false);
+//             return error;
+//         }
+//     }
 
-export default ChatProvider;
+//     useEffect(() => {
+//         fetchChats();
+//     }, [])
+
+
+//     const fetchMessages = async () => {
+//         try {
+//             setLoading(true);
+//             let { data } = await axios.get(`/api/chats/${chatID}/messages`, config);
+//             setMessages(data);
+//             setLoading(false);
+//             return data;
+//         } catch (err) {
+//             const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
+//             toast.error(error);
+//             setLoading(false);
+//         }
+//     }
+
+//     useEffect(() => {
+//         if (!chatID.trim().length) return;
+//         fetchMessages()
+//     }, [chatID])
+
+
+//     return (
+//         <ChatContext.Provider value={{ fetchChats, chats, setChats, chatID, SetChatID, messages, setMessages, chatsLoading, setChatsLoading }}>{children}</ChatContext.Provider>
+//     )
+// }
+
+// export const ChatState = () => {
+//     return useContext(ChatContext)
+// }
+
+// export default ChatProvider;

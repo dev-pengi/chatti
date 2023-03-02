@@ -3,7 +3,7 @@ import { BsFillGearFill } from 'react-icons/bs'
 import { useEffect } from "react";
 import tippy from 'tippy.js';
 import EmptyMenu from '../Menu/EmptyMenu'
-import { ChatState } from "../../Context/ChatProvider";
+import { UserState } from "../../Context/UserProvider";
 import { useNavigate } from "react-router-dom";
 
 const HeaderButtons = () => {

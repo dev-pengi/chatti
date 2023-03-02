@@ -2,11 +2,11 @@ import { Link, Routes, Route, useLocation } from "react-router-dom";
 import Account from "./Account";
 import Privacy from "./Privacy";
 import './settings.css'
-import { ChatState } from "../../Context/ChatProvider";
+import { UserState } from "../../Context/UserProvider";
 import { FaUser, FaWrench } from 'react-icons/fa'
 
 const SettingsPage = () => {
-  const { user } = ChatState();
+  const { user } = UserState();
   const location = useLocation();
 
 

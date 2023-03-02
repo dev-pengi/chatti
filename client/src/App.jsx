@@ -8,12 +8,12 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SettingsPage from './pages/settings/SettingsPage';
 import Header from './components/Header/Header';
-import { ChatState } from './Context/ChatProvider';
+import { UserState } from './Context/UserProvider';
 import { useState } from 'react';
 
 function App() {
   const location = useLocation()
-  const { user } = ChatState()
+  const { user } = UserState()
   const [showHeader, setShowHeader] = useState(false);
 
   useEffect(() => {

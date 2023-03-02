@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useState } from 'react';
 import { FaCircleNotch, FaImages } from 'react-icons/fa';
 import { LabeledArea, LabeledInput } from '../../components/Inputs/Input';
-import { ChatState } from '../../Context/ChatProvider';
+import { UserState } from '../../Context/UserProvider';
 import { toast } from "react-toastify";
 import axios from 'axios';
 import { Confirmation } from '../../components/Modal/Modal';
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
     const navigate = useNavigate()
-    const { user, setUser } = ChatState();
+    const { user, setUser } = UserState();
     const [loading, setLoading] = useState(false)
     const [avatar, setAvatar] = useState(user.avatar)
     const [avtFile, setAvtFile] = useState(user.avatar)
@@ -28,7 +28,6 @@ const Profile = () => {
         });
         try {
             const response = await axios.post('YOUR_API_ENDPOINT', formData);
-            console.log(response.data);
         } catch (error) {
             console.error(error);
         }

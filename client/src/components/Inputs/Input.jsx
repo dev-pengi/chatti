@@ -49,7 +49,7 @@ export const LabeledArea = ({ label, type, placeholder, onChange, style, classNa
                 onChange={onChange}
                 style={{ marginTop: label ? '3px' : '' }}
                 onInput={handleInput}
-                className={`${typed ? 'typed' : ''}`}
+                className={`labeled-textarea ${typed ? 'typed' : ''}`}
                 type={type} placeholder={placeholder}
                 value={value}
             ></textarea>

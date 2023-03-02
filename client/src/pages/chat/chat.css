@@ -203,13 +203,16 @@
 }
 
 .chat-box-header {
+    position: fixed;
     height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: calc(100% - 330px);
     padding: 0 10px;
+    background-color: var(--bg);
     border-bottom: solid 1px var(--ghost-hover);
+    z-index: 40;
 }
 
 .chat-box-header .right {
@@ -243,9 +246,6 @@
     border-radius: 5px;
 }
 
-
-
-
 .chat-box-header .right .avt {
     width: 40px;
     height: 40px;
@@ -253,4 +253,129 @@
 
 .chat-box-header .right .name {
     font-size: 20px;
+}
+
+.chat-box-body {
+    position: fixed;
+    top: 120px;
+    height: calc(100% - 180px);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: calc(100% - 330px);
+    padding: 0 10px;
+    padding-top: 10px;
+}
+
+.chat-box-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-box-body .messages-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.chat-box-body .messages-group .message {
+    display: flex;
+    justify-content: start;
+    align-items: end;
+    gap: 5px;
+    margin-left: 40px;
+}
+.chat-box-body .messages-group .message.last,
+.chat-box-body .messages-group.me .message {
+    margin-left: 0;
+}
+
+.chat-box-body .messages-group .message p {
+    padding: 5px 10px;
+    border-radius: 17px;
+    background-color: #2C3E50;
+    max-width: 50%;
+    height: max-content;
+}
+
+.chat-box-body .messages-group .message.pending {
+    opacity: .7;
+}
+
+.chat-box-body .messages-group .message.has-after p {
+    border-end-start-radius: 4px;
+}
+
+.chat-box-body .messages-group .message.has-before p {
+    border-start-start-radius: 4px;
+}
+
+.chat-box-body .messages-group.me .message.has-after p {
+    border-end-end-radius: 4px !important;
+}
+
+.chat-box-body .messages-group.me .message.has-before p {
+    border-start-end-radius: 4px !important;
+}
+
+
+.chat-box-body .messages-group.me .message {
+    display: flex;
+    justify-content: end;
+}
+
+.chat-box-body .messages-group.me .message p {
+    background-color: #A7C9E0;
+    color: var(--gray-5);
+    border-radius: 17px;
+}
+
+.chat-box-body .messages-group .message .avatar {
+    max-width: 35px;
+    max-height: 35px;
+    min-width: 35px;
+    min-height: 35px;
+    border-radius: 50%;
+}
+
+
+
+.chat-box-new_message {
+    position: fixed;
+    bottom: 0px;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: end;
+    width: calc(100% - 330px);
+    padding: 0 10px;
+    gap: 10px;
+}
+
+.chat-box-new_message textarea {
+    position: relative;
+    bottom: 8px;
+    width: 100%;
+    resize: none;
+    height: 40px;
+    padding: 10px;
+    background-color: var(--nav);
+    border-radius: 5px;
+    padding-right: 40px;
+    max-height: 350px !important;
+}
+
+.chat-box-new_message textarea::-webkit-scrollbar {
+    width: 3px;
+}
+
+.chat-box-new_message i {
+    position: absolute;
+    right: 16px;
+    top: 0;
+    bottom: 0;
+    height: max-content;
+    margin: auto 0;
+    font-size: 18px;
+
 }

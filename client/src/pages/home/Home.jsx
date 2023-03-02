@@ -3,11 +3,11 @@ import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import Login from "../../components/Authentication/Login"
 import SignUp from "../../components/Authentication/SignUp"
-import { ChatState } from "../../Context/ChatProvider"
+import { UserState } from "../../Context/UserProvider"
 import './home.css'
 const Home = () => {
 
-    const { user } = ChatState()
+    const { user } = UserState()
     const navigate = useNavigate();
 
     useEffect(() => {

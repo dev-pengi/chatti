@@ -143,7 +143,6 @@ const UpdateSettings = asyncHandler(async (req, res) => {
     }
     if (avt) {
         update.avatar = `${avt}`;
-        console.log(update.avatar)
     }
 
     try {

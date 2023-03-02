@@ -160,7 +160,6 @@ const createGroupChat = asyncHandler(async (req, res) => {
             avatar: avt,
             groupAdmin: req.user._id,
         })
-        console.log(groupChat)
         const fullGroupChat = await chat.findOne({ _id: groupChat._id })
             .populate("users", "-password")
             .populate("groupAdmin", "-password")
@@ -196,7 +195,6 @@ const updateGroup = asyncHandler(async (req, res) => {
             return users.indexOf(item) === index;
         });
 
-        console.log(JSON.stringify(checkGroup.users.sort().map(u => u._id.toString())) === JSON.stringify(users.sort()));
         if (users && users.length && JSON.stringify(checkGroup.users.map(u => u._id.toString())) !== JSON.stringify(users)) {
             if (!req.user._id.equals(checkGroup.groupAdmin)) {
                 res.status(401)
