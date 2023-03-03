@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
+import { toast } from 'react-toastify';
 import { UserState } from '../../Context/UserProvider';
 
 const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
@@ -33,18 +34,24 @@ const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
 
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setMessage('');
+    try {
+      const sendMessage = await postMessage(message);
+      if (!sendMessage) {
+        toast.error('An error accured while sending the message.')
+      }
+      setMessages(prevMessages => {
+        const index = prevMessages.findIndex(msg => msg.pendingIndex === newMessage.pendingIndex);
+        if (index === -1) return prevMessages; // message already sent and removed from state
+        return [
+          ...prevMessages.slice(0, index),
+          sendMessage,
+          ...prevMessages.slice(index + 1),
+        ];
+      });
+    } catch (err) {
+      toast.error('An error accured while sending the message.')
+    }
 
-    const sendMessage = await postMessage(message);
-    setMessages(prevMessages => {
-      const index = prevMessages.findIndex(msg => msg.pendingIndex === newMessage.pendingIndex);
-      if (index === -1) return prevMessages; // message already sent and removed from state
-      return [
-        ...prevMessages.slice(0, index),
-        sendMessage,
-        ...prevMessages.slice(index + 1),
-      ];
-    });
-    if (socket) socket.emit('message', sendMessage);
   };
 
 
@@ -71,7 +78,7 @@ const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
         value={message}
         onChange={handleChange}
         onKeyPress={handleKeyPress}
-        placeholder="Type your message here"
+        placeholder="Aa"
         autoFocus
       />
       <button className="send-message" onClick={handleSendMessage}>

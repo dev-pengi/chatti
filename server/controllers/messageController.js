@@ -2,8 +2,8 @@ const asyncHandler = require('express-async-handler');
 const user = require('../models/user');
 const chat = require('../models/chat');
 const message = require('../models/message');
-
-
+const { emitMessage } = require('../utilities/socket')
+console.log(emitMessage)
 
 const sendMessage = asyncHandler(async (req, res) => {
     const { chatID } = req.params;
@@ -50,9 +50,9 @@ const sendMessage = asyncHandler(async (req, res) => {
             path: 'chat.lastMessage',
         });
 
-        await chat.findOneAndUpdate(findChat, { lastMessage: sendedMessage._id })
-        // sendedMessage.chat.lastMessage = sendedMessage.content;
-        res.json(sendedMessage)
+        await chat.findOneAndUpdate(findChat, { lastMessage: sendedMessage._id });
+        res.json(sendedMessage);
+        emitMessage(sendedMessage);
 
     } catch (err) {
         console.log(err)

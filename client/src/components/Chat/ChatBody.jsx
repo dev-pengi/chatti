@@ -14,7 +14,7 @@ const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
             const { data } = await axios.get(`/api/chats/${chatID}/messages`, config);
 
             // Merge the new messages with the existing messages in the state
-            setMessages((prevMessages) => [...prevMessages, ...data]);
+            setMessages([...data]);
 
             setLoading(false);
             return data;
@@ -36,17 +36,17 @@ const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
         socket.on('message', (message) => {
             if (message.chat._id != chatID) return;
             // Check if the message already exists in the messages array
-            if (!messages.find((msg) => msg._id === message._id)) {
-                // Add the new message to the messages array
-                setMessages((prevMessages) => [...prevMessages, message]);
-            }
-        });
+            if (messages.find((msg) => msg._id === message._id)) return;
 
+            // Add the new message to the messages array
+            setMessages((prevMessages) => [...prevMessages, message]);
+        });
         // Clean up the event listener when the component unmounts
         return () => {
             socket.off('message');
         };
     }, [socket, messages, setMessages]);
+    
 
     const Message = () => {
         const groupedMessages = [];
