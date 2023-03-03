@@ -3,29 +3,50 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
 import { UserState } from '../../Context/UserProvider';
 
-const ChatBody = ({ config, chatID, messages, setMessages }) => {
+const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
     const { user } = UserState();
     const [loading, setLoading] = useState(true);
-    const [isGroup, setIsGroup] = useState(false);
-
+    const [messagesIDs, setMessagesIDs] = useState([]);
 
     const fetchMessage = async () => {
         try {
             setLoading(true);
-            let { data } = await axios.get(`/api/chats/${chatID}/messages`, config);
-            setMessages(data);
+            const { data } = await axios.get(`/api/chats/${chatID}/messages`, config);
+
+            // Merge the new messages with the existing messages in the state
+            setMessages((prevMessages) => [...prevMessages, ...data]);
+
             setLoading(false);
             return data;
         } catch (err) {
-            const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
+            const error = err.response
+                ? err.response.data.message || 'Server connection error'
+                : 'Server connection error';
             toast.error(error);
             setLoading(false);
         }
-    }
+    };
+
     useEffect(() => {
         fetchMessage();
-    }, [chatID])
+    }, [chatID]);
 
+    useEffect(() => {
+        if (!socket) return;
+        socket.on('message', (message) => {
+            if (message.chat._id != chatID) return;
+            // Check if the message already exists in the messages array
+            if (!messages.find((msg) => msg._id === message._id)) {
+                // Add the new message to the messages array
+                setMessages((prevMessages) => [...prevMessages, message]);
+            }
+        });
+
+        // Clean up the event listener when the component unmounts
+        return () => {
+            socket.off('message');
+        };
+    }, [socket, messages, setMessages]);
 
     const Message = () => {
         const groupedMessages = [];
@@ -58,12 +79,6 @@ const ChatBody = ({ config, chatID, messages, setMessages }) => {
         if (currentGroup.length > 0) {
             groupedMessages.push(currentGroup);
         }
-
-        console.log(groupedMessages)
-
-
-
-
         return (
             <>
                 {

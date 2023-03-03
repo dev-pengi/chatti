@@ -25,7 +25,7 @@ const UserProvider = ({ children }) => {
 
             const { data } = await axios.get('/api/users/@me', config);
             if (!data) return handleInvalid();
-            setUser(data);
+            setUser({ ...data, token });
         } catch (err) {
             handleInvalid();
         }

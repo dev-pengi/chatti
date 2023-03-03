@@ -266,6 +266,7 @@
     width: calc(100% - 330px);
     padding: 0 10px;
     padding-top: 10px;
+    scroll-behavior: auto;
 }
 
 .chat-box-body::-webkit-scrollbar {

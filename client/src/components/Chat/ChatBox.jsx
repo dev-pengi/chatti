@@ -7,7 +7,7 @@ import ChatBody from "./ChatBody";
 import ChatHeader from './ChatHeader'
 import MessageInput from "./MessageInput";
 
-const ChatBox = ({ chatID }) => {
+const ChatBox = ({ chatID, socket }) => {
     const token = localStorage.getItem('token')
     const headers = {
         'Authorization': `Bearer ${token}`,
@@ -23,6 +23,7 @@ const ChatBox = ({ chatID }) => {
     const [loading, setLoading] = useState(false);
     const [isGroup, setIsGroup] = useState(false);
     const [messages, setMessages] = useState([])
+
 
     const fetchChat = async () => {
         try {
@@ -53,10 +54,10 @@ const ChatBox = ({ chatID }) => {
     }, [chatID])
 
     return (
-        <div  className="chat-box show">
-            <ChatHeader chatID={chatID} chatLoading={loading} chat={chat} setChat={setChat} isGroup={isGroup} config={config} />
-            <ChatBody config={config} chatID={chatID} messages={messages} setMessages={setMessages} />
-            <MessageInput config={config} chatID={chatID} messages={messages} setMessages={setMessages} />
+        <div className="chat-box show">
+            <ChatHeader socket={socket} chatID={chatID} chatLoading={loading} chat={chat} setChat={setChat} isGroup={isGroup} config={config} />
+            <ChatBody socket={socket} config={config} chatID={chatID} messages={messages} setMessages={setMessages} />
+            <MessageInput socket={socket} config={config} chatID={chatID} messages={messages} setMessages={setMessages} />
         </div>
     )
 }

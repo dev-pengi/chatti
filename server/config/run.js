@@ -1,13 +1,8 @@
 const mongoose = require('mongoose')
 const colors = require("colors");
 
-const { MONGO_URI, PORT } = process.env;
-module.exports = async (app) => {
-
-    app.listen(PORT, () => {
-        console.log(`Server is runnig on ${PORT}`.green);
-    })
-
+const { MONGO_URI } = process.env;
+module.exports = async () => {
     try {
         mongoose.set("strictQuery", false);
         const conn = await mongoose.connect(MONGO_URI, {

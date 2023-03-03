@@ -8,7 +8,6 @@ const message = require('../models/message');
 const sendMessage = asyncHandler(async (req, res) => {
     const { chatID } = req.params;
     const { content } = req.body;
-    console.log(req.body)
     const findChat = {
         $and: [
             { _id: chatID },

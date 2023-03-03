@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import { UserState } from '../../Context/UserProvider';
 
-const MessageInput = ({ config, chatID, messages, setMessages }) => {
+const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
   const inputRef = useRef(null)
   const { user } = UserState();
   const [message, setMessage] = useState('');
@@ -21,7 +21,7 @@ const MessageInput = ({ config, chatID, messages, setMessages }) => {
 
   const handleSendMessage = async (index) => {
     if (!message.trim().length) return;
-    
+
     const newMessage = {
       content: message,
       sender: user,
@@ -30,10 +30,10 @@ const MessageInput = ({ config, chatID, messages, setMessages }) => {
       pendingIndex,
     };
     pendingIndex++;
-    
+
     setMessages(prevMessages => [...prevMessages, newMessage]);
-    setMessage(''); 
-    
+    setMessage('');
+
     const sendMessage = await postMessage(message);
     setMessages(prevMessages => {
       const index = prevMessages.findIndex(msg => msg.pendingIndex === newMessage.pendingIndex);
@@ -44,8 +44,9 @@ const MessageInput = ({ config, chatID, messages, setMessages }) => {
         ...prevMessages.slice(index + 1),
       ];
     });
+    if (socket) socket.emit('message', sendMessage);
   };
-  
+
 
   const handleChange = (e) => {
     const { value } = e.target;
