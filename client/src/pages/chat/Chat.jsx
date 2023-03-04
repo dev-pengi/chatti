@@ -23,12 +23,8 @@ const Chat = () => {
         if (!user) return;
         // const newSocket = io.connect();
         // console.log(newSocket)
-        const ENDPOINT = 'https://www.chatti.lol:443';
-        const newSocket = io(ENDPOINT, {
-            transports: ['websocket'],
-            secure: true,
-            rejectUnauthorized: false,
-        });
+        const ENDPOINT = 'http://chatti.lol:5000';
+        const newSocket = io(ENDPOINT);
 
         newSocket.on('connect', () => {
             console.log('socket connected')
