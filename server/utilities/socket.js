@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 let io;
 const setupSocket = (server) => {
-    io = require('socket.io')(server, {
+    io = require('socket.io')(5001, {
         // pingTimeout: 60000,
         cors: {
             origin: ["https://www.chatti.lol", "https://chatti.lol", "http://www.chatti.lol", "http://chatti.lol"],
