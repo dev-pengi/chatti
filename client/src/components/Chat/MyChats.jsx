@@ -30,27 +30,27 @@ const MyChats = ({ socket }) => {
 
     useEffect(() => {
         if (!socket) return;
-        console.log('socket')
+
+        // socket.on('message', (message) => {
+        //     setChats((prevChats) => [message.chat, ...prevChats.filter(ch => ch._id != message.chat._id)]);
+        // })
         socket.on('chatCreate', (chat) => {
-            console.log(chat);
+            if (chat.isGroup) navigate(`/chat/${chat._id}`);
             setChats((prevChats) => [chat, ...prevChats]);
         });
         socket.on('chatUpdate', (newChat) => {
-            const chatUsers = newChat.users.map(u => u._id)
-            console.log(chatUsers)
-            if (!chatUsers.includes(user._id)) {
-                setChats((prevChats) => [...prevChats.filter(ch => ch._id != newChat._id)])
-                navigate('/chat')
-            }
-            else {
-                
-                setChats((prevChats) => [newChat, ...prevChats.filter(ch => ch._id != newChat._id)])
-            }
+            console.log(newChat)
+            setChats((prevChats) => [newChat, ...prevChats.filter(ch => ch._id != newChat._id)]);
         });
-
+        socket.on('chatRemove', (chat) => {
+            setChats((prevChats) => [...prevChats.filter(ch => ch._id != chat._id)]);
+            navigate('/chat');
+        })
         return () => {
             socket.off('chatCreate');
             socket.off('chatUpdate');
+            socket.off('chatRemove');
+            socket.off('message');
         };
     }, [socket])
 

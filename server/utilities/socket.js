@@ -13,14 +13,13 @@ const setupSocket = (server) => {
 
     io.on("connection", (socket) => {
         console.log("new client connected");
-
         socket.on("authenticate", async (token) => {
             try {
                 const JWT_KEY = process.env.JWT_KEY;
                 const decoded = jwt.verify(token, JWT_KEY);
                 const user = await User.findById(decoded.id).select("-password");
                 socket.join(user._id.toString());
-                socket.emit("connected");
+                socket.emit("connected", socket.id);
             } catch (err) {
                 console.error(err);
                 socket.disconnect();
@@ -34,18 +33,12 @@ const setupSocket = (server) => {
 const message = (message) => {
     const users = message.chat.users.map(u => u._id)
     for (let i = 0; i < users.length; i++) {
-
         io.to(users[i].toString()).emit('message', message);
     }
 }
 
-const chatUpdate = (oldChat, newChat) => {
-    const oldUsers = oldChat.users.map(u => u._id)
-    const newUsers = newChat.users.map(u => u._id)
-    const users = [...oldUsers.filter(u => !newUsers.includes(u)), ...newUsers.filter(u => !oldUsers.includes(u))];
-    console.log(oldUsers)
-    console.log(newUsers)
-    console.log(users)
+const chatUpdate = (newChat) => {
+    const users = newChat.users.map(u => u._id)
     for (let i = 0; i < users.length; i++) {
         io.to(users[i].toString()).emit('chatUpdate', newChat);
     }
@@ -55,7 +48,12 @@ const chatCreate = (chat) => {
     const users = chat.users.map(u => u._id);
     for (let i = 0; i < users.length; i++) {
         io.to(users[i].toString()).emit('chatCreate', chat);
-        console.log(`emit to ${i}`)
+    }
+}
+
+const chatRemove = (chat, users) => {
+    for (let i = 0; i < users.length; i++) {
+        io.to(users[i].toString()).emit('chatRemove', chat);
     }
 }
 
@@ -65,5 +63,6 @@ module.exports = {
     setupSocket,
     message,
     chatUpdate,
-    chatCreate
+    chatCreate,
+    chatRemove,
 }

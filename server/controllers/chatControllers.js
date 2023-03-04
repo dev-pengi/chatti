@@ -190,12 +190,12 @@ const updateGroup = asyncHandler(async (req, res) => {
             }
         )
             .populate("users", "-password")
-            .populate("groupAdmin", "-password")
-            .populate('lastMessage')
+
         if (!checkGroup) {
             res.status(400)
             throw new Error('Group not found')
         }
+
         users = [...users, req.user._id.toString()]
         users = users.filter((item, index) => {
             return users.indexOf(item) === index;
@@ -250,8 +250,13 @@ const updateGroup = asyncHandler(async (req, res) => {
             path: "lastMessage.sender",
             select: '-password'
         })
-        res.json(updatedChat)
-        socket.chatUpdate(checkGroup, updatedChat);
+        console.log(updatedChat)
+        res.json(updatedChat);
+        socket.chatUpdate(updatedChat);
+        const oldUsers = checkGroup.users.map(u => u._id.toString());
+        const newUsers = updatedChat.users.map(u => u._id.toString());
+        const removedUser = getRemovedUsers(oldUsers, newUsers);
+        socket.chatRemove(updatedChat, removedUser);
 
     } catch (err) {
         res.status(400)
@@ -262,7 +267,7 @@ const updateGroup = asyncHandler(async (req, res) => {
 const leaveGroup = asyncHandler(async (req, res) => {
     let { chatID } = req.params;
 
-    const removed = await chat.findOneAndUpdate(
+    let removed = await chat.findOneAndUpdate(
         {
             _id: chatID,
             isGroup: { $eq: true },
@@ -274,14 +279,26 @@ const leaveGroup = asyncHandler(async (req, res) => {
     )
         .populate("users", "-password")
         .populate("groupAdmin", "-password")
+        .populate('lastMessage')
     if (!removed) {
         res.status(400)
         throw new Error('Group not found')
     }
     else {
         res.status(200).send('Succesffuly left the group')
+        removed = await user.populate(removed, {
+            path: "lastMessage.sender",
+            select: '-password'
+        })
+        socket.chatRemove(removed, [req.user._id]);
     }
 })
+
+function getRemovedUsers(oldUsers, newUsers) {
+    return oldUsers.filter((userId) => !newUsers.includes(userId));
+}
+
+
 
 module.exports = {
     accessChatID,

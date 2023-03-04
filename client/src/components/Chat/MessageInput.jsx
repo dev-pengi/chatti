@@ -11,9 +11,9 @@ const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
   let pendingIndex = 0
 
 
-  const postMessage = async (content) => {
+  const postMessage = async (content, socketID) => {
     try {
-      let { data } = await axios.post(`/api/chats/${chatID}/messages`, { content }, config);
+      let { data } = await axios.post(`/api/chats/${chatID}/messages`, { content, socketID }, config);
       return data;
     } catch (err) {
       return false;
@@ -35,7 +35,8 @@ const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setMessage('');
 
-    const sendMessage = await postMessage(message);
+    const socketID = socket ? socket.id : ''
+    const sendMessage = await postMessage(message, socketID);
     if (!sendMessage) {
       toast.error('An error accured while sending the message.')
     }

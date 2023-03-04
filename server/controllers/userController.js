@@ -3,7 +3,7 @@ const user = require('../models/user');
 const generateToken = require('../config/generateToken')
 
 const registerUser = asyncHandler(async (req, res) => {
-    console.log(req.body);
+
     const { name, email, password } = req.body;
     if (!(name && email && password)) {
         res.status(400)
@@ -157,6 +157,7 @@ const UpdateSettings = asyncHandler(async (req, res) => {
         )
 
         res.status(200).json(UpdatedUser);
+        
 
     } catch (error) {
         res.status(404);

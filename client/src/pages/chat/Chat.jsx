@@ -30,7 +30,7 @@ const Chat = () => {
         const newSocket = io(ENDPOINT)
         newSocket.emit('authenticate', user.token)
 
-        newSocket.on('connected', () => {
+        newSocket.on('connected', (id) => {
             setSocket(newSocket);
             setSocketConnected(true)
         })

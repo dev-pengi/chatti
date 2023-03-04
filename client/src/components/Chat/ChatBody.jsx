@@ -34,8 +34,9 @@ const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
     useEffect(() => {
         if (!socket) return;
         socket.on('message', (message) => {
+            if (message.socket === socket.id) return
             if (message.chat._id != chatID) return;
-            console.log('recived')
+
             // Check if the message already exists in the messages array
             if (!messages.find((msg) => msg._id === message._id)) {
                 // Add the new message to the messages array

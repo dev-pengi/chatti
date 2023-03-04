@@ -7,7 +7,8 @@ const socket = require('../utilities/socket')
 
 const sendMessage = asyncHandler(async (req, res) => {
     const { chatID } = req.params;
-    const { content } = req.body;
+    const { content, socketID } = req.body;
+
     const findChat = {
         $and: [
             { _id: chatID },
@@ -33,7 +34,7 @@ const sendMessage = asyncHandler(async (req, res) => {
         const newMessage = {
             sender: req.user._id,
             content: content,
-            chat: chatID
+            chat: chatID,
         }
 
         var sendedMessage = await message.create(newMessage);
@@ -60,8 +61,12 @@ const sendMessage = asyncHandler(async (req, res) => {
         })
 
         res.json(sendedMessage);
-        socket.message(sendedMessage);
-        socket.chatUpdate(isChat, sendedMessage.chat);
+
+        const sendedMessageObj = sendedMessage.toObject();
+        sendedMessageObj.socket = socketID;
+
+        socket.message(sendedMessageObj);
+        socket.chatUpdate(sendedMessageObj.chat);
 
     } catch (err) {
         console.log(err)
@@ -98,8 +103,6 @@ const fetchMessages = asyncHandler(async (req, res) => {
             query.limit(limit);
         }
         const messages = await query.exec();
-
-
         res.json(messages)
 
     } catch (err) {
