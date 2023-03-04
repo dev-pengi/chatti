@@ -50,15 +50,26 @@ const ChatBox = ({ chatID, socket }) => {
         }
     }
     useEffect(() => {
+        if (!chatID) return;
         fetchChat();
     }, [chatID])
 
+    console.log(chatID)
     return (
-        <div className="chat-box show">
-            <ChatHeader socket={socket} chatID={chatID} chatLoading={loading} chat={chat} setChat={setChat} isGroup={isGroup} config={config} />
-            <ChatBody socket={socket} config={config} chatID={chatID} messages={messages} setMessages={setMessages} />
-            <MessageInput socket={socket} config={config} chatID={chatID} messages={messages} setMessages={setMessages} />
-        </div>
+        <>
+            {
+                chatID ? <div className="chat-box show">
+                    <ChatHeader socket={socket} chatID={chatID} chatLoading={loading} chat={chat} setChat={setChat} isGroup={isGroup} config={config} />
+                    <ChatBody socket={socket} config={config} chatID={chatID} messages={messages} setMessages={setMessages} />
+                    <MessageInput socket={socket} config={config} chatID={chatID} messages={messages} setMessages={setMessages} />
+                </div> :
+                    <div className="chat-box show">
+                        <div className="note">
+                            Select or search for users to start chatting
+                        </div>
+                    </div>
+            }
+        </>
     )
 }
 

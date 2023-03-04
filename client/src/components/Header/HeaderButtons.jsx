@@ -17,6 +17,7 @@ const HeaderButtons = () => {
         const buttonsTooltipConfig = {
             placement: 'bottom',
             animation: 'fade',
+            hideOnClick: true,
             arrow: false,
         }
         const notificationTip = tippy('#notifications', {
@@ -50,7 +51,7 @@ const HeaderButtons = () => {
 
     return (
         <div className="header-buttons">
-            <NotificationMenu />
+            {/* <NotificationMenu /> */}
             <button id='user' className='btn circle ghost'>
                 <FaUser />
             </button>

@@ -48,8 +48,8 @@ const Chat = () => {
     return (
         <>
             {user && <div className='chat-windows show'>
-                {user && <MyChats socket={socket} />}
-                {id && <ChatBox chatID={id} socketConnected={socketConnected} socket={socket} />}
+                <MyChats socket={socket} />
+                <ChatBox chatID={id} socketConnected={socketConnected} socket={socket} />
             </div>}
         </>
     )

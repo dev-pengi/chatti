@@ -122,6 +122,7 @@
     border-radius: 3px;
 }
 
+
 .chats-search {
     transition: .3s;
 }
@@ -201,6 +202,7 @@
     left: 330px;
     width: calc(100% - 330px);
 }
+
 
 .chat-box-header {
     position: fixed;
@@ -286,6 +288,7 @@
     gap: 5px;
     margin-left: 40px;
 }
+
 .chat-box-body .messages-group .message.last,
 .chat-box-body .messages-group.me .message {
     margin-left: 0;
@@ -378,4 +381,35 @@
     height: max-content;
     margin: auto 0;
     font-size: 18px;
+}
+
+
+
+@media screen and (max-width:800px) {
+    .chat-windows nav {
+        left: -330px;
+    }
+
+    .chat-box,
+    .chat-box-header,
+    .chat-box-body,
+    .chat-box-new_message {
+        left: 0;
+        width: 100% !important;
+    }
+
+    .app.nav-active .chat-windows nav {
+        left: 0;
+        width: 100%;
+    }
+}
+
+.chat-box .note {
+    font-size: 22px;
+    width: max-content;
+    max-width: 97%;
+    display: block;
+    margin: auto;
+    margin-top: 150px;
+    text-align: center;
 }
