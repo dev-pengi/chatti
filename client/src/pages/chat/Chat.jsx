@@ -7,7 +7,6 @@ import './chat.css'
 import ChatBox from '../../components/Chat/ChatBox';
 import io from 'socket.io-client'
 
-
 const Chat = () => {
     const { user } = UserState();
     const { id } = useParams();
@@ -16,38 +15,44 @@ const Chat = () => {
     const [socketConnected, setSocketConnected] = useState(false);
     const [socket, setSocket] = useState(null);
 
-
-
     useEffect(() => {
         if (user === null) return navigate('/')
     }, [user])
 
-
-    const ENDPOINT = 'https://chatti.lol:443';
-
     useEffect(() => {
         if (!user) return;
-        const newSocket = io.connect();
-        console.log(newSocket)
-        newSocket.emit('authenticate', user.token)
-        console.log('socket connected authenticated')
+        // const newSocket = io.connect();
+        // console.log(newSocket)
+        const ENDPOINT = 'https://www.chatti.lol:443';
+        const newSocket = io(ENDPOINT, {
+            transports: ['websocket'],
+            secure: true,
+            rejectUnauthorized: false,
+        });
 
-        newSocket.on('connected', (id) => {
-            console.log(newSocket)
-            console.log('socket connected successfuly')
+        newSocket.on('connect', () => {
+            console.log('socket connected')
+            newSocket.emit('authenticate', user.token)
+            console.log('socket authenticated')
             setSocket(newSocket);
             setSocketConnected(true)
         })
 
+        newSocket.on('disconnect', () => {
+            console.log('socket disconnected')
+            setSocketConnected(false)
+        })
 
+        newSocket.on('error', (error) => {
+            console.log('socket error', error)
+            setSocketConnected(false)
+        })
     }, [user])
 
     useEffect(() => {
         if (!id || !socket) return;
         socket.emit('joinChat', id)
     }, [id, socket])
-
-
 
     return (
         <>
@@ -57,7 +62,6 @@ const Chat = () => {
             </div>}
         </>
     )
-
 }
 
 export default Chat;
