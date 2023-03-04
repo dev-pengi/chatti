@@ -23,7 +23,7 @@ const Chat = () => {
     }, [user])
 
 
-    const ENDPOINT = 'https://chatti.lol/api';
+    const ENDPOINT = '/';
 
     useEffect(() => {
         if (!user) return;
