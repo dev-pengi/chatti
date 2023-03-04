@@ -23,16 +23,17 @@ const Chat = () => {
     }, [user])
 
 
-    const ENDPOINT = 'http://chatti.lol:5000';
+    const ENDPOINT = 'http://chatti.lol:3000';
 
     useEffect(() => {
         if (!user) return;
-        const newSocket = io.connect()
-        console.log(newSocket);
+        const newSocket = io.connect(ENDPOINT);
+        console.log(newSocket)
         newSocket.emit('authenticate', user.token)
         console.log('socket connected authenticated')
 
         newSocket.on('connected', (id) => {
+            console.log(newSocket)
             console.log('socket connected successfuly')
             setSocket(newSocket);
             setSocketConnected(true)
