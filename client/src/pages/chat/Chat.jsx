@@ -28,9 +28,12 @@ const Chat = () => {
     useEffect(() => {
         if (!user) return;
         const newSocket = io(ENDPOINT)
+        console.log('socket connected')
         newSocket.emit('authenticate', user.token)
+        console.log('socket connected authenticated')
 
         newSocket.on('connected', (id) => {
+            console.log('socket connected successfuly')
             setSocket(newSocket);
             setSocketConnected(true)
         })
