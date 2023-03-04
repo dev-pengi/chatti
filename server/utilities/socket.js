@@ -27,44 +27,43 @@ const setupSocket = (server) => {
             }
         });
 
-
-
-        // socket.on('message', async (message) => {
-        //     const chatID = message.chat;
-        //     const findChat = await Chat.findOne({ _id: chatID })
-        //         .populate('users', "-password")
-        //         .populate("groupAdmin", "-password")
-        //     if (!findChat) return;
-        //     const users = findChat.users.map(u => u._id)
-        //     console.log(users)
-        //     for (let i = 0; i < users.length; i++) {
-        //         io.to(users[i].toString()).emit('message', message);
-        //         console.log(`emited to user: ${i}`)
-        //     }
-        // })
     });
-
-    // return {
-    //     sendMessage: (users, message) => {
-    //         if (!users || !message) return;
-    //         for (let i = 0; i < users.length; i++) {
-    //             socket.to(users[i]).emit('message', message);
-    //         }
-    //         return `message has been sent to ${users.length} in the chat`;
-    //     }
-    // }
 }
 
 
-const emitMessage = (message) => {
+const message = (message) => {
     const users = message.chat.users.map(u => u._id)
+    for (let i = 0; i < users.length; i++) {
+
+        io.to(users[i].toString()).emit('message', message);
+    }
+}
+
+const chatUpdate = (oldChat, newChat) => {
+    const oldUsers = oldChat.users.map(u => u._id)
+    const newUsers = newChat.users.map(u => u._id)
+    const users = [...oldUsers.filter(u => !newUsers.includes(u)), ...newUsers.filter(u => !oldUsers.includes(u))];
+    console.log(oldUsers)
+    console.log(newUsers)
     console.log(users)
     for (let i = 0; i < users.length; i++) {
-        io.to(users[i].toString()).emit('message', message);
-        console.log(`emited to user: ${i}`)
+        io.to(users[i].toString()).emit('chatUpdate', newChat);
+    }
+}
+
+const chatCreate = (chat) => {
+    const users = chat.users.map(u => u._id);
+    for (let i = 0; i < users.length; i++) {
+        io.to(users[i].toString()).emit('chatCreate', chat);
+        console.log(`emit to ${i}`)
     }
 }
 
 
 
-module.exports = { setupSocket, emitMessage }
+module.exports = {
+    setupSocket,
+    message,
+    chatUpdate,
+    chatCreate
+}

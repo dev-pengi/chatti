@@ -2,8 +2,8 @@ const asyncHandler = require('express-async-handler');
 const user = require('../models/user');
 const chat = require('../models/chat');
 const message = require('../models/message');
-const { emitMessage } = require('../utilities/socket')
-console.log(emitMessage)
+const socket = require('../utilities/socket')
+
 
 const sendMessage = asyncHandler(async (req, res) => {
     const { chatID } = req.params;
@@ -17,6 +17,9 @@ const sendMessage = asyncHandler(async (req, res) => {
     try {
 
         let isChat = await chat.findOne(findChat)
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password")
+            .populate('lastMessage')
 
         if (!isChat) {
             res.status(404);
@@ -34,6 +37,7 @@ const sendMessage = asyncHandler(async (req, res) => {
         }
 
         var sendedMessage = await message.create(newMessage);
+        await chat.findOneAndUpdate(findChat, { lastMessage: sendedMessage._id });
 
         sendedMessage = await sendedMessage
             .populate({ path: 'sender', select: '-password' })
@@ -50,9 +54,14 @@ const sendMessage = asyncHandler(async (req, res) => {
             path: 'chat.lastMessage',
         });
 
-        await chat.findOneAndUpdate(findChat, { lastMessage: sendedMessage._id });
+        sendedMessage = await user.populate(sendedMessage, {
+            path: "chat.lastMessage.sender",
+            select: '-password'
+        })
+
         res.json(sendedMessage);
-        emitMessage(sendedMessage);
+        socket.message(sendedMessage);
+        socket.chatUpdate(isChat, sendedMessage.chat);
 
     } catch (err) {
         console.log(err)

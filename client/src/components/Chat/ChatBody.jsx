@@ -35,18 +35,19 @@ const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
         if (!socket) return;
         socket.on('message', (message) => {
             if (message.chat._id != chatID) return;
+            console.log('recived')
             // Check if the message already exists in the messages array
-            if (messages.find((msg) => msg._id === message._id)) return;
-
-            // Add the new message to the messages array
-            setMessages((prevMessages) => [...prevMessages, message]);
+            if (!messages.find((msg) => msg._id === message._id)) {
+                // Add the new message to the messages array
+                setMessages((prevMessages) => [...prevMessages.filter(msg => msg._id != message._id), message]);
+            }
         });
+
         // Clean up the event listener when the component unmounts
         return () => {
             socket.off('message');
         };
     }, [socket, messages, setMessages]);
-    
 
     const Message = () => {
         const groupedMessages = [];

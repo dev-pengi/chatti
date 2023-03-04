@@ -8,7 +8,7 @@ import Search from '../Search/Search';
 import { Link, Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
 import Modal from '../Modal/Modal';
 
-const MyChats = () => {
+const MyChats = ({ socket }) => {
 
     const { user } = UserState()
     const params = useParams()
@@ -28,6 +28,31 @@ const MyChats = () => {
     // const [error, setError] = useState('')
     const [search, setSearch] = useState('')
 
+    useEffect(() => {
+        if (!socket) return;
+        console.log('socket')
+        socket.on('chatCreate', (chat) => {
+            console.log(chat);
+            setChats((prevChats) => [chat, ...prevChats]);
+        });
+        socket.on('chatUpdate', (newChat) => {
+            const chatUsers = newChat.users.map(u => u._id)
+            console.log(chatUsers)
+            if (!chatUsers.includes(user._id)) {
+                setChats((prevChats) => [...prevChats.filter(ch => ch._id != newChat._id)])
+                navigate('/chat')
+            }
+            else {
+                
+                setChats((prevChats) => [newChat, ...prevChats.filter(ch => ch._id != newChat._id)])
+            }
+        });
+
+        return () => {
+            socket.off('chatCreate');
+            socket.off('chatUpdate');
+        };
+    }, [socket])
 
 
     const fetchChats = async (keyword = '') => {

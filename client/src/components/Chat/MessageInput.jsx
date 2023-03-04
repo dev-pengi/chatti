@@ -16,7 +16,7 @@ const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
       let { data } = await axios.post(`/api/chats/${chatID}/messages`, { content }, config);
       return data;
     } catch (err) {
-      return err.message;
+      return false;
     }
   }
 
@@ -34,23 +34,21 @@ const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
 
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setMessage('');
-    try {
-      const sendMessage = await postMessage(message);
-      if (!sendMessage) {
-        toast.error('An error accured while sending the message.')
-      }
-      setMessages(prevMessages => {
-        const index = prevMessages.findIndex(msg => msg.pendingIndex === newMessage.pendingIndex);
-        if (index === -1) return prevMessages; // message already sent and removed from state
-        return [
-          ...prevMessages.slice(0, index),
-          sendMessage,
-          ...prevMessages.slice(index + 1),
-        ];
-      });
-    } catch (err) {
+
+    const sendMessage = await postMessage(message);
+    if (!sendMessage) {
       toast.error('An error accured while sending the message.')
     }
+    setMessages(prevMessages => {
+      const index = prevMessages.findIndex(msg => msg.pendingIndex === newMessage.pendingIndex);
+      if (index === -1) return prevMessages; // message already sent and removed from state
+      return [
+        ...prevMessages.slice(0, index),
+        sendMessage,
+        ...prevMessages.slice(index + 1),
+      ];
+    });
+
 
   };
 

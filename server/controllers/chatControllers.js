@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const user = require('../models/user');
 const chat = require('../models/chat');
+const socket = require('../utilities/socket')
 
 
 
@@ -45,6 +46,7 @@ const accessChatUser = asyncHandler(async (req, res) => {
                 .populate('users', "-password")
 
             res.status(200).send(fullChat);
+            socket.chatCreate(fullChat);
         } catch (err) {
             res.status(400)
             throw new Error(err.message)
@@ -165,6 +167,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
             .populate("groupAdmin", "-password")
 
         res.status(200).send(fullGroupChat)
+        socket.chatCreate(fullGroupChat);
     } catch (err) {
         res.status(400)
         throw new Error(err.message)
@@ -186,6 +189,9 @@ const updateGroup = asyncHandler(async (req, res) => {
                 isGroup: { $eq: true },
             }
         )
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password")
+            .populate('lastMessage')
         if (!checkGroup) {
             res.status(400)
             throw new Error('Group not found')
@@ -196,7 +202,7 @@ const updateGroup = asyncHandler(async (req, res) => {
         });
 
         if (users && users.length && JSON.stringify(checkGroup.users.map(u => u._id.toString())) !== JSON.stringify(users)) {
-            if (!req.user._id.equals(checkGroup.groupAdmin)) {
+            if (!req.user._id.equals(checkGroup.groupAdmin._id)) {
                 res.status(401)
                 throw new Error('Only group admin could add/remove users')
             }
@@ -221,7 +227,7 @@ const updateGroup = asyncHandler(async (req, res) => {
             update.avatar = avt
         }
 
-        const updatedChat = await chat.findOneAndUpdate(
+        let updatedChat = await chat.findOneAndUpdate(
             {
                 _id: chatID,
                 isGroup: { $eq: true },
@@ -229,18 +235,24 @@ const updateGroup = asyncHandler(async (req, res) => {
             {
                 ...update
             },
-            { new: true }
-        )
+            {
+                new: true
+            })
             .populate("users", "-password")
             .populate("groupAdmin", "-password")
+            .populate('lastMessage')
 
         if (!updatedChat) {
             res.status(400)
             throw new Error('Group not found')
         }
-        else {
-            res.json(updatedChat)
-        }
+        updatedChat = await user.populate(updatedChat, {
+            path: "lastMessage.sender",
+            select: '-password'
+        })
+        res.json(updatedChat)
+        socket.chatUpdate(checkGroup, updatedChat);
+
     } catch (err) {
         res.status(400)
         throw new Error(err.message)
@@ -262,8 +274,6 @@ const leaveGroup = asyncHandler(async (req, res) => {
     )
         .populate("users", "-password")
         .populate("groupAdmin", "-password")
-
-
     if (!removed) {
         res.status(400)
         throw new Error('Group not found')
