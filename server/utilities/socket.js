@@ -7,7 +7,7 @@ const setupSocket = (server) => {
     io = require('socket.io')(server, {
         pingTimeout: 60000,
         cors: {
-            origin: "http://localhost:3000"
+            origin: ["https://www.chatti.lol", "https://chatti.lol", 'http://localhost:3000']
         }
     })
 
