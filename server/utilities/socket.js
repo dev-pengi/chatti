@@ -5,13 +5,14 @@ const jwt = require('jsonwebtoken');
 let io;
 const setupSocket = (server) => {
     console.log(server)
-    io = require('socket.io')(5000, {
+    io = require('socket.io')(server, {
         // pingTimeout: 60000,
         cors: {
             origin: ["https://www.chatti.lol", "https://chatti.lol", "http://www.chatti.lol", "http://chatti.lol"],
             methods: ["GET", "POST"],
         }
     })
+    console.log(io)
 
     console.log("setting up the socket...");
 
