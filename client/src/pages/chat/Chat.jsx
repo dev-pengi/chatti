@@ -23,12 +23,12 @@ const Chat = () => {
     }, [user])
 
 
-    const ENDPOINT = '/';
+    const ENDPOINT = 'https://chatti.lol:5000';
 
     useEffect(() => {
         if (!user) return;
         const newSocket = io(ENDPOINT)
-        console.log('socket connected')
+        console.log(newSocket);
         newSocket.emit('authenticate', user.token)
         console.log('socket connected authenticated')
 
