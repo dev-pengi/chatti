@@ -4,12 +4,14 @@ const jwt = require('jsonwebtoken');
 
 let io;
 const setupSocket = (server) => {
-    io = require('socket.io')(server, {
-        // pingTimeout: 60000,
-        // cors: {
-        //     // origin: ["https://www.chatti.lol", "https://chatti.lol", 'http://localhost:3000']
-        // }
-    })
+    io = require('socket.io')(server)
+    console.log("setting up the socket...");
+    // , {
+    //     // pingTimeout: 60000,
+    //     // cors: {
+    //     //     // origin: ["https://www.chatti.lol", "https://chatti.lol", 'http://localhost:3000']
+    //     // }
+    // }
 
     io.on("connection", (socket) => {
         console.log("new client connected");
