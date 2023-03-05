@@ -11,7 +11,6 @@ const setupSocket = (server) => {
         }
     })
 
-    console.log("setting up the socket...");
 
     io.on("connection", (socket) => {
         console.log("new client connected");

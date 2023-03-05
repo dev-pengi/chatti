@@ -39,7 +39,6 @@ const MyChats = ({ socket }) => {
             setChats((prevChats) => [chat, ...prevChats]);
         });
         socket.on('chatUpdate', (newChat) => {
-            console.log(newChat)
             setChats((prevChats) => [newChat, ...prevChats.filter(ch => ch._id != newChat._id)]);
         });
         socket.on('chatRemove', (chat) => {

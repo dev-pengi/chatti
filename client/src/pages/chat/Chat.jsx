@@ -21,17 +21,12 @@ const Chat = () => {
 
     useEffect(() => {
         if (!user) return;
-        // const newSocket = io.connect();
-        // console.log(newSocket)
-        const ENDPOINT = 'http://chatti.lol:5000';
         const newSocket = io.connect();
-        console.log(newSocket)
 
 
         newSocket.on('connect', () => {
             console.log('socket connected')
             newSocket.emit('authenticate', user.token)
-            console.log('socket authenticated')
             setSocket(newSocket);
             setSocketConnected(true)
         })

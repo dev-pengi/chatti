@@ -53,8 +53,6 @@ const ChatBox = ({ chatID, socket }) => {
         if (!chatID) return;
         fetchChat();
     }, [chatID])
-
-    console.log(chatID)
     return (
         <>
             {

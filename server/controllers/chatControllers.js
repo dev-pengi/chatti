@@ -250,7 +250,6 @@ const updateGroup = asyncHandler(async (req, res) => {
             path: "lastMessage.sender",
             select: '-password'
         })
-        console.log(updatedChat)
         res.json(updatedChat);
         socket.chatUpdate(updatedChat);
         const oldUsers = checkGroup.users.map(u => u._id.toString());
