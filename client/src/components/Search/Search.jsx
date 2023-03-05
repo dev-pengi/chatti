@@ -11,7 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './search.css'
 
 
-const Search = ({ type = 'ghost' }) => {
+const Search = ({ type = 'ghost', textfit = true }) => {
     const navigate = useNavigate()
 
     const [search, setSearch] = useState('');
@@ -70,7 +70,7 @@ const Search = ({ type = 'ghost' }) => {
         return (
             <button className={`btn ${type}`} onClick={onClick}>
                 <FaSearch />
-                <p className='remove-small with-icon'> Search user </p>
+                <p className={`remove-small ${textfit ? 'with-icon' : ''}`}> Search user </p>
             </button>
         )
     }

@@ -123,7 +123,7 @@ const MyChats = ({ socket }) => {
         else return (
             <div className='searchNote'>
                 <p className="nav-note">no chat has been found, you can search for users and send a message to create a new chat</p>
-                <Search type='primary' />
+                <Search type='primary' textfit={false} />
             </div>
         )
     }
