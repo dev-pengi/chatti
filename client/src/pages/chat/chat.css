@@ -348,14 +348,14 @@
 
 
 .chat-box-new_message {
-    position: relative;
+    position: fixed;
+    bottom: 0;
     height: 60px;
     display: flex;
     justify-content: end;
     align-items: end;
     width: 100%;
     padding: 0 10px;
-    gap: 10px;
 }
 
 .chat-box-new_message textarea {
