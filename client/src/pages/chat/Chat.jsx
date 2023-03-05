@@ -24,7 +24,7 @@ const Chat = () => {
         // const newSocket = io.connect();
         // console.log(newSocket)
         const ENDPOINT = 'http://chatti.lol:5000';
-        const newSocket = io(ENDPOINT);
+        const newSocket = io.connect();
 
         newSocket.on('connect', () => {
             console.log('socket connected')
