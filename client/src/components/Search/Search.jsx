@@ -70,7 +70,7 @@ const Search = ({ type = 'ghost', textfit = true }) => {
         return (
             <button className={`btn ${type}`} onClick={onClick}>
                 <FaSearch />
-                <p className={`remove-small ${textfit ? 'with-icon' : ''}`}> Search user </p>
+                <p className={`with-icon ${textfit ? 'remove-small' : ''}`}> Search user </p>
             </button>
         )
     }
