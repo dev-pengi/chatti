@@ -298,7 +298,7 @@
     padding: 5px 10px;
     border-radius: 17px;
     background-color: #2C3E50;
-    max-width: 50%;
+    max-width: min(80%, 600px);
     height: max-content;
 }
 
