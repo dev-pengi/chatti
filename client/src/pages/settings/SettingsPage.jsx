@@ -4,6 +4,7 @@ import Privacy from "./Privacy";
 import './settings.css'
 import { UserState } from "../../Context/UserProvider";
 import { FaUser, FaWrench } from 'react-icons/fa'
+import { useEffect } from "react";
 
 const SettingsPage = () => {
   const { user } = UserState();
