@@ -9,6 +9,9 @@ const SettingsPage = () => {
   const { user } = UserState();
   const location = useLocation();
 
+  useEffect(() => {
+    if (user === null) return navigate('/')
+  }, [user])
 
   return (
     <>

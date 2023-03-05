@@ -13,6 +13,7 @@
     transition: .3s;
     z-index: 47;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .chat-windows nav::-webkit-scrollbar {
@@ -201,16 +202,18 @@
     position: relative;
     left: 330px;
     width: calc(100% - 330px);
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
 }
 
 
 .chat-box-header {
-    position: fixed;
     height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: calc(100% - 330px);
+    width:100%;
     padding: 0 10px;
     background-color: var(--bg);
     border-bottom: solid 1px var(--ghost-hover);
@@ -258,14 +261,14 @@
 }
 
 .chat-box-body {
-    position: fixed;
     top: 120px;
-    height: calc(100% - 180px);
+    max-height: calc(100vh - 180px);
+    min-height: calc(100vh - 180px);
     overflow: auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    width: calc(100% - 330px);
+    width: 100%;
     padding: 0 10px;
     padding-top: 10px;
     scroll-behavior: auto;
@@ -345,13 +348,12 @@
 
 
 .chat-box-new_message {
-    position: fixed;
-    bottom: 0px;
+    position: relative;
     height: 60px;
     display: flex;
-    justify-content: space-around;
+    justify-content: end;
     align-items: end;
-    width: calc(100% - 330px);
+    width: 100%;
     padding: 0 10px;
     gap: 10px;
 }
@@ -390,10 +392,7 @@
         left: -330px;
     }
 
-    .chat-box,
-    .chat-box-header,
-    .chat-box-body,
-    .chat-box-new_message {
+    .chat-box {
         left: 0;
         width: 100% !important;
     }
@@ -413,3 +412,4 @@
     margin-top: 150px;
     text-align: center;
 }
+
