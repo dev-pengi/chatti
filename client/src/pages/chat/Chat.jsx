@@ -46,6 +46,10 @@ const Chat = () => {
         if (!id || !socket) return;
         socket.emit('joinChat', id)
     }, [id, socket])
+    
+    useEffect(() => {
+        document.querySelector('.app').classList.remove('nav-active')
+    }, [id])
 
     return (
         <>
