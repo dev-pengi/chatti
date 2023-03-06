@@ -1,8 +1,6 @@
 .chat-windows {
     display: flex;
     width: 100%;
-    height: calc(100vh -60px);
-    overflow-y: hidden;
 }
 
 .chat-windows nav {
@@ -201,11 +199,9 @@
 }
 
 .chat-box {
-    position: fixed;
+    position: relative;
     left: 330px;
     width: calc(100% - 330px);
-    height: calc(100vh - 60px);
-    bottom: 0;
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
@@ -217,7 +213,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width:100%;
     padding: 0 10px;
     background-color: var(--bg);
     border-bottom: solid 1px var(--ghost-hover);
@@ -352,8 +348,8 @@
 
 
 .chat-box-new_message {
-    position: relative;
     display: flex;
+    position: relative;
     height: 60px;
     display: flex;
     justify-content: end;
@@ -416,3 +412,4 @@
     margin-top: 150px;
     text-align: center;
 }
+
