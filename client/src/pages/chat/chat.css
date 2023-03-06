@@ -351,8 +351,8 @@
 
 
 .chat-box-new_message {
-    position: fixed;
-    bottom: 0;
+    position: relative;
+    display: flex;
     height: 60px;
     display: flex;
     justify-content: end;
