@@ -13,7 +13,6 @@
     transition: .3s;
     z-index: 47;
     overflow-y: auto;
-    overflow-x: hidden;
 }
 
 .chat-windows nav::-webkit-scrollbar {
@@ -55,7 +54,6 @@
     padding: 10px 5px;
 }
 
-
 .chat-windows nav .nav-chats .nav-chat {
     border-radius: 7px;
     transition: .3s;
@@ -68,7 +66,6 @@
 .chat-windows nav .nav-chats .nav-chat.chat-active {
     background-color: var(--ghost-click);
 }
-
 
 .chat-windows nav .nav-chats .nav-chat .left img {
     min-height: 50px;
@@ -122,7 +119,6 @@
     width: 190px;
     border-radius: 3px;
 }
-
 
 .chats-search {
     transition: .3s;
@@ -202,18 +198,15 @@
     position: relative;
     left: 330px;
     width: calc(100% - 330px);
-    display: flex;
-    flex-direction: column;
-    overflow-x: hidden;
 }
 
-
 .chat-box-header {
+    position: fixed;
     height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width:100%;
+    width: calc(100% - 330px);
     padding: 0 10px;
     background-color: var(--bg);
     border-bottom: solid 1px var(--ghost-hover);
@@ -261,14 +254,14 @@
 }
 
 .chat-box-body {
+    position: fixed;
     top: 120px;
-    max-height: calc(100vh - 180px);
-    min-height: calc(100vh - 180px);
+    height: calc(100% - 180px);
     overflow: auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    width: 100%;
+    width: calc(100% - 330px);
     padding: 0 10px;
     padding-top: 10px;
     scroll-behavior: auto;
@@ -325,7 +318,6 @@
     border-start-end-radius: 4px !important;
 }
 
-
 .chat-box-body .messages-group.me .message {
     display: flex;
     justify-content: end;
@@ -345,17 +337,16 @@
     border-radius: 50%;
 }
 
-
-
 .chat-box-new_message {
-    display: flex;
-    position: relative;
+    position: fixed;
+    bottom: 0px;
     height: 60px;
     display: flex;
-    justify-content: end;
+    justify-content: space-around;
     align-items: end;
-    width: 100%;
+    width: calc(100% - 330px);
     padding: 0 10px;
+    gap: 10px;
 }
 
 .chat-box-new_message textarea {
@@ -385,18 +376,17 @@
     font-size: 18px;
 }
 
-
-
 @media screen and (max-width:800px) {
     .chat-windows nav {
         left: -330px;
     }
-
-    .chat-box {
+    .chat-box,
+    .chat-box-header,
+    .chat-box-body,
+    .chat-box-new_message {
         left: 0;
         width: 100% !important;
     }
-
     .app.nav-active .chat-windows nav {
         left: 0;
         width: 100%;
@@ -412,4 +402,3 @@
     margin-top: 150px;
     text-align: center;
 }
-
