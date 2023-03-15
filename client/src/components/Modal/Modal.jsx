@@ -58,24 +58,31 @@ export const Confirmation = ({ children = 'Do you want to procced?', Button, dan
         setIsOpen(true);
     }
 
+    const modal = (
+        <div className="c-modal-box scale show">
+            <div className="modal-header">
+                <h2>{title}</h2>
+                <button onClick={handleClose} style={{ color: "#fff" }} className='btn circle ghost'><FaPlus className='icon' /></button>
+            </div>
+            <div className="modal-body" style={style}>{children}</div>
+            <div className="c-modal-fotter">
+                <button className="btn secondary ghost" onClick={handleClose}>{secondaryBtn ? secondaryBtn : 'Cancel'}</button>
+                <button onClick={onSubmit} className={`btn ${danger ? 'danger' : 'primary'} ${loading ? 'loading' : ''}`}>{loading ? <FaCircleNotch className='spin' /> : primaryBtn}</button>
+            </div>
+        </div>
+    );
     return (
         <>
-            {isOpen && <div className="modal-overlay show"></div>}
-            <UseClickOutside onClickOutside={handleClose}>
-                <Button onClick={handleOpen} />
-                {isOpen && <div className="c-modal-box scale show">
-                    <div className="modal-header">
-                        <h2>{title}</h2>
-                        <button onClick={handleClose} style={{ color: "#fff" }} className='btn circle ghost'><FaPlus className='icon' /></button>
-                    </div>
-                    <div className="modal-body" style={style}>{children}</div>
-                    <div className="c-modal-fotter">
-                        <button className="btn secondary ghost" onClick={handleClose}>{secondaryBtn ? secondaryBtn : 'Cancel'}</button>
-                        <button onClick={onSubmit} className={`btn ${danger ? 'danger' : 'primary'} ${loading ? 'loading' : ''}`}>{loading ? <FaCircleNotch className='spin' /> : primaryBtn}</button>
-                    </div>
-                </div>}
-            </UseClickOutside>
+            <Button onClick={handleOpen} />
+            {isOpen &&
+                ReactDOM.createPortal(
+                    <>
+                        <div className="modal-overlay show" onClick={handleClose}></div>
+                        {modal}
+                    </>,
+                    document.getElementById('modal-root')
+                )}
         </>
-    )
+    );
 
 }
