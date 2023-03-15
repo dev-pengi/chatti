@@ -102,7 +102,6 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
                                 onClick={(event) => {
                                     if (!remove) return;
                                     removeUser(user);
-                                    event.stopPropagation();
                                 }}
                                 className="group-user">
 
@@ -133,7 +132,7 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
                                             <h3 className='name'>{user.name}</h3>
                                         </div>
                                         <div className="left">
-                                            <button className="ghost btn" onClick={(event) => { addUser(user); event.stopPropagation(); }}>Add</button>
+                                            <button className="ghost btn" onClick={(event) => { addUser(user); }}>Add</button>
                                         </div>
                                     </div>
                                 )

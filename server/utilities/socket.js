@@ -6,7 +6,7 @@ const setupSocket = (server) => {
     io = require('socket.io')(server, {
         pingTimeout: 60000,
         cors: {
-            origin: ["https://www.chatti.lol", "https://chatti.lol", "http://www.chatti.lol", "http://chatti.lol","http://localhost:3000"],
+            origin: ["https://www.chatti.lol", "https://chatti.lol", "http://localhost:3000"],
             methods: ["GET", "POST"],
         }
     })
@@ -58,6 +58,20 @@ const chatRemove = (chat, users) => {
     }
 }
 
+const blockAdd = (blocker, blocked) => {
+    const users = [blocker, blocked]
+    for (let i = 0; i < users.length; i++) {
+        io.to(users[i].toString()).emit('blockAdd', (blocker, blocked));
+    }
+}
+const blockRemove = (blocker, blocked) => {
+    const users = [blocker, blocked]
+    for (let i = 0; i < users.length; i++) {
+        io.to(users[i].toString()).emit('blockRemove', (blocker, blocked));
+    }
+}
+
+
 
 
 module.exports = {
@@ -66,4 +80,6 @@ module.exports = {
     chatUpdate,
     chatCreate,
     chatRemove,
+    blockAdd,
+    blockRemove,
 }

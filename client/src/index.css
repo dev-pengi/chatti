@@ -58,16 +58,21 @@ body {
 }
 
 .show {
-  animation: show .2s linear;
-}
-
-.scale {
-  animation: scale .1s linear;
+  animation: show .2s linear normal;
 }
 
 .unshow {
-  animation: unshow .2s linear;
+  animation: unshow .2s linear normal;
 }
+
+.fadeIn {
+  animation: fadeIn 0.1s linear normal;
+}
+
+.fadeOut {
+  animation: fadeOut 0.1s linear normal;
+}
+
 
 @-moz-keyframes spin {
   from {
@@ -99,13 +104,23 @@ body {
   }
 }
 
-@keyframes scale {
+@keyframes fadeIn {
   0% {
-    transform: scale(.7);
+    transform: scale(.4);
   }
 
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0.7);
   }
 }
 
