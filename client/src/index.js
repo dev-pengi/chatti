@@ -16,3 +16,14 @@ root.render(
     </Router>
   </ChakraProvider>
 );
+
+
+// Get all elements in the HTML document
+const elements = document.getElementsByTagName('*');
+
+// Loop through all the elements and add the onClick event listener
+for (let i = 0; i < elements.length; i++) {
+  elements[i].addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+}

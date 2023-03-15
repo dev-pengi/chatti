@@ -14,16 +14,22 @@ const userSchema = new Schema({
     avatar: {
         type: String,
         required: true,
-        default: 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
+        default: 'https://i.imgur.com/tS4CS66.png',
     },
     followers: [{
         type: Schema.Types.ObjectId,
-        ref: "userF"
+        ref: "user"
     }],
     following: [{
         type: Schema.Types.ObjectId,
-        ref: "userF"
+        ref: "user"
     }],
+    blocked: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "user"
+        },
+    ],
 }, {
     timestamps: true,
 });

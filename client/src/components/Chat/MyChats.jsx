@@ -196,7 +196,7 @@ const MyChats = ({ socket }) => {
                 <div className="group-users">
                     {groupUsers.map(user => {
                         return (
-                            <div key={user._id} onClick={(event) => { removeUser(user); event.stopPropagation(); }} className="group-user" >
+                            <div key={user._id} onClick={(event) => { removeUser(user) }} className="group-user" >
                                 <p className="name">{user.name}</p>
                                 <FaPlus className='icon' />
                             </div>
@@ -223,7 +223,7 @@ const MyChats = ({ socket }) => {
                                             <h3 className='name'>{user.name}</h3>
                                         </div>
                                         <div className="left">
-                                            <button className="ghost btn" onClick={(event) => { addUser(user); event.stopPropagation(); }}>Add</button>
+                                            <button className="ghost btn" onClick={(event) => { addUser(user) }}>Add</button>
                                         </div>
                                     </div>
                                 )

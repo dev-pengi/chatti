@@ -146,7 +146,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
             throw new Error('one of the added users doesn\'t exists')
         }
     }
-    const avt = 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg'
+    const avt = 'https://i.imgur.com/tS4CS66.png'
 
     if (users.length < 2) {
         res.status(400)

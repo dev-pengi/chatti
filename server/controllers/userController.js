@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const user = require('../models/user');
-const generateToken = require('../config/generateToken')
+const generateToken = require('../config/generateToken');
+const socket = require('../utilities/socket');
+const { updateGroup } = require('./chatControllers');
 
 const registerUser = asyncHandler(async (req, res) => {
 
@@ -85,7 +87,10 @@ const allUsers = asyncHandler(async (req, res) => {
 const getUser = asyncHandler(async (req, res) => {
     const { userID } = req.params;
     if (userID == "@me") {
-        const getUser = await user.findById(req.user._id).select('-password');
+        const getUser = await user.findById(req.user._id).select('-password')
+            .populate('blocked', 'name email avatar')
+            .populate('followers', 'name email avatar')
+            .populate('following', 'name email avatar')
         if (!getUser) {
             res.status(404);
             throw new Error('User can\'t be not found')
@@ -93,8 +98,16 @@ const getUser = asyncHandler(async (req, res) => {
         res.status(200).json(getUser);
     }
     else {
-        res.status(404);
-        throw new Error('User can\'t be not found')
+
+        const getUser = await user.findOne({ _id: userID }).select('name email bio url gender avatar birthday followers following')
+            .populate('followers', 'name email avatar')
+            .populate('following', 'name email avatar')
+
+        if (!getUser) {
+            res.status(404);
+            throw new Error('This User can\'t be not found')
+        }
+        res.status(200).json(getUser);
     }
 })
 const UpdateSettings = asyncHandler(async (req, res) => {
@@ -157,12 +170,79 @@ const UpdateSettings = asyncHandler(async (req, res) => {
         )
 
         res.status(200).json(UpdatedUser);
-        
 
-    } catch (error) {
+
+    } catch (err) {
         res.status(404);
         throw new Error('User can\'t be not found')
     }
 })
 
-module.exports = { registerUser, authUser, allUsers, getUser, UpdateSettings }
+
+
+const blockUser = asyncHandler(async (req, res) => {
+    const { userID } = req.params;
+    if (userID == req.user._id) {
+        res.status(403)
+        throw new Error('You can\'t block yourself');
+    }
+    try {
+        const checkUser = await user.findOne({ _id: userID })
+        if (!checkUser) {
+            throw new Error('User can\'t be not found');
+        }
+        const updatedUser = await user.findOneAndUpdate({
+            _id: req.user._id
+        }, {
+            $addToSet: { blocked: userID }
+        }, {
+            new: true
+        })
+        if (!updatedUser)
+            throw new Error('An error occurred while blocking the user')
+
+        res.status(200).send('this user has been successfuly blocked');
+        socket.blockAdd(req.user._id, userID)
+    } catch (err) {
+        res.status(400)
+        throw new Error('An error occurred while blocking the user');
+    }
+})
+const RemoveBlockUser = asyncHandler(async (req, res) => {
+    const { userID } = req.params;
+    const checkUser = await user.findOne({ _id: userID })
+    if (!checkUser) {
+        res.status(404)
+        throw new Error('User can\'t be not found')
+    }
+    try {
+        const updatedUser = await user.findOneAndUpdate({
+            _id: req.user._id
+        }, {
+            $pull: { blocked: userID }
+        }, {
+            new: true
+        })
+        if (!updatedUser) {
+            res.status(500)
+            throw new Error('An error occurred while blocking the user')
+        }
+        res.status(200).send('this user has been successfuly unblocked');
+        socket.blockRemove(req.user._id, userID)
+
+    } catch (error) {
+        res.status(500)
+        throw new Error(err.message);
+    }
+})
+
+
+module.exports = {
+    registerUser,
+    authUser,
+    allUsers,
+    getUser,
+    UpdateSettings,
+    blockUser,
+    RemoveBlockUser,
+}
