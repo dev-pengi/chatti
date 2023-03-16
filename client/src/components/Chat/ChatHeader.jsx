@@ -25,6 +25,7 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
         const [isAdmin, setIsAdmin] = useState(false);
         const [groupAvt, setGroupAvt] = useState('');
         const [avtFile, setAvtFile] = useState('');
+        const [showModal, setShowModal] = useState(false);
 
         useEffect(() => {
             if (!isGroup) return;
@@ -177,35 +178,38 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
         };
 
         return (
-            <Modal Button={GroupSettingsOption} title="Group settings" showFotter={true} loading={groupLoading} primaryBtn="Update group" onSubmit={EditGroup}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                    <div className="group" >
-                        <div
-                            onClick={handleAvtClick}
-                            className="change-avt relative"
-                            onDrop={handleDrop}
-                            onDragOver={handleDragOver}>
-                            <img src={groupAvt} width="120px" className="circle" />
-                            <div className="icon absolute circle">
-                                <FaImages />
+            <>
+                <GroupSettingsOption onClick={() => { setShowModal(true) }} />
+                <Modal openProp={showModal} onClose={() => { setShowModal(false) }} title="Group settings" showFotter={true} loading={groupLoading} primaryBtn="Update group" onSubmit={EditGroup}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                        <div className="group" >
+                            <div
+                                onClick={handleAvtClick}
+                                className="change-avt relative"
+                                onDrop={handleDrop}
+                                onDragOver={handleDragOver}>
+                                <img src={groupAvt} width="120px" className="circle" />
+                                <div className="icon absolute circle">
+                                    <FaImages />
+                                </div>
+
+                                <input
+                                    type="file"
+                                    ref={fileInput}
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    onChange={handleAvtChange} />
+
                             </div>
-
-                            <input
-                                type="file"
-                                ref={fileInput}
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                onChange={handleAvtChange} />
-
+                            <LabeledInput label="Group name" placeholder="Group name" className="full" value={groupName} onChange={(e) => { setGroupName(e.target.value) }} />
                         </div>
-                        <LabeledInput label="Group name" placeholder="Group name" className="full" value={groupName} onChange={(e) => { setGroupName(e.target.value) }} />
-                    </div>
 
-                    {isAdmin && <LabeledInput label="Add users" placeholder="Search" className="full" value={groupSearch} onChange={handleGroupUsers} />}
-                    <GroupUsers remove={isAdmin} />
-                    {isAdmin && <SearchResults />}
-                </div>
-            </Modal>
+                        {isAdmin && <LabeledInput label="Add users" placeholder="Search" className="full" value={groupSearch} onChange={handleGroupUsers} />}
+                        <GroupUsers remove={isAdmin} />
+                        {isAdmin && <SearchResults />}
+                    </div>
+                </Modal>
+            </>
         )
     }
 
