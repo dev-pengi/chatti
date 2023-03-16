@@ -18,6 +18,7 @@ const Search = ({ type = 'ghost', textfit = true }) => {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
 
     const token = localStorage.getItem('token')
@@ -129,15 +130,18 @@ const Search = ({ type = 'ghost', textfit = true }) => {
 
     }
     return (
-        <Modal Button={SearchButton} title="Search" showFotter={false}>
-            <div className="flex-block" style={{ display: 'flex', justifyContent: "center", alignItems: 'center' }} >
-                <LabeledInput onChange={(e) => setSearch(e.target.value)} value={search} className="full" placeholder="Search for users" />
-                <button onClick={HandleSearch} style={{ marginLeft: "10px" }} className='btn circle ghost'>
-                    <FaSearch />
-                </button>
-            </div>
-            <Users users={results} />
-        </Modal>
+        <>
+            <SearchButton onClick={() => setShowModal(true)} />
+            <Modal onClose={() => { setShowModal(false) }} openProp={showModal} title="Search" showFotter={false}>
+                <div className="flex-block" style={{ display: 'flex', justifyContent: "center", alignItems: 'center' }} >
+                    <LabeledInput onChange={(e) => setSearch(e.target.value)} value={search} className="full" placeholder="Search for users" />
+                    <button onClick={HandleSearch} style={{ marginLeft: "10px" }} className='btn circle ghost'>
+                        <FaSearch />
+                    </button>
+                </div>
+                <Users users={results} />
+            </Modal>
+        </>
     )
 }
 

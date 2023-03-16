@@ -51,6 +51,7 @@ const Login = () => {
       handleLogin(data);
     } catch (err) {
       toast.error(err.response.data.message || 'Server connection error');
+    } finally {
       setLoading(false);
     }
   }

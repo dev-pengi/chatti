@@ -148,6 +148,7 @@ const MyChats = ({ socket }) => {
         const [groupLoading, setGroupLoading] = useState(false);
         const [groupSearchLoading, setGroupSearchLoading] = useState(false);
         const [groupUsers, setGroupUsers] = useState([]);
+        const [showModal, setShowModal] = useState(false);
 
 
         const CreateGroup = async () => {
@@ -236,14 +237,17 @@ const MyChats = ({ socket }) => {
 
 
         return (
-            <Modal Button={AddGroupButton} title="Create group" showFotter={true} loading={groupLoading} primaryBtn="Create group" onSubmit={CreateGroup}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                    {groupUsers.length > 0 && <GroupUsers />}
-                    <LabeledInput label="Group name" placeholder="Group name" className="full" value={groupName} onChange={(e) => { setGroupName(e.target.value) }} />
-                    <LabeledInput label="Add users" placeholder="Search" className="full" value={groupSearch} onChange={handleGroupUsers} />
-                    <SearchResults />
-                </div>
-            </Modal>
+            <>
+                <AddGroupButton onClick={() => { setShowModal(true) }} />
+                <Modal openProp={showModal} onClose={() => { setShowModal(false) }} title="Create group" showFotter={true} loading={groupLoading} primaryBtn="Create group" onSubmit={CreateGroup}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                        {groupUsers.length > 0 && <GroupUsers />}
+                        <LabeledInput label="Group name" placeholder="Group name" className="full" value={groupName} onChange={(e) => { setGroupName(e.target.value) }} />
+                        <LabeledInput label="Add users" placeholder="Search" className="full" value={groupSearch} onChange={handleGroupUsers} />
+                        <SearchResults />
+                    </div>
+                </Modal>
+            </>
         )
     }
 

@@ -66,7 +66,8 @@ const SignUp = () => {
       handleSignUp(data)
     } catch (err) {
       toast.error(err.response.data.message || 'Server connection error');
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   }
   const handleType = (event, setValue, setVerify) => {
