@@ -40,13 +40,13 @@ const ChatBox = ({ chatID, socket }) => {
                 setChat(data);
                 setIsGroup(false)
             }
-            setLoading(false);
             return data;
         } catch (err) {
             const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
             toast.error(error);
-            setLoading(false);
             navigate('/chat')
+        } finally {
+            setLoading(false);
         }
     }
     useEffect(() => {

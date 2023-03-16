@@ -89,6 +89,7 @@ const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
     const [promot, setPromot] = useState('');
     const [result, setResult] = useState('');
     const [genratingLoading, setGenratingLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
 
 
@@ -119,31 +120,35 @@ const MessageInput = ({ config, chatID, messages, setMessages, socket }) => {
 
 
     return (
-      <Modal Button={AiButton} title="Generate message by ai" showFotter={false} primaryBtn="Import message">
-        <div className="ai-message-box">
-          <TextareaAutosize
-            value={promot}
-            onChange={(e) => setPromot(e.target.value)}
-            placeholder="Promot"
-            autoFocus
-            className='promot-input'
-          />
-          <button className='btn primary full generate-message-button' onClick={handleGenerate}>
-            {genratingLoading ? <i class="fa-solid fa-circle-notch spin"></i> : 'Generate a message'}
-          </button>
-          <TextareaAutosize
-            value={genratingLoading ? 'Please wait while we\'re generating the answer for you...' : result}
-            placeholder="Result..."
-            readOnly={true}
-            className='result-input'
-          />
-        </div>
-      </Modal>
+      <>
+        <AiButton onClick={() => setShowModal(true)} />
+        <Modal onClose={() => setShowModal(false)} openProp={showModal} title="Generate message by ai" showFotter={false} primaryBtn="Import message">
+          <div className="ai-message-box">
+            <TextareaAutosize
+              value={promot}
+              onChange={(e) => setPromot(e.target.value)}
+              placeholder="Promot"
+              autoFocus
+              className='promot-input'
+            />
+            <button className='btn primary full generate-message-button' onClick={handleGenerate}>
+              {genratingLoading ? <i className="fa-solid fa-circle-notch spin"></i> : 'Generate a message'}
+            </button>
+            <TextareaAutosize
+              value={genratingLoading ? 'Please wait while we\'re generating the answer for you...' : result}
+              placeholder="Result..."
+              readOnly={true}
+              className='result-input'
+            />
+          </div>
+        </Modal>
+      </>
     )
   }
 
   //TODO: add the image uploading to the messaging system
   const ImageMessage = () => {
+    const [showModal, setShowModal] = useState(false);
 
   }
 

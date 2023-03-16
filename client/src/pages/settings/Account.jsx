@@ -54,10 +54,10 @@ const Profile = () => {
             const { data } = await axios.post('/api/users/settings', formData, config);
             setUser(data);
             toast.success('Changes has been successfuly changed');
-            setLoading(false);
         } catch (err) {
             console.log(err);
             toast.error(err.response ? err.response.data.message || 'Server connection error' : 'Server connection error');
+        } finally {
             setLoading(false);
         }
     }
@@ -161,7 +161,7 @@ const Profile = () => {
                             accept="image/*"
                             style={{ display: 'none' }}
                             onChange={handleAvtChange} />
-                            
+
                     </div>
                     <LabeledInput className="full" onChange={(e) => setName(e.target.value)} placeholder="name" label={"name"} value={name} />
                 </div>

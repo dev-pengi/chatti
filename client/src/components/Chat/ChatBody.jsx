@@ -16,13 +16,13 @@ const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
             // Merge the new messages with the existing messages in the state
             setMessages([...data]);
 
-            setLoading(false);
             return data;
         } catch (err) {
             const error = err.response
                 ? err.response.data.message || 'Server connection error'
                 : 'Server connection error';
             toast.error(error);
+        } finally {
             setLoading(false);
         }
     };

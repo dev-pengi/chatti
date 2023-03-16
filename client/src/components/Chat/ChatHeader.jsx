@@ -10,7 +10,7 @@ import Modal, { Confirmation } from "../Modal/Modal";
 import { useNavigate } from "react-router-dom";
 
 const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => {
-    
+
     const navigate = useNavigate()
 
     const GroupSettings = ({ onClick }) => {
@@ -58,13 +58,13 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
                 toast.success('Group has been successfuly updated');
                 setChat(data)
                 navigate(`/chat/${data._id}`)
-                setGroupLoading(false);
             } catch (err) {
                 const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
                 toast.error(error);
-                setGroupLoading(false);
                 console.log(err)
                 return error;
+            } finally {
+                setGroupLoading(false);
             }
         }
 
@@ -72,9 +72,10 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
             try {
                 setGroupSearchLoading(true);
                 const { data } = await axios.get(`/api/users?search=${search}`, config);
-                setGroupSearchLoading(false);
                 setResults(data);
             } catch (err) {
+                return false;
+            } finally {
                 setGroupSearchLoading(false);
             }
         }
@@ -222,15 +223,15 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
             try {
                 setLeaveLoading(true);
                 await axios.delete(`/api/chats/groups/${chatID}`, config)
-                setLeaveLoading(false);
                 toast.success('you have successfuly left the group')
                 navigate('/chat')
             } catch (err) {
                 const error = err.response ? err.response.data.message || 'Server connection error' : 'Server connection error'
                 toast.error(error);
-                setLeaveLoading(false);
                 console.log(err)
                 return error;
+            } finally {
+                setLeaveLoading(false);
             }
         }
         return (
