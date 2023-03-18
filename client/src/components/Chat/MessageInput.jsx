@@ -11,7 +11,12 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
   const inputRef = useRef(null)
   const { user } = UserState();
   const [message, setMessage] = useState('');
-  let pendingIndex = 0
+  const [pendingIndex, setPendingIndex] = useState(0);
+
+  useEffect(() => {
+    console.log(pendingIndex)
+  }, [pendingIndex])
+
   useEffect(() => {
     const buttonsTooltipConfig = {
       placement: 'bottom',
@@ -66,11 +71,10 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
         },
       };
 
-      const settingsData = {
-        socketID,
-      };
-      const formData = new FormData();
 
+      const formData = new FormData();
+      console.log(socketID)
+      formData.append("socketID", socketID);
       if (file) {
         formData.append("img", file);
       }
@@ -78,9 +82,9 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
         formData.append("content", content);
       }
 
-      Object.keys(settingsData).forEach((key) => {
-        formData.append(key, settingsData[key]);
-      });
+      // Object.keys(settingsData).forEach((key) => {
+      //   formData.append(key, settingsData[key]);
+      // });
 
       let { data } = await axios.post(
         `/api/chats/${chatID}/messages`,
@@ -104,7 +108,8 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
       pending: true,
       pendingIndex,
     };
-    pendingIndex++;
+    console.log(newMessage)
+    setPendingIndex(prevPendingIndex => prevPendingIndex + 1);
 
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setMessage('');
@@ -167,7 +172,6 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
           return setResult('An error occurred while genrating the message')
         }
         setResult(data);
-        console.log(result)
       } catch (err) {
         setGenratingLoading(false);
         setResult('An error occurred while genrating the message')
@@ -211,7 +215,8 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
       pending: true,
       pendingIndex,
     };
-    pendingIndex++;
+    console.log(newMessage)
+    setPendingIndex(prevPendingIndex => prevPendingIndex + 1);
 
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setMessage('');
@@ -307,7 +312,7 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
         className='message-input'
         autoFocus
       />
-      <button className="send-message" id='send-message' onClick={handleSendMessage}>
+      <button className={`send-message ${message.trim().length ? 'valid' : ''}`} id='send-message' onClick={handleSendMessage}>
         <i className="fa-solid fa-paper-plane"></i>
       </button>
     </div>

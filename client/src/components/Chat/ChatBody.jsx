@@ -38,6 +38,7 @@ const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
     useEffect(() => {
         if (!socket) return;
         socket.on('message', (message) => {
+            console.log(message)
             if (message.socket === socket.id) return
             if (message.chat._id != chatID) return;
 

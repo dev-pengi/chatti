@@ -318,6 +318,7 @@
     display: flex;
     justify-content: end;
 }
+
 .chat-box-body .messages-group .message p {
     padding: 5px 10px;
     border-radius: 17px;
@@ -328,7 +329,7 @@
 
 .chat-box-body .messages-group .message img.img-message {
     max-width: 400px;
-    min-width: 100px ;
+    min-width: 100px;
     max-height: 300px;
     min-height: 30px;
     border-radius: 15px;
@@ -338,6 +339,7 @@
 .chat-box-body .messages-group.me .message img.img-message {
     border-radius: 15px;
 }
+
 .chat-box-body .messages-group.me .message p {
     background-color: #A7C9E0;
     color: var(--gray-5);
@@ -394,6 +396,14 @@ textarea::-webkit-scrollbar {
     font-size: 18px;
 }
 
+.chat-box-new_message .send-message i {
+    transition: .2s;
+}
+
+.chat-box-new_message .send-message.valid i {
+    color: var(--primary);
+}
+
 .chat-box-new_message .left-buttons {
     display: flex;
     justify-content: center;
@@ -408,8 +418,17 @@ textarea::-webkit-scrollbar {
     z-index: 100;
 }
 
-.chat-box-new_message .generate-message {
-    font-size: 15px;
+.chat-box-new_message .left-buttons i {
+    transition: .2s;
+}
+
+.chat-box-new_message .left-buttons i:hover {
+    transform: translateY(-1px);
+    color: var(--primary);
+}
+
+.chat-box-new_message .image-message {
+    font-size: 18px;
 }
 
 @media screen and (max-width:800px) {

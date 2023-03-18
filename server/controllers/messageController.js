@@ -101,6 +101,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 
         const sendedMessageObj = sendedMessage.toObject();
         sendedMessageObj.socket = socketID;
+        console.log(sendedMessageObj);
 
         socket.message(sendedMessageObj);
         socket.chatUpdate(sendedMessageObj.chat);
