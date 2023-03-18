@@ -13,8 +13,7 @@ router.route('/groups/create').post(protect, createGroupChat)
 router.route('/groups/:chatID').put(protect, imgurUploadMiddleware, updateGroup) // update group
 router.route('/groups/:chatID').delete(protect, leaveGroup) // leave group
 
-
-router.route('/:chatID/messages').post(protect, sendMessage)
+router.route('/:chatID/messages').post(protect, imgurUploadMiddleware, sendMessage)
 router.route('/:chatID/messages').get(protect, fetchMessages)
 
 module.exports = router;

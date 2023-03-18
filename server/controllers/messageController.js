@@ -11,10 +11,39 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 
+function getMessageType(content, image) {
+    const MESSAGE_TYPES = {
+        TEXT: 'text',
+        IMAGE: 'image',
+    };
+
+    if (image && !(content && content.trim().length)) {
+        return {
+            type: MESSAGE_TYPES.IMAGE,
+            URL: image,
+        };
+    }
+    else if (image && (content && content.trim().length)) {
+        return {
+            type: MESSAGE_TYPES.IMAGE,
+            URL: image,
+            content,
+        };
+    }
+    else if (content && content.trim().length) {
+        return {
+            type: MESSAGE_TYPES.TEXT,
+            content,
+        };
+    } else {
+        throw new Error('Message can\'t be empty');
+    }
+}
 
 const sendMessage = asyncHandler(async (req, res) => {
     const { chatID } = req.params;
     const { content, socketID } = req.body;
+    const image = req.image;
 
     const findChat = {
         $and: [
@@ -22,6 +51,7 @@ const sendMessage = asyncHandler(async (req, res) => {
             { users: { $elemMatch: { $eq: req.user._id } } }
         ]
     }
+
     try {
 
         let isChat = await chat.findOne(findChat)
@@ -33,16 +63,16 @@ const sendMessage = asyncHandler(async (req, res) => {
             res.status(404);
             throw new Error('Chat not found')
         }
-        if (!content || !content.trim().length) {
-            res.status(400);
-            throw new Error('Message can\'t be empty')
-        }
 
+        const messageDetails = getMessageType(content, image)
+        console.log(messageDetails)
         const newMessage = {
             sender: req.user._id,
-            content: content,
-            chat: chatID,
+            chat: isChat._id,
+            ...messageDetails
         }
+
+
 
         var sendedMessage = await message.create(newMessage);
         await chat.findOneAndUpdate(findChat, { lastMessage: sendedMessage._id });
@@ -132,7 +162,7 @@ const generateMessage = asyncHandler(async (req, res) => {
         messages: [
             {
                 role: "system",
-                content: "These are the instructions for a message generator powered by AI, known as \"chatti\". Its role is to respond to user questions and messages. Here are some guidelines to follow:\n\n1. Responses should not include any formatting or Markdown. Use plain text only.\n2. If a user sends a message containing explicit or unethical content, respond with: \"I apologize, but I am unable to provide an answer to that type of message. Can you please ask a different question?\"\n3. Avoid adding any additional comments or information to your responses. Only answer the user's question or request.\n4. If asked about emotions or anything related to them, respond with: \"I'm sorry, as an AI-powered message generator, I do not have feelings or emotions.\"\n"
+                content: "These are the instructions for a message generator powered by AI, known as \"chatti\". Your role is to respond to user questions and messages. Here are some guidelines to follow:\n\n1. Responses should not include any formatting or Markdown. Use plain text only.\n2. If a user sends a message containing explicit or unethical content, respond with: \"I apologize, but I am unable to provide an answer to that type of message. Can you please ask a different question?\"\n3. Avoid adding any additional comments or information to your responses. Only answer the user's question or request.\n4. If asked about emotions or anything related to them, respond with: \"I'm sorry, as an AI-powered message generator, I do not have feelings or emotions.\"\n5. if the user sent you a code without any cleament of what he wants answer him with the language name and explain what the code is for and it does.\""
             },
             {
                 role: "user",
