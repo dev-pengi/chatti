@@ -104,6 +104,20 @@ const MyChats = ({ socket }) => {
                         {userChats.map((chat, index) => {
                             const otherUser = chat.isGroup ? chat : chat.users.find(u => u._id != user._id);
                             if (!otherUser) return;
+                            const LastMessage = () => {
+                                if (chat.lastMessage) {
+                                    const sent = (chat.lastMessage.sender._id == user._id)
+                                    if (chat.lastMessage.type == 'image') {
+                                        return <p className='last-msg'>{sent ? `You sent a photo.` : `${chat.lastMessage.sender.name} sent a photo.`}</p>
+                                    }
+                                    else if (chat.lastMessage.type == 'text') {
+                                        return <p className='last-msg'>{sent ? <> <span>You: </span> {chat.lastMessage.content} </> : chat.lastMessage.content}</p>
+                                    }
+                                }
+                                else {
+                                    return <p className='last-msg'>New {chat.isGroup ? 'group' : 'contact'}, start chating!</p>
+                                }
+                            }
                             return (
                                 <Link to={`/chat/${chat._id}`} key={chat._id} className={` nav-chat ${params.id == chat._id ? "chat-active" : ''}`}>
                                     <div className="left">
@@ -111,7 +125,7 @@ const MyChats = ({ socket }) => {
                                     </div>
                                     <div className="right">
                                         <h3 className='name'>{otherUser.name}</h3>
-                                        <p className='last-msg'>{chat.lastMessage ? (chat.lastMessage.sender._id == user._id) ? <> <span>You: </span> {chat.lastMessage.content} </> : chat.lastMessage.content : `New ${chat.isGroup ? 'group' : 'contact'}, start chating!`}</p>
+                                        <LastMessage />
                                     </div>
                                 </Link>
                             )
