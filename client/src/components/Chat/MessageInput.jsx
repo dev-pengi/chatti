@@ -43,7 +43,7 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
   }, [chatID])
 
   const isValidImage = (image) => {
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    // const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
     // return allowedTypes.includes(image.type);
     return image.type.startsWith('image/');
   };
@@ -239,17 +239,6 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
   };
 
 
-  const HandleImageModal = ({ image, file, showModal }) => {
-    return (
-      <>
-        <Modal onClose={() => setShowModal(false)} fitwidth={true} onSubmit={() => handleSendImg(image, file)} openProp={showModal} title="Send image?" primaryBtn="Send image">
-          <div className="image-preview" >
-            <img src={image} />
-          </div>
-        </Modal>
-      </>
-    )
-  }
 
 
 
@@ -293,7 +282,11 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
     return (
       <>
         <ImageButton onClick={handleImgClick} />
-        <HandleImageModal image={image} file={file} showModal={showModal} />
+        <Modal onClose={() => setShowModal(false)} fitwidth={true} onSubmit={() => handleSendImg(image, file)} openProp={showModal} title="Send image?" primaryBtn="Send image">
+          <div className="image-preview" >
+            <img src={image} />
+          </div>
+        </Modal>
       </>
     )
   }
