@@ -109,7 +109,7 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
     setMessage('');
 
     const socketID = socket ? socket.id : ''
-    const sendMessage = await postMessage(message, socketID);
+    const sendMessage = await postMessage({ content: message, socketID });
     if (!sendMessage) {
       toast.error('An error occurred while sending the message.')
     }
