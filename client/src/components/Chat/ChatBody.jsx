@@ -92,6 +92,7 @@ const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
                                         return (<div className={`message ${msg.pending ? 'pending' : ''} ${msg.hasMessageBefore && 'has-before'} ${msg.isFirstInGroup && 'first'} ${msg.isLastInGroup && 'last'} ${msg.hasMessageAfter && 'has-after'}`} key={index}>
                                             {(msg.sender._id != user._id && msg.isLastInGroup) && <img className='avatar' src={msg.sender.avatar} />}
                                             {(msg.type == 'text') && <p>{msg.content}</p>}
+                                            {(msg.type == 'image') && <img src={msg.URL}/>}
                                         </div>)
                                     })
                                 }
@@ -105,11 +106,10 @@ const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
 
 
     const messagesRef = useRef(null);
-
+    const scrollToBottom = () => {
+        messagesRef.current.scrollTop = messagesRef.current.scrollHeight + 1000;
+    };
     useEffect(() => {
-        const scrollToBottom = () => {
-            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-        };
         scrollToBottom();
     }, [messages]);
 

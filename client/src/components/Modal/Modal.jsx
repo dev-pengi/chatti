@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { FaCircleNotch, FaPlus } from 'react-icons/fa';
 import './style.css';
 
-const Modal = ({ children, openProp, onClose, title = "Chatti", showFotter = true, primaryBtn, secondaryBtn, style, loading, onSubmit }) => {
+const Modal = ({ children, openProp, fitwidth, onClose, title = "Chatti", showFotter = true, primaryBtn, secondaryBtn, style, loading, onSubmit }) => {
 
 
     useEffect(() => {
@@ -19,7 +19,7 @@ const Modal = ({ children, openProp, onClose, title = "Chatti", showFotter = tru
     }, []);
 
     const modal = (
-        <div className="modal-box fadeIn show">
+        <div className={`modal-box fadeIn show ${fitwidth ? 'fit' : ''}`}>
             <div className="modal-header">
                 <h2>{title}</h2>
                 <button onClick={onClose} style={{ color: "#fff" }} className='btn circle ghost'><FaPlus className='icon' /></button>
