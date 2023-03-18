@@ -12,7 +12,9 @@ const imgurUpload = async (image) => {
             },
             data: {
                 image: image,
+                privacy: "hidden"
             },
+            privacy: "hidden",
         });
         const { data } = response;
         return data.data.link;

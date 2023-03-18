@@ -327,7 +327,7 @@
 }
 
 .chat-box-body .messages-group.me .message img {
-    max-width: 98%;
+    max-width: 400px;
     min-width: 100px;
     max-height: 300px;
     min-height: 30px;

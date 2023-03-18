@@ -44,7 +44,8 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
 
   const isValidImage = (image) => {
     const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-    return allowedTypes.includes(image.type);
+    // return allowedTypes.includes(image.type);
+    return image.type.startsWith('image/');
   };
 
 
@@ -88,8 +89,8 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
       );
       return data;
     } catch (err) {
-      console.error(err);
-      return false;
+      console.log(err)
+      throw new Error(err.message);
     }
   };
 
@@ -201,7 +202,57 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
     )
   }
 
-  //TODO: add the image uploading to the messaging system
+
+  const handleSendImg = async (image, file) => {
+    const newMessage = {
+      URL: image,
+      sender: user,
+      type: 'image',
+      pending: true,
+      pendingIndex,
+    };
+    pendingIndex++;
+
+    setMessages(prevMessages => [...prevMessages, newMessage]);
+    setMessage('');
+
+    try {
+      const socketID = socket ? socket.id : ''
+      const sendMessage = await postMessage({ file, socketID });
+      console.log(sendMessage);
+      if (!sendMessage) {
+        throw new Error('An error occurred while sending the message')
+      }
+      setMessages(prevMessages => {
+        const index = prevMessages.findIndex(msg => msg.pendingIndex === newMessage.pendingIndex);
+        if (index === -1) return prevMessages; // message already sent and removed from state
+        return [
+          ...prevMessages.slice(0, index),
+          sendMessage,
+          ...prevMessages.slice(index + 1),
+        ];
+      });
+    } catch (err) {
+      toast.error(err.message)
+    }
+
+  };
+
+
+  const HandleImageModal = ({ image, file, showModal }) => {
+    return (
+      <>
+        <Modal onClose={() => setShowModal(false)} fitwidth={true} onSubmit={() => handleSendImg(image, file)} openProp={showModal} title="Send image?" primaryBtn="Send image">
+          <div className="image-preview" >
+            <img src={image} />
+          </div>
+        </Modal>
+      </>
+    )
+  }
+
+
+
   const ImageMessage = () => {
     const [showModal, setShowModal] = useState(false);
     const [image, setImage] = useState('')
@@ -221,35 +272,8 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
       };
       reader.readAsDataURL(selectedFile);
     }
-    const handleSendImg = async () => {
-      const newMessage = {
-        URL: image,
-        sender: user,
-        type: 'image',
-        pending: true,
-        pendingIndex,
-      };
-      pendingIndex++;
 
-      setMessages(prevMessages => [...prevMessages, newMessage]);
-      setMessage('');
 
-      const socketID = socket ? socket.id : ''
-      const sendMessage = await postMessage({ file, socketID });
-      console.log(sendMessage)
-      if (!sendMessage) {
-        toast.error('An error occurred while sending the message.')
-      }
-      setMessages(prevMessages => {
-        const index = prevMessages.findIndex(msg => msg.pendingIndex === newMessage.pendingIndex);
-        if (index === -1) return prevMessages; // message already sent and removed from state
-        return [
-          ...prevMessages.slice(0, index),
-          sendMessage,
-          ...prevMessages.slice(index + 1),
-        ];
-      });
-    };
 
     const ImageButton = ({ onClick }) => {
       return (
@@ -257,7 +281,6 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
           <button onClick={onClick} className="image-message" id='image-message'>
             <i className="fa-solid fa-image"></i>
           </button>
-
           <input
             type="file"
             ref={fileInput}
@@ -267,15 +290,10 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
         </>
       )
     }
-
     return (
       <>
         <ImageButton onClick={handleImgClick} />
-        <Modal onClose={() => setShowModal(false)} fitwidth={true} onSubmit={handleSendImg} openProp={showModal} title="Send image?" primaryBtn="Send image">
-          <div className="image-preview" >
-            <img src={image} />
-          </div>
-        </Modal>
+        <HandleImageModal image={image} file={file} showModal={showModal} />
       </>
     )
   }
