@@ -62,7 +62,7 @@ const SignUp = () => {
           "Content-type": "application/json",
         }
       }
-      const { data } = await axios.post("/api/users/register", { name, email, password }, config)
+      const { data } = await axios.post("https://chatti-id5o.onrender.com/api/users/register", { name, email, password }, config)
       handleSignUp(data)
     } catch (err) {
       toast.error(err.response.data.message || 'Server connection error');

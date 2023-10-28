@@ -33,7 +33,7 @@ const Search = ({ type = 'ghost', textfit = true }) => {
         setError('')
         try {
             setLoading(true);
-            const { data } = await axios.get(`/api/users?search=${search}`, config);
+            const { data } = await axios.get(`https://chatti-id5o.onrender.com/api/users?search=${search}`, config);
             setLoading(false);
             if (!data || !data.length) return setError('Can\'t find any users');
             setResults(data);
@@ -80,7 +80,7 @@ const Search = ({ type = 'ghost', textfit = true }) => {
 
         const accessChat = async () => {
             try {
-                const { data } = await axios.get(`/api/chats/user/${userID}`, config)
+                const { data } = await axios.get(`https://chatti-id5o.onrender.com/api/chats/user/${userID}`, config)
                 setBtnLoading(false);
                 navigate(`/chat/${data._id}`)
             } catch (err) {

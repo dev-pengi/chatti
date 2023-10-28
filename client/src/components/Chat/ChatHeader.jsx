@@ -55,7 +55,7 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
                 Object.keys(groupData).forEach(key => {
                     formData.append(key, JSON.stringify(groupData[key]));
                 });
-                const { data } = await axios.put(`/api/chats/groups/${chatID}`, formData, config)
+                const { data } = await axios.put(`https://chatti-id5o.onrender.com/api/chats/groups/${chatID}`, formData, config)
                 toast.success('Group has been successfuly updated');
                 setChat(data)
                 navigate(`/chat/${data._id}`)
@@ -72,7 +72,7 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
         const fetchUsers = async (search) => {
             try {
                 setGroupSearchLoading(true);
-                const { data } = await axios.get(`/api/users?search=${search}`, config);
+                const { data } = await axios.get(`https://chatti-id5o.onrender.com/api/users?search=${search}`, config);
                 setResults(data);
             } catch (err) {
                 return false;
@@ -226,7 +226,7 @@ const ChatHeader = ({ chatID, chatLoading, chat, isGroup, config, setChat }) => 
         const handleLeave = async () => {
             try {
                 setLeaveLoading(true);
-                await axios.delete(`/api/chats/groups/${chatID}`, config)
+                await axios.delete(`https://chatti-id5o.onrender.com/api/chats/groups/${chatID}`, config)
                 toast.success('you have successfuly left the group')
                 navigate('/chat')
             } catch (err) {

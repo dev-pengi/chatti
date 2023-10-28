@@ -23,7 +23,7 @@ const UserProvider = ({ children }) => {
                 headers
             };
 
-            const { data } = await axios.get('/api/users/@me', config);
+            const { data } = await axios.get('https://chatti-id5o.onrender.com/api/users/@me', config);
             if (!data) return handleInvalid();
             setUser({ ...data, token });
         } catch (err) {

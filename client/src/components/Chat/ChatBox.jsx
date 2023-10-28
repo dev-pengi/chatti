@@ -28,7 +28,7 @@ const ChatBox = ({ chatID, socket }) => {
     const fetchChat = async () => {
         try {
             setLoading(true);
-            let { data } = await axios.get(`/api/chats/${chatID}`, config);
+            let { data } = await axios.get(`https://chatti-id5o.onrender.com/api/chats/${chatID}`, config);
             if (data.isGroup) {
                 setChat(data)
                 setIsGroup(true)

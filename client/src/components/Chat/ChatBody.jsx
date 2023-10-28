@@ -15,7 +15,7 @@ const ChatBody = ({ config, chatID, messages, setMessages, socket }) => {
     const fetchMessage = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`/api/chats/${chatID}/messages`, config);
+            const { data } = await axios.get(`https://chatti-id5o.onrender.com/api/chats/${chatID}/messages`, config);
 
             // Merge the new messages with the existing messages in the state
             setMessages([...data]);

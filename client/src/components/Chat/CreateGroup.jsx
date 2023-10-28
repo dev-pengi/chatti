@@ -27,7 +27,7 @@
 //         setGroupLoading(true);
 //         try {
 //             const groupData = { name: groupName, users: groupUsers.map(u => u._id) }
-//             const { data } = await axios.post('/api/chats/group/create', groupData, config)
+//             const { data } = await axios.post('https://chatti-id5o.onrender.com/api/chats/group/create', groupData, config)
 //             toast.success('Group has been successfuly created');
 //             navigate(`/chat/${data._id}`)
 //             setGroupLoading(false);
@@ -42,7 +42,7 @@
 //     const fetchUsers = async (search) => {
 //         try {
 //             setGroupSearchLoading(true);
-//             const { data } = await axios.get(`/api/users?search=${search}`, config);
+//             const { data } = await axios.get(`https://chatti-id5o.onrender.com/api/users?search=${search}`, config);
 //             setGroupSearchLoading(false);
 //             setResults(data);
 //         } catch (err) {

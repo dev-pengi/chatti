@@ -51,7 +51,7 @@ const Profile = () => {
             Object.keys(settingsData).forEach(key => {
                 formData.append(key, settingsData[key]);
             });
-            const { data } = await axios.post('/api/users/settings', formData, config);
+            const { data } = await axios.post('https://chatti-id5o.onrender.com/api/users/settings', formData, config);
             setUser(data);
             toast.success('Changes has been successfuly changed');
         } catch (err) {

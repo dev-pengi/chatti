@@ -22,7 +22,7 @@
 //         try {
 //             setChatsLoading(true);
 //             const apiQuery = keyword.trim().length ? `?search=${keyword}` : ''
-//             const { data } = await axios.get(`/api/chats${apiQuery}`, config);
+//             const { data } = await axios.get(`https://chatti-id5o.onrender.com/api/chats${apiQuery}`, config);
 //             setChatsLoading(false);
 //             setChats(data);
 //             return data;
@@ -42,7 +42,7 @@
 //     const fetchMessages = async () => {
 //         try {
 //             setLoading(true);
-//             let { data } = await axios.get(`/api/chats/${chatID}/messages`, config);
+//             let { data } = await axios.get(`https://chatti-id5o.onrender.com/api/chats/${chatID}/messages`, config);
 //             setMessages(data);
 //             setLoading(false);
 //             return data;

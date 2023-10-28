@@ -47,7 +47,7 @@ const Login = () => {
           "Content-type": "application/json",
         }
       }
-      const { data } = await axios.post("/api/users/login", { email, password }, config);
+      const { data } = await axios.post("https://chatti-id5o.onrender.com/api/users/login", { email, password }, config);
       handleLogin(data);
     } catch (err) {
       toast.error(err.response.data.message || 'Server connection error');

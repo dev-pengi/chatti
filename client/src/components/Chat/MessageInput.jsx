@@ -87,7 +87,7 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
       // });
 
       let { data } = await axios.post(
-        `/api/chats/${chatID}/messages`,
+        `https://chatti-id5o.onrender.com/api/chats/${chatID}/messages`,
         formData,
         config
       );
@@ -166,7 +166,7 @@ const MessageInput = ({ chatID, messages, setMessages, socket }) => {
       if (!promot.trim().length) return setResult('Please provide a valid promot');
       try {
         setGenratingLoading(true);
-        let { data } = await axios.post(`/api/messages/ai/generate`, { promot }, config);
+        let { data } = await axios.post(`https://chatti-id5o.onrender.com/api/messages/ai/generate`, { promot }, config);
         setGenratingLoading(false);
         if (!data) {
           return setResult('An error occurred while genrating the message')
